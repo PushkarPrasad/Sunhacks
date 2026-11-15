@@ -5,8 +5,6 @@ import { Settings2, Usb } from "lucide-react";
 import { useT } from "@/lib/hooks/useT";
 import { connectRing, ringStatus, useRing } from "@/lib/input/serial";
 import { useUi } from "@/stores/ui";
-import { useInput } from "@/stores/input";
-import { startCamera, stopCamera } from "@/lib/input/camera";
 import { Toggle } from "@/components/ui/Toggle";
 import type { Lang } from "@/lib/i18n/notes";
 
@@ -22,7 +20,6 @@ export function SettingsPopover() {
   const ui = useUi();
   const t = useT();
   const ring = useRing();
-  const camera = useInput((s) => s.camera);
 
   useEffect(() => {
     if (!open) return;
@@ -75,7 +72,6 @@ export function SettingsPopover() {
           <div className="border-t border-line pt-1">
             <Toggle id="set-contrast" label={t("settings.contrast")} checked={ui.highContrast} onChange={(v) => ui.set({ highContrast: v })} />
             <Toggle id="set-motion" label={t("settings.motion")} checked={ui.motion === "reduced"} onChange={(v) => ui.set({ motion: v ? "reduced" : "system" })} />
-            <Toggle id="set-gestures" label={t("settings.gestures")} checked={camera === "on" || camera === "starting"} onChange={(v) => (v ? void startCamera() : stopCamera())} />
           </div>
           <div className="mt-1 border-t border-line px-2 pt-2">
             <button

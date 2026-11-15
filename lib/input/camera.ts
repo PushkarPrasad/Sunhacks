@@ -4,7 +4,7 @@
 // getUserMedia synchronously so it can run inside the same click handler as the glove chooser. Gesture events
 // go to the shared input store and to any subscriber (the ring cursor layer, the Home hand rig).
 
-import { fireAction, setGrab, useInput } from "@/stores/input";
+import { fireAction, useInput } from "@/stores/input";
 import { GestureRecognizer, type GestureEvent, type Hand, type Pt } from "./gestures";
 
 const MP_VERSION = "1.2.3";
@@ -49,17 +49,24 @@ function route(e: GestureEvent) {
     case "collapse":
       fireAction("collapse", "camera", "Fist tap (collapse)");
       break;
-    case "grabStart":
-      setGrab("camera", true);
-      break;
-    case "grabEnd":
-      setGrab("camera", false);
-      break;
   }
   for (const l of listeners) l(e);
 }
 
-export function startCamera(): Promise<void> {
+/**
+ * The ONLY camera entry point in the app (P0-5). Called from the Calibration tab's "Start hand control" button;
+ * nothing else may start the camera. The tracker keeps running across client-side navigation (module singleton,
+ * no video element in the DOM) and a full reload turns it off for good until started again.
+ */
+export function startHandControl(): Promise<void> {
+  return startCamera();
+}
+
+export function stopHandControl() {
+  stopCamera();
+}
+
+function startCamera(): Promise<void> {
   const st = useInput.getState().camera;
   if (st === "starting" || st === "on") return Promise.resolve();
   if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
@@ -149,7 +156,6 @@ export function stopCamera() {
   video = null;
   rec = null;
   latest = { hands: [], world: [] };
-  setGrab("camera", false);
   useInput.setState({ camera: "off", handSeen: false, cameraPose: "none" });
 }
 

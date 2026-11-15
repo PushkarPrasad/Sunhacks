@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Bluetooth, Check, RotateCcw, Usb } from "lucide-react";
 import { calibrate, initialCal, PITCH_NEED, ROLL_NEED, TWIST_NEED, type CalState } from "@/lib/input/calibration";
-import { connectGloveAndCamera, reconnect, useGlove } from "@/lib/input/glove";
+import { connectGlove, reconnect, useGlove } from "@/lib/input/glove";
 import { useInput } from "@/stores/input";
 
 const GlovePreview = dynamic(() => import("./GlovePreview"), { ssr: false, loading: () => <div className="h-full w-full" /> });
@@ -51,10 +51,10 @@ export function CalibratePage() {
               </button>
             ) : (
               <>
-                <button type="button" onClick={() => void connectGloveAndCamera("bluetooth")} className="flex h-9 items-center gap-2 rounded-full bg-copper px-4 text-white shadow-[var(--shadow-glow)] hover:bg-copper-hover">
+                <button type="button" onClick={() => void connectGlove("bluetooth")} className="flex h-9 items-center gap-2 rounded-full bg-copper px-4 text-white shadow-[var(--shadow-glow)] hover:bg-copper-hover">
                   <Bluetooth size={14} strokeWidth={1.75} /> Connect Bluetooth
                 </button>
-                <button type="button" onClick={() => void connectGloveAndCamera("usb")} className="flex h-9 items-center gap-2 rounded-full border border-line-strong px-4 hover:border-copper">
+                <button type="button" onClick={() => void connectGlove("usb")} className="flex h-9 items-center gap-2 rounded-full border border-line-strong px-4 hover:border-copper">
                   <Usb size={14} strokeWidth={1.5} /> USB
                 </button>
               </>

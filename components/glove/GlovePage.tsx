@@ -5,15 +5,14 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Bluetooth, Camera, Lightbulb, RefreshCw, RotateCcw, Unplug, Usb } from "lucide-react";
 import { BRAND } from "@/lib/brand";
-import { bluetoothSupported, connectGloveAndCamera, disconnectGlove, reconnect, sendGlove, serialSupported, useGlove } from "@/lib/input/glove";
-import { startCamera } from "@/lib/input/camera";
+import { bluetoothSupported, connectGlove, type GloveStatus, disconnectGlove, reconnect, sendGlove, serialSupported, useGlove } from "@/lib/input/glove";
 import { recenter, useInput } from "@/stores/input";
 
 const DroneModel = dynamic(() => import("@/components/device3d/DroneModel"), { ssr: false, loading: () => <div className="h-full w-full" /> });
 const GlovePreview = dynamic(() => import("./GlovePreview"), { ssr: false, loading: () => <div className="h-full w-full" /> });
 
 const noop = () => () => {};
-const STATUS_TEXT = { idle: "Not connected", searching: "Searching", connected: "Glove connected", disconnected: "Disconnected", error: "Not connected" } as const;
+const STATUS_TEXT: Record<GloveStatus, string> = { idle: "Not connected", searching: "Searching", connected: "Glove connected", reconnecting: "Reconnecting…", stalled: "Stalled: reconnecting", disconnected: "Disconnected", error: "Not connected" };
 
 const MAP: [string, string][] = [
   ["Fist or switch + turn wrist", "Rotate the model"],
@@ -28,6 +27,7 @@ export function GlovePage() {
   const grabbing = useInput((s) => s.grabbing);
   const camera = useInput((s) => s.camera);
   const events = useInput((s) => s.events);
+  const linkLog = useGlove((s) => s.log);
   const connected = g.status === "connected";
   const supported = useSyncExternalStore(noop, () => bluetoothSupported() || serialSupported(), () => true);
 
@@ -58,13 +58,13 @@ export function GlovePage() {
               <>
                 <button
                   type="button"
-                  onClick={() => void connectGloveAndCamera("bluetooth")}
+                  onClick={() => void connectGlove("bluetooth")}
                   disabled={g.status === "searching"}
                   className="flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-copper text-[13px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-60"
                 >
                   <Bluetooth size={15} strokeWidth={1.75} /> Connect Bluetooth
                 </button>
-                <button type="button" onClick={() => void connectGloveAndCamera("usb")} className="flex h-10 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] transition hover:-translate-y-px hover:border-copper">
+                <button type="button" onClick={() => void connectGlove("usb")} className="flex h-10 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] transition hover:-translate-y-px hover:border-copper">
                   <Usb size={15} strokeWidth={1.5} /> USB
                 </button>
               </>
@@ -103,16 +103,16 @@ export function GlovePage() {
             ))}
             <div className="mt-1 flex items-center justify-between text-muted">
               <span>Grab</span>
-              <span className={grabbing ? "text-copper" : "text-ink"}>{grabbing ? "Held" : g.hasSwitch ? "Released" : "Fist (switch optional)"}</span>
+              <span className={grabbing ? "text-copper" : "text-ink"}>{grabbing ? "Grabbed" : g.hasSwitch ? "Released" : "Knock to grab"}</span>
             </div>
             <div className="flex items-center justify-between text-muted">
               <span>Camera</span>
               {camera === "on" ? (
                 <span className="text-ok">On</span>
               ) : (
-                <button type="button" onClick={() => void startCamera()} className="flex items-center gap-1 text-ink underline decoration-line-strong underline-offset-2 hover:text-copper">
-                  <Camera size={12} strokeWidth={1.5} /> {camera === "starting" ? "Starting" : camera === "denied" ? "Blocked" : "Start"}
-                </button>
+                <Link href="/calibrate" className="flex items-center gap-1 text-ink underline decoration-line-strong underline-offset-2 hover:text-copper">
+                  <Camera size={12} strokeWidth={1.5} /> Start on Calibrate
+                </Link>
               )}
             </div>
           </dl>
@@ -121,7 +121,8 @@ export function GlovePage() {
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col rounded-[18px] border border-line bg-card/70 p-4">
+        <div className="grid min-h-0 flex-1 grid-cols-2 gap-3">
+        <div className="flex min-h-0 flex-col rounded-[18px] border border-line bg-card/70 p-4">
           <p className="text-[12px] text-muted">Last events</p>
           <ol className="mt-2 min-h-0 flex-1 space-y-1 overflow-hidden font-mono text-[12px]" data-testid="glove-events">
             {events.length === 0 && <li className="text-muted">Nothing yet. Flick, knock or shake the glove.</li>}
@@ -134,6 +135,19 @@ export function GlovePage() {
               </li>
             ))}
           </ol>
+        </div>
+        <div className="flex min-h-0 flex-col rounded-[18px] border border-line bg-card/70 p-4">
+          <p className="text-[12px] text-muted">Link log</p>
+          <ol className="mt-2 min-h-0 flex-1 space-y-1 overflow-hidden font-mono text-[11px]" data-testid="link-log">
+            {linkLog.length === 0 && <li className="text-muted">Connects, drops, reconnects and stalls appear here.</li>}
+            {linkLog.slice(0, 9).map((e, i) => (
+              <li key={`${e.at}-${i}`} className="flex justify-between gap-2 border-b border-line/50 pb-1">
+                <span className={e.kind === "stall" || e.kind === "disconnect" || e.kind === "give-up" ? "text-warn" : e.kind === "error" ? "text-bad" : "text-ink"}>{e.text}</span>
+                <span className="shrink-0 text-muted">{new Date(e.at).toLocaleTimeString([], { hour12: false })}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
         </div>
       </section>
 

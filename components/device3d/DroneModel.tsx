@@ -12,7 +12,7 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Group } from "@/lib/three/Group";
 import { batteryLabel, carbonTexture, coilTexture, pcbTexture } from "@/lib/three/textures";
 import { onInput } from "@/lib/input/bus";
-import { useModelPose } from "@/stores/modelPose";
+import { slerpToPose, usePoseView } from "@/stores/modelPose";
 
 export type Shell = "solid" | "transparent" | "xray";
 
@@ -503,6 +503,7 @@ function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor,
   const vel = useRef(0);
   const spin = useRef(0);
   const root = useRef<THREE.Group>(null);
+  usePoseView();
   const controls = useRef<OrbitControlsImpl>(null);
   const { camera, size } = useThree();
   const v = useMemo(() => new THREE.Vector3(), []);
@@ -564,12 +565,7 @@ function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor,
       });
     }
 
-    const pose = useModelPose.getState();
-    if (root.current) {
-      root.current.rotation.x += (pose.rx - root.current.rotation.x) * 0.2;
-      root.current.rotation.z += (pose.rz - root.current.rotation.z) * 0.2;
-      root.current.rotation.y += (pose.ry - root.current.rotation.y) * 0.2;
-    }
+    if (root.current) slerpToPose(root.current);
 
     if (onAnchor) {
       const id = hovered ?? selected;

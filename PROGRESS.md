@@ -48,3 +48,16 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 | 3D printer (P2) | 4 | 4 | 4 | 4 | 4 | Compared with i3-style bed-slingers: 2020/2040 frame with T-slots, labelled NEMA 17s, T8 lead screws, direct-drive hot end with heatsink fins, heater block and brass nozzle, PEI bed on springs and knobs, LCD + knob, PSU, 1 kg spool and PTFE tube, a print in progress |
 | Synthesizer (P2) | 4 | 4 | 4 | 4 | 4 | Compared with compact desktop synths: walnut cheeks, anodized panel with legends, 12 knobs with pointer lines, encoder, OLED, faders, jacks, 25 mini keys; pass 1 had the panel cut-out at the back and the PCB above the keys |
 - [x] Verification (05:55): lint clean, typecheck clean, 87 unit tests, production build, 67 Playwright tests (every page at 1440x900 and 1280x800 incl. every model category and Calibrate, glove/camera bench, hoop throw, calibration wizard). Fixed on the way: arrow keys could skip the Home slides (input-bus priority), e2e specs updated for V3 names, starter-build budgets
+
+## V4 (Reliability, Precision, Emerald)
+Next up: P0-3 continuous palm-openness explode, then P0-4 snap-to-target pointer.
+- [x] P0-1 Glove reliability: firmware v4 (Appendix A, verbatim); singleton Bluetooth layer (survives client navigation), auto-reconnect 0.5/1/2/4 s then 5 s for 2 min with re-subscribe, 4 s stall watchdog, queued writes, nav status pill, link log on the Glove tab. Test: e2e/glove-link.spec.ts (fake Web Bluetooth).
+- [x] P0-2 Grab and rotate: glove-only clutch (held switch, or knock toggle with no switch on 3D views), quaternion delta math (qDelta = qGlove·qGlove0⁻¹, target = qDelta·qModel0), 2° dead zone, slerp 0.25/frame, AXIS_MAP + per-axis flips, shake resets, Grabbed chip + emerald ring. Tests: tests/grab.test.ts (11), e2e grab 90° per axis within 5°.
+- [ ] P0-3 Continuous palm-openness explode
+- [ ] P0-4 Snap-to-target pointer
+- [~] P0-5 Camera only from Calibration (entry point + Settings toggle removed; PiP removal with P0-4)
+- [ ] P0-6 Calibration wizard + test page
+- [~] P1-1 Emerald redesign (subagent in a separate worktree)
+- [ ] P1-2 Motion pass
+- [ ] P2 Polish, audit, STATUS
+Skills/connectors used: Taste Skill rules (read as text in V2), Playwright; no MCP connectors needed.

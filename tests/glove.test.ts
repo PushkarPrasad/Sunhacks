@@ -43,43 +43,30 @@ test("a second event of the same action within 300 ms is dropped, from either so
   expect(shouldFire("prevPage", "glove", 2100)).toBe(true);
 });
 
-test("globe-grab: switch held turns the model from the grab-start baseline, release keeps it", async () => {
+test("glove messages drive the quaternion grab end to end (switch held, release keeps the pose)", async () => {
   const { handleGloveMessage } = await import("@/lib/input/glove");
   const { resetInputForTests, useInput } = await import("@/stores/input");
+  const { resetGrabForTests, quatAngleDeg } = await import("@/lib/input/grab");
   const { useModelPose } = await import("@/stores/modelPose");
+  const { Quaternion } = await import("three");
   resetInputForTests();
-  useModelPose.getState().reset();
+  resetGrabForTests();
   handleGloveMessage(parseGloveLine("O:0,0,170"));
   handleGloveMessage(parseGloveLine("BTN:DOWN"));
+  expect(useModelPose.getState().grabbed).toBe(true);
   expect(useInput.getState().grabbing).toBe(true);
-  // smoothed: many samples converge on the target
-  for (let i = 0; i < 40; i++) handleGloveMessage(parseGloveLine("O:0,10,-160"));
-  expect(useModelPose.getState().ry).toBeCloseTo((30 * Math.PI) / 180, 3);
-  expect(useModelPose.getState().rx).toBeCloseTo((10 * Math.PI) / 180, 3);
+  handleGloveMessage(parseGloveLine("O:0,0,-160")); // +30° yaw across the wrap
+  const angle = () => quatAngleDeg(new Quaternion(...useModelPose.getState().q));
+  expect(Math.abs(angle() - 30)).toBeLessThan(1);
   handleGloveMessage(parseGloveLine("BTN:UP"));
   handleGloveMessage(parseGloveLine("O:0,40,90"));
-  expect(useModelPose.getState().ry).toBeCloseTo((30 * Math.PI) / 180, 3);
-  expect(useInput.getState().events[0].label).toBe("Switch up");
+  expect(Math.abs(angle() - 30)).toBeLessThan(1);
 });
 
-test("a camera fist counts as a grab, so fist + twist works with no switch", async () => {
-  const { handleGloveMessage } = await import("@/lib/input/glove");
-  const { resetInputForTests, setGrab, useInput } = await import("@/stores/input");
-  const { useModelPose } = await import("@/stores/modelPose");
-  resetInputForTests();
-  useModelPose.getState().reset();
-  handleGloveMessage(parseGloveLine("O:5,0,0"));
-  setGrab("camera", true);
-  for (let i = 0; i < 40; i++) handleGloveMessage(parseGloveLine("O:5,0,60"));
-  expect(useModelPose.getState().ry).toBeCloseTo((60 * Math.PI) / 180, 3);
-  setGrab("camera", false);
-  expect(useInput.getState().grabbing).toBe(false);
-});
-
-test("shake recenters the model", async () => {
+test("shake animates back to the default view", async () => {
   const { handleGloveMessage } = await import("@/lib/input/glove");
   const { useModelPose } = await import("@/stores/modelPose");
-  useModelPose.getState().set({ ry: 1 });
+  useModelPose.getState().setQ([0, 0.5, 0, 0.866]);
   handleGloveMessage(parseGloveLine("G:SHAKE"));
-  expect(useModelPose.getState().ry).toBe(0);
+  expect(useModelPose.getState().q).toEqual([0, 0, 0, 1]);
 });

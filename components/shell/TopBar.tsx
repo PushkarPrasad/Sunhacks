@@ -7,6 +7,7 @@ import { useT } from "@/lib/hooks/useT";
 import { Logo } from "@/components/ui/Logo";
 import { BRAND } from "@/lib/brand";
 import { SettingsPopover } from "./SettingsPopover";
+import { StatusPills } from "./StatusPills";
 
 export function TopBar() {
   const pathname = usePathname();
@@ -33,7 +34,8 @@ export function TopBar() {
           </Link>
         ))}
       </nav>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
+        <StatusPills />
         <SettingsPopover />
       </div>
     </header>

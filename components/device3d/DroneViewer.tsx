@@ -1,5 +1,6 @@
 "use client";
 
+import { GrabChip } from "@/components/device3d/GrabChip";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "motion/react";
@@ -55,6 +56,7 @@ export function DroneViewer() {
     <div ref={host} className="relative h-full w-full" aria-label="Drone model. Scroll or press E to explode, click a part to inspect it.">
       <div className="absolute inset-[10%] rounded-full bg-[radial-gradient(circle,rgb(124_92_255/0.22),rgb(61_123_255/0.08)_45%,transparent_70%)] blur-2xl" aria-hidden="true" />
       <DroneModel explode={explode} shell={shell} hovered={hovered} selected={selected} onHover={setHovered} onSelect={setSelected} onAnchor={setAnchor} enableZoom={false} camera={[4.6, 3.3, 5.6]} />
+      <GrabChip />
 
       {anchor && labelPart && (
         <>

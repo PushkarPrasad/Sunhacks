@@ -1,7 +1,7 @@
 // Glove message protocol (one text line per message, same over Bluetooth notify and USB serial at 115200).
 // Matches hardware/glove/glove.ino (Arduino 101):
 //   READY:CURIE            boot + heartbeat every 3 s
-//   O:roll,pitch,yaw       integer degrees at 25 Hz (yaw drifts; always use deltas from a baseline)
+//   O:roll,pitch,yaw       integer degrees, ~15 Hz and only when changed (+1 s keepalive); yaw drifts
 //   G:SWIPE_L | G:SWIPE_R  flick gestures
 //   G:SELECT               knock
 //   G:SHAKE                recenter
@@ -13,7 +13,7 @@ export const GLOVE_EVENT_CHAR = "19b10001-e8f2-537e-4f6c-d104768a1214";
 export const GLOVE_COMMAND_CHAR = "19b10002-e8f2-537e-4f6c-d104768a1214";
 export const GLOVE_NAME = "Copperline Glove";
 /** A heartbeat arrives every 3 s; after this long without any message the link is treated as stale. */
-export const GLOVE_STALE_MS = 7000;
+export const GLOVE_STALE_MS = 4000;
 
 export type GloveGesture = "SELECT" | "SWIPE_L" | "SWIPE_R" | "SHAKE";
 

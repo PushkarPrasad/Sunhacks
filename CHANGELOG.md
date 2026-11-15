@@ -1,5 +1,9 @@
 # Changelog
 
+## V4
+- Glove firmware v4; singleton Bluetooth link with auto-reconnect, stall watchdog, status pill and link log.
+- Quaternion grab-and-rotate with a switch or knock clutch; Grabbed chip; camera no longer grabs or starts on connect.
+
 ## V3
 - Glove protocol matches `hardware/glove/glove.ino` (READY heartbeat, O:roll,pitch,yaw, SWIPE/SELECT/SHAKE, optional BTN); old formats ignored; writes queued with writeValueWithoutResponse.
 - Shared input store (`stores/input.ts`): camera fist or glove switch = grab; smoothed globe rotation from the grab-start baseline; shake recenters; any duplicate action within 300 ms dropped.

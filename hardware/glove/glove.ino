@@ -1,22 +1,26 @@
-// Magic Smoke glove, Arduino 101. Motion + optional grab switch. No extra libraries.
+// Magic Smoke glove v4, Arduino 101. Motion + optional grab switch. No extra libraries.
 #include <CurieIMU.h>
 #include <CurieBLE.h>
 #include <math.h>
 
-const float SWIPE_G = 0.8;          // lower = easier swipes
-const float KNOCK_G = 1.2;          // lower = easier knocks
 const bool HAS_BUTTON = true;       // false if no switch is wired
 const bool BTN_ACTIVE_HIGH = true;  // true = Grove button, false = bare switch to GND
 const int BTN_PIN = 4;
+const bool DEBUG_SERIAL = false;    // true only while the Serial Monitor is open
+const float SWIPE_G = 0.8;          // lower = easier swipes
+const float KNOCK_G = 1.2;          // lower = easier knocks
+const unsigned long O_EVERY_MS = 66;  // ~15 Hz orientation
 const int LED = 13;
 
 BLEService svc("19B10000-E8F2-537E-4F6C-D104768A1214");
 BLECharacteristic evt("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify, 20);
 BLEUnsignedCharCharacteristic cmd("19B10002-E8F2-537E-4F6C-D104768A1214", BLEWrite | BLEWriteWithoutResponse);
 
+volatile bool linked = false, readvertise = false;
 float roll = 0, pitch = 0, yaw = 0;
 float grav[3] = {0, 0, 1}, lin[3] = {0, 0, 0};
-unsigned long lastUs = 0, lastO = 0, lastReady = 0, cooldown = 0, lastKnock = 0;
+unsigned long lastUs = 0, lastO = 0, lastOSent = 0, lastReady = 0, cooldown = 0, lastKnock = 0;
+int lastR = 999, lastP = 999, lastY = 999;
 int spikeSign = 0, pendingDir = 0, reversals = 0;
 unsigned long firstSpike = 0, lastSpike = 0;
 int blinks = 0;
@@ -24,9 +28,12 @@ unsigned long blinkAt = 0;
 bool btnRaw = false, btnState = false;
 unsigned long btnChangeAt = 0;
 
+void onConnect(BLEDevice c) { linked = true; }
+void onDisconnect(BLEDevice c) { linked = false; readvertise = true; }
+
 void send(const char *m) {
-  Serial.println(m);
-  evt.writeValue((const unsigned char *)m, strlen(m));
+  if (DEBUG_SERIAL) Serial.println(m);
+  if (linked && evt.subscribed()) evt.writeValue((const unsigned char *)m, strlen(m));
 }
 
 void blink(int n) { blinks = n * 2; blinkAt = millis(); }
@@ -45,10 +52,11 @@ void setup() {
   svc.addCharacteristic(evt);
   svc.addCharacteristic(cmd);
   BLE.addService(svc);
+  BLE.setEventHandler(BLEConnected, onConnect);
+  BLE.setEventHandler(BLEDisconnected, onDisconnect);
   BLE.advertise();
   lastUs = micros();
   blink(3);
-  send("READY:CURIE");
 }
 
 void detectSwipes(unsigned long now) {
@@ -82,14 +90,19 @@ void checkButton(unsigned long now) {
 
 void loop() {
   BLE.poll();
+  if (readvertise) { readvertise = false; BLE.advertise(); }
   if (cmd.written() && cmd.value() == 'B') blink(3);
   while (Serial.available()) if (Serial.read() == 'B') blink(3);
 
   unsigned long now = millis();
-  if (blinks > 0 && now - blinkAt > 80) { blinkAt = now; blinks--; digitalWrite(LED, blinks % 2); }
+  if (blinks > 0) {
+    if (now - blinkAt > 80) { blinkAt = now; blinks--; digitalWrite(LED, blinks % 2); }
+  } else {
+    digitalWrite(LED, (now % 1000) < 60);   // heartbeat: loop is alive
+  }
   checkButton(now);
 
-  if (micros() - lastUs < 10000) return;   // 100 Hz
+  if (micros() - lastUs < 10000) return;   // 100 Hz sensor loop
   float dt = (micros() - lastUs) / 1e6;
   lastUs = micros();
 
@@ -113,11 +126,15 @@ void loop() {
     lastKnock = now; send("G:SELECT"); blink(1);
   }
 
-  if (now - lastO >= 40) {   // 25 Hz orientation
+  if (now - lastO >= O_EVERY_MS) {
     lastO = now;
-    char b[21];
-    snprintf(b, sizeof(b), "O:%d,%d,%d", (int)roll, (int)pitch, (int)yaw);
-    send(b);
+    int r = (int)roll, p = (int)pitch, y = (int)yaw;
+    if (r != lastR || p != lastP || y != lastY || now - lastOSent > 1000) {
+      lastR = r; lastP = p; lastY = y; lastOSent = now;
+      char b[21];
+      snprintf(b, sizeof(b), "O:%d,%d,%d", r, p, y);
+      send(b);
+    }
   }
   if (now - lastReady >= 3000) { lastReady = now; send("READY:CURIE"); }
 }
