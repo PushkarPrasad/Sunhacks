@@ -12,7 +12,7 @@ import { ScanDevice } from "./ScanDevice";
 export function DevicesGrid() {
   const router = useRouter();
   const newBuild = useBuild((s) => s.newBuild);
-  const onKeyDown = useRoving(4);
+  const onKeyDown = useRoving(5);
 
   const open = (id: string, kind: string) => {
     if (kind === "custom") {
@@ -32,7 +32,7 @@ export function DevicesGrid() {
         </div>
         <ScanDevice />
       </div>
-      <div className="mt-8 grid min-h-0 flex-1 grid-cols-4 grid-rows-3 gap-4" data-arrows onKeyDown={onKeyDown} role="list">
+      <div className="mt-8 grid min-h-0 flex-1 grid-cols-5 grid-rows-3 gap-4" data-arrows onKeyDown={onKeyDown} role="list">
         {categories.map((c, i) => {
           const muted = c.kind === "more";
           const count = c.kind === "device" ? templatesForCategory(c.id).length : 0;
@@ -46,7 +46,7 @@ export function DevicesGrid() {
               onClick={() => open(c.id, c.kind)}
               className={`group relative flex min-h-0 flex-col justify-between rounded-[12px] border p-5 text-left transition-[border-color,background-color] duration-300 ${
                 muted ? "border-dashed border-line-strong bg-transparent text-muted hover:border-muted" : "border-line bg-card hover:border-ink"
-              } ${c.kind === "custom" ? "bg-copper text-white hover:border-copper" : ""}`}
+              } ${c.kind === "custom" ? "row-span-2 border-copper/60 bg-[linear-gradient(160deg,rgb(124_92_255/0.3),rgb(61_123_255/0.1))] hover:border-copper" : ""} ${c.kind === "more" ? "col-span-2" : ""}`}
             >
               <div className="flex items-start justify-between">
                 <span
@@ -60,7 +60,7 @@ export function DevicesGrid() {
               </div>
               <div>
                 <p className={`font-serif text-[26px] leading-tight ${muted ? "" : ""}`}>{c.name}</p>
-                <p className={`mt-1 line-clamp-2 text-[13px] leading-snug ${c.kind === "custom" ? "text-paper/70" : "text-muted"}`}>{c.description}</p>
+                <p className={`mt-1 line-clamp-2 text-[13px] leading-snug ${c.kind === "custom" ? "text-ink/75" : "text-muted"}`}>{c.description}</p>
                 {count > 0 && <p className="mt-2 font-mono text-[11px] text-muted">{count} starter builds</p>}
               </div>
             </button>

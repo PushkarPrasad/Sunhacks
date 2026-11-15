@@ -1,16 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ExplodedDevice from "@/components/device3d/ExplodedDevice";
-import { categoriesById } from "@/data/categories";
+import DroneModel from "@/components/device3d/DroneModel";
 
-/** Home hero: a device that slowly explodes and reassembles. */
+/** Home hero: the drone slowly explodes and reassembles while turning. */
 export default function HeroModel() {
-  const [exploded, setExploded] = useState(false);
-  const [active, setActive] = useState<string | null>(null);
+  const [explode, setExplode] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setExploded((e) => !e), 3600);
+    const id = setInterval(() => setExplode((e) => (e > 0.5 ? 0 : 0.85)), 3800);
     return () => clearInterval(id);
   }, []);
-  return <ExplodedDevice blocks={categoriesById.phones.blocks} active={active} onActive={setActive} exploded={exploded} />;
+  return <DroneModel explode={explode} autoRotate enableZoom={false} camera={[3.8, 2.4, 4.4]} />;
 }

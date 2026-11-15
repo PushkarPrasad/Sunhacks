@@ -202,9 +202,24 @@ export const categories: DeviceCategory[] = [
     ],
   },
   {
+    id: "drones",
+    name: "Drones",
+    description: "Four motors, a flight controller and a battery that flies.",
+    icon: "Drone",
+    kind: "device",
+    // The category page shows the detailed procedural model (components/device3d/DroneModel.tsx);
+    // these blocks back the simple view used elsewhere.
+    blocks: [
+      b("frame", "Frame", "Carbon plate that holds the motors in plane.", "Laser-cut plate", "rounded", [2.4, 0.06, 2.4], [0, 0, 0], [0, -0.6, 0], "shell"),
+      b("esc", "Motor drivers", "Turn battery power into motor drive.", "TB6612FNG", "box", [0.5, 0.05, 0.5], [0, 0.15, 0], [0, 0.3, 0], "board"),
+      b("fc", "Flight controller", "Gyro and control loop.", "ESP32-S3 + MPU6050", "box", [0.5, 0.05, 0.5], [0, 0.25, 0], [0, 0.7, 0], "chip"),
+      b("battery", "Battery", "Lithium pack.", "LiPo 500 mAh", "rounded", [0.5, 0.3, 1.0], [0, 0.5, 0], [0, 1.2, 0], "battery"),
+    ],
+  },
+  {
     id: "more",
     name: "More (Coming Soon)",
-    description: "Drones, e-readers, keyboards and more are on the way.",
+    description: "E-readers, keyboards and weather stations are on the way.",
     icon: "Ellipsis",
     kind: "more",
     blocks: [],

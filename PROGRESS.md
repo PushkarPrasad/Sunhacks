@@ -13,7 +13,7 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 
 ## V2 (owner's reduced list)
 - [x] 1. Rename to Magic Smoke (lib/brand.ts), dark violet/blue palette + DESIGN.md, Home as 5 story slides, decluttered pages, webcam popup removed, Next.js indicator hidden
-- [ ] 2. Realistic drone model (Home hero + Drones category)
+- [x] 2. Realistic drone model (Home hero + Drones category)
 - [ ] 3. Hoop Upload gag in the Builder
 - [ ] 4. About page + docs/RUNDOWN.md
 - [ ] 5. Glove tab connection

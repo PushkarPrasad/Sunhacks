@@ -8,7 +8,7 @@ export function ComingSoon() {
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">More (Coming Soon)</p>
         <h1 className="mt-4 font-serif text-[56px] leading-none">More devices are on the way.</h1>
         <p className="mt-5 text-[15px] leading-relaxed text-muted">
-          Drones, e-readers, mechanical keyboards and weather stations are next. Until then, the Custom tile opens an empty board
+          E-readers, mechanical keyboards and weather stations are next. Until then, the Custom tile opens an empty board
           with every module in the catalogue.
         </p>
         <div className="mt-8 flex justify-center gap-3">

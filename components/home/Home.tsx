@@ -121,7 +121,7 @@ function HeroSlide({ onNext }: { onNext: () => void }) {
         </Rise>
         <Rise d={2}>
           <p className="mt-6 text-[22px] leading-snug text-ink">{BRAND.tagline}</p>
-          <p className="mt-2 max-w-[380px] text-[15px] text-muted">69 real modules, checked as you wire, a PCB in one click.</p>
+          <p className="mt-2 max-w-[460px] text-[15px] text-muted">69 real modules, checked as you wire, a PCB in one click.</p>
         </Rise>
         <Rise d={3} className="mt-9 flex items-center gap-5">
           <button type="button" onClick={() => router.push("/devices")} className="flex h-12 items-center gap-2 rounded-full bg-copper px-6 text-[14px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5 hover:bg-copper-hover active:translate-y-0">

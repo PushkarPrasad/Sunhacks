@@ -43,9 +43,10 @@ describe("seed data", () => {
 
   test("categories are in the exact order with Custom first and More last", () => {
     expect(categories.map((c) => c.name)).toEqual([
-      "Custom", "Phones", "Laptops", "Tablets", "Projectors", "Smartwatches", "Smart Home", "Robots", "Game Consoles", "Audio", "Cameras", "More (Coming Soon)",
+      "Custom", "Phones", "Laptops", "Tablets", "Projectors", "Smartwatches", "Smart Home", "Robots", "Game Consoles", "Audio", "Cameras", "Drones", "More (Coming Soon)",
     ]);
     for (const c of categories.slice(1, 11)) expect(c.blocks.length, c.id).toBeGreaterThanOrEqual(6);
+    expect(categories.find((c) => c.id === "drones")!.blocks.length).toBeGreaterThan(0);
   });
 
   test("every device category has 2+ visible templates; required templates exist", () => {
@@ -77,7 +78,7 @@ describe("seed data", () => {
   });
 
   test("flagship templates pass power and pins checks", () => {
-    for (const id of ["pocket-lora-messenger", "plant-monitor", "smartwatch", "gesture-ring", "handheld-console", "smart-speaker", "wifi-camera", "laptop-handheld", "pi-touch-tablet", "mini-projector-controller"]) {
+    for (const id of ["pocket-lora-messenger", "plant-monitor", "smartwatch", "gesture-ring", "handheld-console", "smart-speaker", "wifi-camera", "laptop-handheld", "pi-touch-tablet", "mini-projector-controller", "micro-drone", "drone-telemetry"]) {
       const t = templates.find((x) => x.id === id)!;
       const r = runChecks(buildFromTemplate(t, (pid) => partsById[pid]), parts);
       const failing = r.findings.filter((f) => f.severity === "fail");

@@ -14,6 +14,7 @@ import { fmtUSD } from "@/lib/checks/util";
 import { onInput } from "@/lib/input/bus";
 import { useBuild } from "@/stores/build";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
+import { DroneViewer } from "./DroneViewer";
 import { StatusDot } from "@/components/ui/StatusDot";
 
 /** Categories drawn as full anatomy figures (numbered callouts); the rest use the plain exploded view. */
@@ -69,6 +70,11 @@ export function CategoryView({ id }: { id: string }) {
 
   return (
     <div className="grid h-full grid-cols-[1.15fr_1fr]">
+      {id === "drones" ? (
+        <section className="relative min-h-0 border-r border-line" aria-label="Drone model">
+          <DroneViewer />
+        </section>
+      ) : (
       <section
         className="relative min-h-0 border-r border-line outline-none"
         aria-label={`${category.name} exploded view. Use arrow keys to step through the blocks, E to explode or collapse.`}
@@ -126,13 +132,14 @@ export function CategoryView({ id }: { id: string }) {
           </ul>
         </div>
       </section>
+      )}
 
       <section className="flex min-h-0 flex-col px-10 pb-8 pt-8">
         <div className="flex items-center gap-3">
           <span className="grid h-10 w-10 place-items-center rounded-full border border-line">
             <CategoryIcon name={category.icon} size={20} />
           </span>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Device · {blocks.length} blocks</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-peri">Device{id === "drones" ? " · 12 parts" : ` · ${blocks.length} blocks`}</p>
         </div>
         <h1 className="mt-4 font-serif text-[52px] leading-none">{category.name}</h1>
         <p className="mt-3 max-w-[460px] text-[15px] leading-relaxed text-muted">{category.description}</p>
