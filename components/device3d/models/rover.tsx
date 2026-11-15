@@ -21,7 +21,7 @@ const BOGIE: [number, number] = [0.85, 1.02];
 const WHEELS_X = [-1.65, 0, 1.65];
 
 /** 2020 extrusion cross-section (20 mm square, four T-slots, centre bore), extruded along +Z. */
-function extrusionGeometry(length: number): THREE.BufferGeometry {
+export function extrusionGeometry(length: number): THREE.BufferGeometry {
   const a = 0.1;
   const s = 0.031;
   const d = 0.055;
