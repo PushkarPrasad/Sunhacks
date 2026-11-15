@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
-import { ContactShadows, Edges, OrbitControls, Text } from "@react-three/drei";
+import { Edges, OrbitControls, Text } from "@react-three/drei";
+import { Studio, STUDIO_DPR, STUDIO_GL } from "@/components/three/Studio";
 import * as THREE from "three";
 import { Group } from "@/lib/three/Group";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -126,9 +127,7 @@ function Scene({ cj, build, selected, onSelect }: { cj: El[]; build: Build; sele
   const HEADER = 8.5 * S;
   return (
     <>
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[4, 10, 6]} intensity={1.5} />
-      <directionalLight position={[-6, 5, -5]} intensity={0.4} />
+      <Studio floor={-0.4} shadowScale={Math.max(bw, bh) * 2.2} aoRadius={0.3} />
       <Group>
         <mesh>
           <boxGeometry args={[bw, BOARD_T, bh]} />
@@ -186,7 +185,6 @@ function Scene({ cj, build, selected, onSelect }: { cj: El[]; build: Build; sele
           </Group>
         ))}
       </Group>
-      <ContactShadows position={[0, -0.4, 0]} opacity={0.3} scale={Math.max(bw, bh) * 2.2} blur={2.4} far={3} color="#16181C" />
       <OrbitControls ref={controls} enablePan={false} enableDamping dampingFactor={0.08} minDistance={3} maxDistance={30} maxPolarAngle={Math.PI / 2.1} />
     </>
   );
@@ -196,7 +194,7 @@ export default function Board3D({ circuitJson, build, selected, onSelect }: { ci
   const board = circuitJson.find((e) => e.type === "pcb_board") as { width: number; height: number } | undefined;
   const span = Math.max(board?.width ?? 60, board?.height ?? 60) * S;
   return (
-    <Canvas camera={{ position: [span * 1.15, span * 1.3, span * 1.6], fov: 35 }} dpr={[1, 2]} gl={{ antialias: true, preserveDrawingBuffer: true }}>
+    <Canvas camera={{ position: [span * 1.15, span * 1.3, span * 1.6], fov: 35 }} dpr={STUDIO_DPR} shadows gl={STUDIO_GL}>
       <Scene cj={circuitJson} build={build} selected={selected} onSelect={onSelect} />
     </Canvas>
   );

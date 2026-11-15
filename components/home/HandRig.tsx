@@ -8,7 +8,8 @@
 
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { ContactShadows, Environment, Lightformer, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
+import { Studio, STUDIO_DPR, STUDIO_GL } from "@/components/three/Studio";
 import * as THREE from "three";
 import { Group } from "@/lib/three/Group";
 import { MiniDrone } from "@/components/device3d/DroneModel";
@@ -229,18 +230,11 @@ useGLTF.preload("/models/hand/right.glb");
 export default function HandRig({ gesture, startedAt }: { gesture: HandGesture; startedAt: number }) {
   useEffect(() => () => useGLTF.clear("/models/hand/right.glb"), []);
   return (
-    <Canvas shadows camera={{ position: [0, 0.2, 3.2], fov: 30 }} dpr={[1, 2]} gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>
-      <Environment resolution={256}>
-        <Lightformer form="rect" intensity={3} color="#ffffff" position={[0, 5, -2]} scale={[8, 3, 1]} />
-        <Lightformer form="rect" intensity={1.6} color="#9479ff" position={[-5, 2, 2]} rotation-y={Math.PI / 2} scale={[6, 2, 1]} />
-        <Lightformer form="rect" intensity={1.4} color="#3d7bff" position={[5, 1, 1]} rotation-y={-Math.PI / 2} scale={[6, 2, 1]} />
-        <Lightformer form="ring" intensity={1.4} color="#ffffff" position={[0, 2, 5]} scale={3} />
-      </Environment>
-      <directionalLight position={[2.5, 4, 3]} intensity={1.6} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0004} />
+    <Canvas shadows camera={{ position: [0, 0.2, 3.2], fov: 30 }} dpr={STUDIO_DPR} gl={STUDIO_GL}>
+      <Studio floor={-0.95} shadowScale={5} aoRadius={0.25} />
       <Suspense fallback={null}>
         <Hand gesture={gesture} startedAt={startedAt} />
       </Suspense>
-      <ContactShadows position={[0, -0.95, 0]} opacity={0.5} scale={5} blur={2.8} far={2.5} color="#000000" />
     </Canvas>
   );
 }

@@ -143,6 +143,8 @@ package's LICENSE file where the field is missing).
 | `lucide-react` | 1.73.0 | ISC | runtime | Line icons |
 | `mongodb` | 7.9.0 | Apache-2.0 | runtime | Saved builds and share links (mock until configured) |
 | `motion` | 14.14.0 | MIT | runtime | Page, slide and card motion |
+| `@react-three/postprocessing` | 3.2.2 | MIT | runtime | Ambient occlusion (N8AO), bloom and SMAA in the 3D views |
+| `postprocessing` | 6.39.6 | Zlib | runtime | Effect passes behind @react-three/postprocessing |
 | `next` | 16.4.6 | MIT | runtime | Web framework |
 | `pg` | 8.23.1 | MIT | runtime | Tiger Data price history (mock until configured) |
 | `qrcode` | 1.5.4 | MIT | runtime | Share-link QR codes |
@@ -172,3 +174,4 @@ Device models, textures and illustrations are procedural or drawn in code; the o
 | Asset | File | License | Source | Used for |
 | --- | --- | --- | --- | --- |
 | WebXR generic hand (right) | `public/models/hand/right.glb` | MIT (© 2019 Amazon) | https://github.com/immersive-web/webxr-input-profiles (`@webxr-input-profiles/assets@1.0.20`, `dist/profiles/generic-hand/right.glb`) | 3D hand on the Home "Drive it with your hands" slide, posed by our own forward kinematics |
+| Studio Small 09 HDRI (1k) | `public/hdri/studio_small_09_1k.hdr` | CC0 | https://polyhaven.com/a/studio_small_09 | Reflections and image-based lighting in every 3D view (loaded locally) |

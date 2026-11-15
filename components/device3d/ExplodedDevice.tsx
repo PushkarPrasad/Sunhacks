@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Edges, OrbitControls, RoundedBox } from "@react-three/drei";
+import { Edges, OrbitControls, RoundedBox } from "@react-three/drei";
+import { Studio, STUDIO_DPR, STUDIO_GL } from "@/components/three/Studio";
 import * as THREE from "three";
 import { Group } from "@/lib/three/Group";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -146,9 +147,7 @@ function Scene({ blocks, active, onActive, exploded, anatomy, onProject }: Props
   const minY = Math.min(...blocks.map((b) => b.position[1] - b.size[1] / 2 + Math.min(0, b.explode[1])));
   return (
     <>
-      <ambientLight intensity={0.75} />
-      <directionalLight position={[5, 9, 6]} intensity={1.6} />
-      <directionalLight position={[-6, 4, -4]} intensity={0.45} />
+      <Studio floor={minY - 0.85} shadowScale={12} aoRadius={0.6} />
       <Group position={[0, -0.6, 0]}>
         {blocks.map((b) => (
           <Block
@@ -159,7 +158,6 @@ function Scene({ blocks, active, onActive, exploded, anatomy, onProject }: Props
             onActive={onActive}
           />
         ))}
-        <ContactShadows position={[0, minY - 0.25, 0]} opacity={0.28} scale={12} blur={2.6} far={6} color="#16181C" />
       </Group>
       {anatomy && onProject && <Projector blocks={blocks} t={t} onProject={onProject} />}
       <OrbitControls ref={controls} enablePan={false} enableDamping dampingFactor={0.08} minDistance={4} maxDistance={16} minPolarAngle={0.2} maxPolarAngle={Math.PI / 2.05} />
@@ -249,7 +247,7 @@ export default function ExplodedDevice(props: Props) {
   const [ready, setReady] = useState(false);
   return (
     <div className={`relative h-full w-full transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}>
-      <Canvas camera={{ position: [6.2, 5.2, 7.4], fov: 32 }} dpr={[1, 2]} onCreated={() => setReady(true)} gl={{ antialias: true, preserveDrawingBuffer: true }}>
+      <Canvas camera={{ position: [6.2, 5.2, 7.4], fov: 32 }} dpr={STUDIO_DPR} shadows onCreated={() => setReady(true)} gl={STUDIO_GL}>
         <Scene {...props} onProject={props.anatomy ? setAnchors : undefined} />
       </Canvas>
       {props.anatomy && <AnatomyOverlay blocks={props.blocks} anchors={anchors} active={props.active} onActive={props.onActive} show={props.exploded} />}

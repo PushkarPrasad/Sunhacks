@@ -5,7 +5,8 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import { ContactShadows, Environment, Lightformer, OrbitControls, RoundedBox } from "@react-three/drei";
+import { OrbitControls, RoundedBox } from "@react-three/drei";
+import { Studio, STUDIO_DPR, STUDIO_GL } from "@/components/three/Studio";
 import * as THREE from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Group } from "@/lib/three/Group";
@@ -608,18 +609,10 @@ function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor,
 
   return (
     <>
-      <Environment resolution={256}>
-        <Lightformer form="rect" intensity={3} color="#ffffff" position={[0, 5, -2]} scale={[8, 3, 1]} />
-        <Lightformer form="rect" intensity={2.2} color="#9479ff" position={[-5, 2, 2]} rotation-y={Math.PI / 2} scale={[6, 2, 1]} />
-        <Lightformer form="rect" intensity={1.8} color="#3d7bff" position={[5, 1, 1]} rotation-y={-Math.PI / 2} scale={[6, 2, 1]} />
-        <Lightformer form="ring" intensity={1.2} color="#ffffff" position={[0, 2, 5]} scale={3} />
-      </Environment>
-      <ambientLight intensity={0.15} />
-      <directionalLight position={[3, 6, 4]} intensity={1.1} />
+      <Studio floor={-0.85} shadowScale={6} aoRadius={0.35} />
       <Group ref={root} position={[0, -0.25, 0]}>
         <Parts m={m} spin={spin} groups={groups} handlers={handlers} />
       </Group>
-      <ContactShadows position={[0, -0.85, 0]} opacity={0.55} scale={6} blur={2.6} far={3} color="#000000" />
       <OrbitControls ref={controls} enablePan={false} enableDamping dampingFactor={0.08} minDistance={2.6} maxDistance={10} maxPolarAngle={Math.PI / 1.9} enableZoom={enableZoom} autoRotate={autoRotate} autoRotateSpeed={0.6} />
     </>
   );
@@ -654,8 +647,9 @@ export default function DroneModel({ explode, shell = "solid", hovered = null, s
     <div className={`h-full w-full transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}>
       <Canvas
         camera={{ position: camera, fov: 30 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, preserveDrawingBuffer: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
+        dpr={STUDIO_DPR}
+        shadows
+        gl={STUDIO_GL}
         onCreated={() => setReady(true)}
         onPointerMissed={() => onSelect(null)}
       >
