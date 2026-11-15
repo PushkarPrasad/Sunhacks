@@ -151,7 +151,8 @@ for (const size of SIZES) {
     test("templates", async ({ page }) => {
       const errors = collectErrors(page);
       await page.goto("/templates");
-      await expect(page.getByText("Gesture Ring")).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Start from a working build" })).toBeVisible();
+      await expect(page.getByText("Motion Glove")).toBeVisible();
       await expectNoOverflow(page);
       await page.waitForTimeout(700);
       await page.screenshot({ path: shot("10-templates") });
