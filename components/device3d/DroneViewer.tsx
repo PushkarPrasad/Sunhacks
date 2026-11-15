@@ -89,11 +89,7 @@ export function DroneViewer() {
           ))}
         </div>
       </div>
-<<<<<<< HEAD
-      <label className="glass absolute bottom-6 left-1/2 flex min-w-[300px] -translate-x-1/2 items-center gap-3 rounded-full border border-line px-4 py-2 text-[12px] text-muted">
-=======
-      <label className="glass absolute bottom-6 left-1/2 flex w-[300px] -translate-x-1/2 items-center gap-3 rounded-[12px] border border-line px-4 py-2 text-[12px] text-muted">
->>>>>>> worktree-agent-aae6dd9a910a35503
+      <label className="glass absolute bottom-6 left-1/2 flex min-w-[300px] -translate-x-1/2 items-center gap-3 rounded-[12px] border border-line px-4 py-2 text-[12px] text-muted">
         <span>Assembled</span>
         <input type="range" min={0} max={100} value={Math.round(explode * 100)} onChange={(e) => setExplode(Number(e.target.value) / 100)} className="flex-1 accent-[var(--color-copper)]" aria-label="Explode" />
         <span>Exploded</span>
