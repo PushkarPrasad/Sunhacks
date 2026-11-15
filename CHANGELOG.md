@@ -1,6 +1,7 @@
 # Changelog
 
 ## V4
+- Snap-to-target hand pointer with click intent; the camera starts only from Calibration and never shows a pop-up.
 - Continuous palm-openness explode (fist 0, half-open 0.5, open 1), filtered and gated, with a meter by the slider.
 - Glove firmware v4; singleton Bluetooth link with auto-reconnect, stall watchdog, status pill and link log.
 - Quaternion grab-and-rotate with a switch or knock clutch; Grabbed chip; camera no longer grabs or starts on connect.

@@ -82,7 +82,7 @@ function startCamera(): Promise<void> {
     return Promise.resolve();
   }
   const id = ++runId;
-  useInput.setState({ camera: "starting", cameraNotice: null, pipOpen: true });
+  useInput.setState({ camera: "starting", cameraNotice: null });
   // Called before any await so the permission prompt belongs to the click that started it.
   const media = navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" } });
   return (async () => {

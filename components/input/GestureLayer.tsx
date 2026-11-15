@@ -1,101 +1,141 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+// Hand pointer UI (P0-4): snap-to-target cursor and pinch-to-click. No camera preview anywhere (P0-5); the tracker
+// itself is the singleton in lib/input/camera.ts, started only from the Calibration tab.
+
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
 import { X } from "lucide-react";
 import { emitInput } from "@/lib/input/bus";
-import { cameraVideo, latestHands, onGesture, stopCamera } from "@/lib/input/camera";
+import { onGesture, onHandFrame } from "@/lib/input/camera";
+import { loadHandCal, onHandCal } from "@/lib/input/handCal";
+import { fromLandmarks, SnapPointer, type Target } from "@/lib/input/snap";
 import { fireAction, logInputEvent, useInput } from "@/stores/input";
-import { useUi } from "@/stores/ui";
 
-// Ring cursor, pinch-to-click and the picture-in-picture camera preview. The tracking engine itself lives in
-// lib/input/camera.ts and is started by the Settings toggle or by connecting the glove.
-const CLICKABLE = "button, a[href], [role=tab], [role=radio], [role=switch], [data-pin], summary, label";
-const BONES = [
-  [0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [5, 9], [9, 10], [10, 11], [11, 12],
-  [9, 13], [13, 14], [14, 15], [15, 16], [13, 17], [17, 18], [18, 19], [19, 20], [0, 17],
-];
-const PIP_W = 200;
-const PIP_H = 150;
+const TARGETS = "[data-snap], a[href], button:not([disabled]), [role=button], [role=tab], [role=radio], [role=switch], input[type=range], summary";
+
+interface CursorState {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  locked: boolean;
+  pinching: boolean;
+  visible: boolean;
+}
+
+/** Visible interactive elements with ids for the snap pointer (ids are stable per element). */
+const ids = new WeakMap<Element, string>();
+let nextId = 0;
+function scanTargets(): { targets: Target[]; byId: Map<string, HTMLElement> } {
+  const byId = new Map<string, HTMLElement>();
+  const targets: Target[] = [];
+  for (const el of document.querySelectorAll<HTMLElement>(TARGETS)) {
+    if (el.closest("[data-snap-ignore]")) continue;
+    const r = el.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4 || r.bottom < 0 || r.right < 0 || r.top > innerHeight || r.left > innerWidth) continue;
+    const style = getComputedStyle(el);
+    if (style.visibility === "hidden" || style.pointerEvents === "none" || Number(style.opacity) === 0) continue;
+    let id = ids.get(el);
+    if (!id) ids.set(el, (id = `t${++nextId}`));
+    byId.set(id, el);
+    targets.push({ id, rect: { x: r.left, y: r.top, w: r.width, h: r.height } });
+  }
+  return { targets, byId };
+}
 
 export function GestureLayer() {
-  const ring = useRef<HTMLDivElement>(null);
-  const fill = useRef<HTMLDivElement>(null);
   const camera = useInput((s) => s.camera);
   const notice = useInput((s) => s.cameraNotice);
-  const pipOpen = useInput((s) => s.pipOpen);
-  const pose = useInput((s) => s.cameraPose);
-  const grabbing = useInput((s) => s.grabbing);
   const active = camera === "on" || camera === "starting";
+  const pathname = usePathname();
+  const [cursor, setCursor] = useState<CursorState>({ x: 0, y: 0, w: 28, h: 28, locked: false, pinching: false, visible: false });
+  const scan = useRef<ReturnType<typeof scanTargets>>({ targets: [], byId: new Map() });
+  const pointer = useRef<SnapPointer | null>(null);
+
+  // Rebuild target rects on route change, scroll, resize, and every 500 ms for dynamic UI.
+  useEffect(() => {
+    if (!active) return;
+    const rescan = () => (scan.current = scanTargets());
+    rescan();
+    const t = setTimeout(rescan, 450); // after the page transition settles
+    const iv = setInterval(rescan, 500);
+    addEventListener("scroll", rescan, true);
+    addEventListener("resize", rescan);
+    return () => {
+      clearTimeout(t);
+      clearInterval(iv);
+      removeEventListener("scroll", rescan, true);
+      removeEventListener("resize", rescan);
+    };
+  }, [active, pathname]);
 
   useEffect(() => {
     if (!active) return;
-    return onGesture((e) => {
-      const r = ring.current;
-      switch (e.type) {
-        case "cursor":
-          if (r) {
-            r.style.opacity = "1";
-            r.style.transform = `translate(${e.x - 16}px, ${e.y - 16}px)`;
-          }
-          if (fill.current) fill.current.style.transform = `scale(${e.progress})`;
-          if (!e.pinching) {
-            const el = document.elementFromPoint(e.x, e.y);
-            el?.dispatchEvent(new PointerEvent("pointermove", { clientX: e.x, clientY: e.y, bubbles: true, pointerType: "mouse" }));
-          }
-          break;
-        case "lost":
-          if (r) r.style.opacity = "0";
-          break;
-        case "pinchStart": {
-          const el = document.elementFromPoint(e.x, e.y) as HTMLElement | null;
-          const target = el?.closest<HTMLElement>(CLICKABLE);
-          if (target && !target.closest("[data-gesture-ui]")) {
-            target.focus({ preventScroll: true });
-            target.click();
-            logInputEvent("Pinch (click)", "camera");
-          } else fireAction("select", "camera", "Pinch (select)");
-          break;
-        }
-        case "zoom":
-          emitInput(e.factor < 1 ? "zoomIn" : "zoomOut", "gesture", e.factor);
-          break;
-        case "rotate":
-          emitInput("rotate", "gesture", e.delta);
-          break;
+    pointer.current = new SnapPointer(loadHandCal().reach);
+    const offCal = onHandCal((c) => pointer.current && (pointer.current.reach = c.reach));
+    const offFrame = onHandFrame((hands) => {
+      const p = pointer.current;
+      if (!p) return;
+      const lm = hands[0];
+      if (!lm) {
+        p.reset();
+        setCursor((c) => (c.visible ? { ...c, visible: false } : c));
+        return;
+      }
+      const { source, pinch } = fromLandmarks(lm);
+      const out = p.update(source, pinch, performance.now(), scan.current.targets, innerWidth, innerHeight);
+      const el = out.locked ? scan.current.byId.get(out.locked) : undefined;
+      const r = el?.getBoundingClientRect();
+      const pad = 6;
+      setCursor(
+        r
+          ? { x: r.left - pad, y: r.top - pad, w: r.width + pad * 2, h: r.height + pad * 2, locked: true, pinching: out.pinching, visible: true }
+          : { x: out.raw.x - 14, y: out.raw.y - 14, w: 28, h: 28, locked: false, pinching: out.pinching, visible: true },
+      );
+      // Hover for 3D scenes and CSS: move a synthetic pointer to the effective point.
+      if (!out.pinching) {
+        const hx = r ? r.left + r.width / 2 : out.raw.x;
+        const hy = r ? r.top + r.height / 2 : out.raw.y;
+        document.elementFromPoint(hx, hy)?.dispatchEvent(new PointerEvent("pointermove", { clientX: hx, clientY: hy, bubbles: true, pointerType: "mouse" }));
+      }
+      if (out.click) {
+        const target = out.click !== "none" ? scan.current.byId.get(out.click) : undefined;
+        if (target && document.contains(target)) {
+          target.focus({ preventScroll: true });
+          target.click();
+          logInputEvent("Pinch (click)", "camera");
+        } else fireAction("select", "camera", "Pinch (select)");
       }
     });
+    const offGesture = onGesture((e) => {
+      if (e.type === "zoom") emitInput(e.factor < 1 ? "zoomIn" : "zoomOut", "gesture", e.factor);
+      else if (e.type === "rotate") emitInput("rotate", "gesture", e.delta);
+    });
+    return () => {
+      offCal();
+      offFrame();
+      offGesture();
+      pointer.current = null;
+    };
   }, [active]);
-
-  const close = () => {
-    stopCamera();
-    useUi.getState().set({ gestures: false });
-  };
 
   return (
     <>
       {active && (
-        <div ref={ring} aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-[60] h-8 w-8 rounded-full border-2 border-copper opacity-0 transition-opacity" style={{ willChange: "transform" }}>
-          <div ref={fill} className="absolute inset-1 origin-center rounded-full bg-copper/70" style={{ transform: "scale(0)" }} />
-        </div>
-      )}
-      {active && pipOpen && (
-        <div data-gesture-ui className="glass fixed bottom-16 right-4 z-[55] overflow-hidden rounded-[14px] border border-line shadow-[var(--shadow-float)]" style={{ width: PIP_W }}>
-          <Pip />
-          <div className="flex items-center justify-between px-2.5 py-1.5 font-mono text-[10px] text-muted">
-            <span>{camera === "starting" ? "Starting camera" : grabbing ? "Grabbing" : pose === "none" ? "No hand" : pose}</span>
-            <span className="flex gap-1">
-              <button type="button" onClick={() => useInput.setState({ pipOpen: false })} className="rounded px-1 hover:text-ink" aria-label="Hide camera preview">
-                Hide
-              </button>
-              <button type="button" onClick={close} className="grid h-4 w-4 place-items-center rounded hover:text-bad" aria-label="Turn the camera off">
-                <X size={12} strokeWidth={1.75} />
-              </button>
-            </span>
-          </div>
-        </div>
+        <motion.div
+          aria-hidden="true"
+          data-testid="hand-cursor"
+          data-locked={cursor.locked ? "true" : "false"}
+          className={`pointer-events-none fixed left-0 top-0 z-[60] border-2 ${cursor.pinching ? "border-ok bg-ok/15" : "border-copper"} ${cursor.locked ? "rounded-[12px]" : "rounded-full"}`}
+          initial={false}
+          animate={{ x: cursor.x, y: cursor.y, width: cursor.w, height: cursor.h, opacity: cursor.visible ? 1 : 0 }}
+          transition={{ type: "spring", stiffness: 520, damping: 38, mass: 0.6 }}
+        />
       )}
       {notice && (
-        <p role="status" className="glass fixed bottom-16 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-line px-4 py-1.5 text-[12px] text-warn">
+        <p role="status" className="glass fixed bottom-16 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-[10px] border border-line px-4 py-1.5 text-[12px] text-warn">
           {notice}
           <button type="button" onClick={() => useInput.setState({ cameraNotice: null })} aria-label="Dismiss" className="text-muted hover:text-ink">
             <X size={12} strokeWidth={1.75} />
@@ -104,49 +144,4 @@ export function GestureLayer() {
       )}
     </>
   );
-}
-
-/** Mirrored camera frame with the hand skeleton drawn on top. */
-function Pip() {
-  const canvas = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    let raf = 0;
-    const draw = () => {
-      const c = canvas.current;
-      const ctx = c?.getContext("2d");
-      const v = cameraVideo();
-      if (c && ctx) {
-        ctx.save();
-        ctx.clearRect(0, 0, c.width, c.height);
-        ctx.translate(c.width, 0);
-        ctx.scale(-1, 1);
-        if (v && v.readyState >= 2) ctx.drawImage(v, 0, 0, c.width, c.height);
-        else {
-          ctx.fillStyle = "#12121C";
-          ctx.fillRect(0, 0, c.width, c.height);
-        }
-        for (const lm of latestHands().hands) {
-          ctx.strokeStyle = "rgba(165,180,252,0.9)";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          for (const [a, b] of BONES) {
-            ctx.moveTo(lm[a].x * c.width, lm[a].y * c.height);
-            ctx.lineTo(lm[b].x * c.width, lm[b].y * c.height);
-          }
-          ctx.stroke();
-          ctx.fillStyle = "#7C5CFF";
-          for (const p of lm) {
-            ctx.beginPath();
-            ctx.arc(p.x * c.width, p.y * c.height, 2.5, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-        ctx.restore();
-      }
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => cancelAnimationFrame(raf);
-  }, []);
-  return <canvas ref={canvas} width={PIP_W * 2} height={PIP_H * 2} style={{ width: PIP_W, height: PIP_H }} className="block bg-raised" aria-label="Camera preview with hand landmarks" />;
 }
