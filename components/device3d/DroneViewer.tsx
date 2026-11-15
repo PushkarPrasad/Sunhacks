@@ -17,7 +17,7 @@ const SHELLS: { id: Shell; label: string }[] = [
   { id: "xray", label: "X-ray" },
 ];
 
-/** Interactive drone: shell modes, continuous explode (slider, wheel, E, hand spread), hover labels, inspector. */
+/** Interactive drone: shell modes, continuous explode (slider, wheel, E, palm openness), hover labels, inspector. */
 export function DroneViewer() {
   const [explode, setExplode] = useState(0.55);
   useHandExplode(setExplode);

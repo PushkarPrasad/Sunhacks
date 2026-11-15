@@ -274,11 +274,11 @@ function StepArt({ kind }: { kind: "explode" | "wire" | "check" | "board" }) {
 }
 
 const POSES: { name: string; does: string; g: HandGesture }[] = [
-  { name: "Pinch", does: "select", g: "pinch" },
-  { name: "Spread", does: "explode", g: "spread" },
-  { name: "Fist", does: "collapse", g: "fist" },
+  { name: "Pinch", does: "click what the ring snaps to", g: "pinch" },
+  { name: "Open hand", does: "explode, as far as it is open", g: "spread" },
+  { name: "Fist", does: "assemble", g: "fist" },
   { name: "Swipe", does: "next page", g: "swipe" },
-  { name: "Grab + twist", does: "rotate (glove)", g: "twist" },
+  { name: "Glove grab + twist", does: "turn the model", g: "twist" },
 ];
 
 function HandsSlide() {

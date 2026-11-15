@@ -27,28 +27,45 @@ can connect to the team's motion glove over Bluetooth or USB.
 
 Who it's for: student engineering teams, makers, educators, and anyone curious about what's inside their devices.
 
-## How the hand control works
+## How the hand control works (V4)
 
-- Webcam: Google's MediaPipe Hand Landmarker (`@mediapipe/tasks-vision`, Apache 2.0) runs in the browser and finds 21
-  points on each hand on every video frame. The camera feed never leaves the computer. The WebAssembly runtime and
-  model file are downloaded from jsDelivr and Google Storage when hand tracking is turned on.
-- Our gesture layer (`lib/input/gestures.ts`) turns those points into actions with rule-based pose classification
-  (pinch, open palm, spread, fist), exponential smoothing with a dead zone, hold times and cooldowns: pinch selects,
-  an open-palm swipe changes page, holding a spread hand explodes a model, a fist collapses it, and a two-hand pinch
-  zooms and rotates. **A trained gesture classifier is planned but not built yet** (see Machine learning).
-- The glove: an Arduino 101 (Intel Curie: accelerometer, gyroscope and Bluetooth) with an optional switch on the index
-  finger. Its sketch is `hardware/glove/glove.ino`: a complementary filter gives roll, pitch and yaw at 25 Hz, flicks
-  become swipes, a knock selects, a shake recenters, and everything is sent as one text line per message over Bluetooth
-  notify or USB serial. The website side (`lib/input/glove.ts`, the Glove and Calibrate pages) connects over Web
-  Bluetooth (found by service UUID) or USB, shows live roll/pitch/yaw, the last eight events and a Blink LED button,
-  and walks you through a three-step calibration (keep still, tilt each side, grab and twist).
-- Grab and twist: a camera fist or the glove switch counts as a grab; while grabbed, the glove's wrist turns rotate the
-  model like a globe from where the grab started. Connecting the glove also starts the camera in the same click.
-- Combining them: one shared input store (`stores/input.ts`) owns the rules. The webcam handles pointing and hand
-  poses, the glove handles rotation, flicks and knocks. A second event of the same action within 300 ms, from either
-  source, is dropped. The keyboard always works. A standalone test bench at `/test/glove-camera.html` checks every
-  glove and camera gesture with a score.
-- No app or driver to install: Web Bluetooth, Web Serial and the webcam all work in Chrome.
+- **Camera, only when you ask.** MediaPipe Hand Landmarker (`@mediapipe/tasks-vision`, Apache 2.0) runs in the
+  browser; frames never leave the computer. The camera starts only from **Start hand control** on the Calibration
+  tab (`lib/input/camera.ts` is the one place that calls `getUserMedia`, checked by a unit test). It then keeps running
+  across pages with no video on screen, just a "Hand control on" pill with an off switch. A reload turns it off.
+- **Snap-to-target pointer** (`lib/input/snap.ts`). The pointer follows the base knuckle of the index finger, not the
+  fingertip, because the fingertip moves when you pinch. It is One Euro filtered and mapped from the reach box you set in
+  calibration. Any button, link, tab or slider within 48 px captures the pointer, and it stays locked until you move
+  72 px away. The emerald ring morphs to wrap the locked control. A pinch (thumb to index under a third of palm size for
+  two frames) clicks the control that was locked 150 ms before the pinch began, so the pinch itself cannot drag the
+  click off target.
+- **Continuous palm openness** (`lib/input/openness.ts`). Curl per finger comes from the joint angles of MediaPipe's
+  world landmarks (independent of distance). Openness = 1 − mean curl, mapped through your calibrated fist and open
+  values, One Euro filtered, and snapped to 0 or 1 at the ends with hysteresis. It only drives the explode when hand
+  confidence is above 0.7, the palm faces the camera, and the hand has held still for 300 ms; otherwise the last value
+  holds. Half-open is half exploded.
+- **The glove** (Arduino 101, optional switch on the index finger). Firmware v4 is `hardware/glove/glove.ino`. It
+  notifies only when a central is connected and subscribed, sends orientation at about 15 Hz only when it changes (plus
+  a keepalive), keeps USB printing off by default, re-advertises after a disconnect, and flashes its LED once a second
+  as a heartbeat.
+- **One glove link for the whole site** (`lib/input/glove.ts`). The Bluetooth device, characteristics and timers live
+  in a module singleton, so moving between pages never drops the link. On a drop it reconnects to the same device with
+  no chooser, backing off 0.5, 1, 2 and 4 s, then every 5 s for 2 minutes, and re-subscribes each time. A 4 s watchdog
+  treats silence as a stall and reconnects, but ignores gaps caused by the page itself being busy. Writes go through
+  one queue. A status pill in the nav and a link log on the Glove tab show every connect, drop, reconnect and stall.
+- **Grab and rotate** (`lib/input/grab.ts`). The glove alone grabs. With a switch, hold it to grab; without one, a knock
+  toggles grab while a 3D model is on screen. Orientation becomes a quaternion in screen axes
+  (`AXIS_MAP`, per-axis flips on the Calibration tab). The model target is qDelta · qModel0, where
+  qDelta = qGlove · qGlove0⁻¹ since the grab began, with a 2° dead zone. Models slerp toward it at 0.25 per frame, a
+  "Grabbed" chip and emerald ring show while held, release keeps the pose, and a shake returns to the default view.
+- **Combining sources**: a second event of the same action within 300 ms from the other source is dropped. The
+  keyboard always works.
+
+**What was tested how.** Everything above was tested with simulated input only: scripted glove lines through a fake
+Web Bluetooth device (connect, navigation, drop and reconnect, stall, grab 90° per axis within 5°), and synthetic
+MediaPipe landmark streams with noise (openness fist, half and open within ±0.1 and no flicker; ≥95% click accuracy on
+a grid of small buttons with ±30 px noise in unit tests, 5/5 in the browser test). **None of it has been run against
+the physical glove or a real webcam by us**; the hardware checklist is in STATUS.md.
 
 ## Open source we built on
 
