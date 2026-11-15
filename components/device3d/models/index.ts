@@ -4,10 +4,12 @@ import { CUBE } from "./cube";
 import { ROVER } from "./rover";
 import { ARM } from "./arm";
 import { PHONE } from "./phone";
+import { LAPTOP } from "./laptop";
 
 export const MODELS: Record<string, ProductDef> = {
   "balancing-robots": CUBE,
   rovers: ROVER,
   "robot-arms": ARM,
   "phones-laptops:phone": PHONE,
+  "phones-laptops:laptop": LAPTOP,
 };

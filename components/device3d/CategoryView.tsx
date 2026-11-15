@@ -86,6 +86,7 @@ export function CategoryView({ id }: { id: string }) {
       ) : model ? (
         <section className="relative min-h-0 border-r border-line" aria-label={`${model.name} model`}>
           <ProductViewer key={model.id} def={model} />
+          {id === "phones-laptops" && <VariantToggle variant={variant} onChange={setVariant} />}
         </section>
       ) : (
       <section
@@ -214,6 +215,18 @@ export function CategoryView({ id }: { id: string }) {
           Or start this one from scratch
         </Link>
       </section>
+    </div>
+  );
+}
+
+function VariantToggle({ variant, onChange }: { variant: "phone" | "laptop"; onChange: (v: "phone" | "laptop") => void }) {
+  return (
+    <div className="glass absolute right-6 top-6 flex rounded-full border border-line p-0.5 text-[12px]" role="radiogroup" aria-label="Device">
+      {(["phone", "laptop"] as const).map((v) => (
+        <button key={v} type="button" role="radio" aria-checked={variant === v} onClick={() => onChange(v)} className={`rounded-full px-3.5 py-1.5 capitalize transition ${variant === v ? "bg-copper text-white" : "text-muted hover:text-ink"}`}>
+          {v}
+        </button>
+      ))}
     </div>
   );
 }

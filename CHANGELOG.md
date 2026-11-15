@@ -12,6 +12,7 @@
 - Realism pass on every 3D view: local studio HDRI, soft shadows, contact shadows, ambient occlusion, bloom only on LEDs and screens, SMAA; shared procedural materials library.
 - Balancing Robots: hyper-real reaction-wheel cube standing on an edge, with shell modes and exploded plates.
 - Rovers and Robot Arms: hyper-real rocker-bogie rover and six-axis servo arm.
+- Phones & Laptops: rebuilt hyper-real phone and laptop with exploded internals.
 - Glove tab rebuilt: live roll/pitch/yaw bars, 3D board preview, last 8 events, Blink LED, Reconnect.
 
 ## V2
