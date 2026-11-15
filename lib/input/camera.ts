@@ -155,5 +155,9 @@ export function stopCamera() {
 
 if (typeof window !== "undefined") {
   // Test hook: Playwright drives the fusion with fake landmarks (no camera in headless Chrome).
-  (window as unknown as { __magicSmokeInput?: unknown }).__magicSmokeInput = { feedHands };
+  (window as unknown as { __magicSmokeInput?: unknown }).__magicSmokeInput = {
+    feedHands,
+    /** Pretend the camera is running (headless Chrome has none), so pages that mirror landmarks react. */
+    fakeCameraOn: () => useInput.setState({ camera: "on", pipOpen: false }),
+  };
 }

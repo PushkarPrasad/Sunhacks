@@ -9,6 +9,7 @@ import { BRAND } from "@/lib/brand";
 import { onInput } from "@/lib/input/bus";
 import { useBuild } from "@/stores/build";
 import type { HandGesture } from "./HandRig";
+import { useInput } from "@/stores/input";
 
 const HeroModel = dynamic(() => import("./HeroModel"), { ssr: false, loading: () => <div className="h-full w-full" /> });
 const HandRig = dynamic(() => import("./HandRig"), { ssr: false, loading: () => <div className="h-full w-full" /> });
@@ -282,6 +283,7 @@ const POSES: { name: string; does: string; g: HandGesture }[] = [
 
 function HandsSlide() {
   const [k, setK] = useState(0);
+  const live = useInput((s) => s.camera === "on" && s.handSeen);
   const [tick, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setK((x) => (x + 1) % POSES.length), 3000);
@@ -321,7 +323,7 @@ function HandsSlide() {
           <HandRig gesture={POSES[k].g} startedAt={tick} />
         </div>
         <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-full border border-line bg-card/70 px-3 py-1 text-[12px] backdrop-blur">
-          <Hand size={14} strokeWidth={1.5} className="text-ok" /> {POSES[k].name}
+          <Hand size={14} strokeWidth={1.5} className="text-ok" /> {live ? "Your hand, live" : POSES[k].name}
         </div>
       </Rise>
     </div>
