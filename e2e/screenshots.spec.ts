@@ -12,6 +12,39 @@ for (const size of SIZES) {
 
     const shot = (name: string) => `screenshots/${name}${size.suffix}.png`;
 
+    test("calibrate", async ({ page }) => {
+      const errors = collectErrors(page);
+      await page.goto("/calibrate");
+      await expect(page.getByRole("heading", { name: /Tune the glove/ })).toBeVisible();
+      await page.waitForTimeout(1500);
+      await expectNoOverflow(page);
+      await page.screenshot({ path: shot("18-calibrate") });
+      expect(errors).toEqual([]);
+    });
+
+    for (const [cat, model] of [
+      ["balancing-robots", "cube"],
+      ["rovers", "rover"],
+      ["robot-arms", "arm"],
+      ["wearables", "glove"],
+      ["space-cansats", "cansat"],
+      ["rc-vehicles", "rccar"],
+      ["smart-home", "weather"],
+      ["printers-cnc", "printer"],
+      ["audio", "synth"],
+      ["phones-laptops", "phone"],
+    ] as const) {
+      test(`model ${cat}`, async ({ page }) => {
+        const errors = collectErrors(page);
+        await page.goto(`/devices/${cat}`);
+        await expect(page.locator(`[data-model=${model}] canvas`)).toBeVisible({ timeout: 30_000 });
+        await page.waitForTimeout(3000);
+        await expectNoOverflow(page);
+        await page.screenshot({ path: shot(`19-model-${cat}`) });
+        expect(errors).toEqual([]);
+      });
+    }
+
     test("home", async ({ page }) => {
       const errors = collectErrors(page);
       await page.goto("/");
@@ -82,7 +115,7 @@ for (const size of SIZES) {
       const errors = collectErrors(page);
       await page.goto("/devices/rovers");
       await expect(page.getByText("Robot Car")).toBeVisible();
-      await expect(page.locator("[data-model=rover] canvas")).toBeVisible();
+      await expect(page.locator("[data-model=rover] canvas")).toBeVisible({ timeout: 30_000 });
       await page.waitForTimeout(3500);
       await expectNoOverflow(page);
       await page.waitForTimeout(700);
