@@ -42,7 +42,7 @@ export function GlovePage() {
         <div className={`rounded-[18px] border bg-card/70 p-4 ${g.status === "disconnected" ? "border-bad/60" : "border-line"}`}>
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-[15px]" role="status" aria-live="polite" data-testid="glove-status">
-              <span className={`h-2.5 w-2.5 rounded-full ${connected ? "bg-ok shadow-[0_0_12px_rgb(61_220_151/0.8)]" : g.status === "searching" ? "animate-pulse bg-warn" : g.status === "disconnected" ? "bg-bad" : "bg-line-strong"}`} />
+              <span className={`h-2.5 w-2.5 rounded-full ${connected ? "bg-ok shadow-[0_0_12px_rgb(94_226_168/0.7)]" : g.status === "searching" ? "animate-pulse bg-warn" : g.status === "disconnected" ? "bg-bad" : "bg-line-strong"}`} />
               {STATUS_TEXT[g.status]}
             </span>
             <span className="font-mono text-[11px] text-muted">
@@ -51,7 +51,7 @@ export function GlovePage() {
           </div>
           <div className="mt-3 flex gap-2">
             {g.status === "disconnected" ? (
-              <button type="button" onClick={() => void reconnect()} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-copper text-[13px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-px hover:bg-copper-hover">
+              <button type="button" onClick={() => void reconnect()} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-[10px] bg-copper text-[13px] text-white shadow-[var(--shadow-btn)] transition hover:-translate-y-px hover:bg-copper-hover">
                 <RefreshCw size={15} strokeWidth={1.75} /> Reconnect
               </button>
             ) : !connected ? (
@@ -60,20 +60,20 @@ export function GlovePage() {
                   type="button"
                   onClick={() => void connectGlove("bluetooth")}
                   disabled={g.status === "searching"}
-                  className="flex h-10 flex-1 items-center justify-center gap-2 rounded-full bg-copper text-[13px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-60"
+                  className="flex h-10 flex-1 items-center justify-center gap-2 rounded-[10px] bg-copper text-[13px] text-white shadow-[var(--shadow-btn)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-60"
                 >
                   <Bluetooth size={15} strokeWidth={1.75} /> Connect Bluetooth
                 </button>
-                <button type="button" onClick={() => void connectGlove("usb")} className="flex h-10 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] transition hover:-translate-y-px hover:border-copper">
+                <button type="button" onClick={() => void connectGlove("usb")} className="flex h-10 items-center gap-2 rounded-[10px] border border-line-strong px-4 text-[13px] transition hover:-translate-y-px hover:border-copper">
                   <Usb size={15} strokeWidth={1.5} /> USB
                 </button>
               </>
             ) : (
               <>
-                <button type="button" onClick={() => void sendGlove("B")} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-full border border-line-strong text-[13px] transition hover:-translate-y-px hover:border-copper">
+                <button type="button" onClick={() => void sendGlove("B")} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-[10px] border border-line-strong text-[13px] transition hover:-translate-y-px hover:border-copper">
                   <Lightbulb size={15} strokeWidth={1.5} /> Blink LED
                 </button>
-                <button type="button" onClick={() => void disconnectGlove()} className="flex h-10 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] transition hover:border-bad hover:text-bad">
+                <button type="button" onClick={() => void disconnectGlove()} className="flex h-10 items-center gap-2 rounded-[10px] border border-line-strong px-4 text-[13px] transition hover:border-bad hover:text-bad">
                   <Unplug size={15} strokeWidth={1.5} /> Disconnect
                 </button>
               </>
@@ -152,7 +152,7 @@ export function GlovePage() {
       </section>
 
       <section className="relative min-h-0 overflow-hidden rounded-[22px] border border-line bg-card/40" aria-label="Globe-grab model">
-        <div className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle,rgb(61_123_255/0.2),rgb(124_92_255/0.1)_45%,transparent_70%)] blur-2xl" aria-hidden="true" />
+        <div className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle,rgb(15_157_107/0.18),rgb(10_107_73/0.08)_45%,transparent_70%)] blur-2xl" aria-hidden="true" />
         <DroneModel explode={0} enableZoom={false} camera={[3.6, 2.6, 4.4]} />
         <ul className="glass absolute bottom-5 left-5 w-[300px] space-y-1 rounded-[14px] border border-line p-3 text-[12px]" aria-label="What the glove does">
           {MAP.map(([k, v]) => (
@@ -163,10 +163,10 @@ export function GlovePage() {
           ))}
         </ul>
         <div className="absolute right-5 top-5 flex gap-2">
-          <Link href="/test/glove-camera.html" target="_blank" className="glass flex h-9 items-center rounded-full border border-line px-3.5 text-[12px] text-muted transition hover:-translate-y-px hover:text-ink">
+          <Link href="/test/glove-camera.html" target="_blank" className="glass flex h-9 items-center rounded-[10px] border border-line px-3.5 text-[12px] text-muted transition hover:-translate-y-px hover:text-ink">
             Test page
           </Link>
-          <button type="button" onClick={() => recenter("glove")} className="glass flex h-9 items-center gap-2 rounded-full border border-line px-3.5 text-[12px] text-muted transition hover:-translate-y-px hover:text-ink">
+          <button type="button" onClick={() => recenter("glove")} className="glass flex h-9 items-center gap-2 rounded-[10px] border border-line px-3.5 text-[12px] text-muted transition hover:-translate-y-px hover:text-ink">
             <RotateCcw size={14} strokeWidth={1.5} /> Recenter
           </button>
         </div>

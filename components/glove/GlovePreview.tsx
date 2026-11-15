@@ -40,7 +40,7 @@ function Board() {
       {/* forward arrow = where the fingers point */}
       <mesh position={[0, 0.05, 0.72]} rotation={[Math.PI / 2, 0, 0]}>
         <coneGeometry args={[0.1, 0.24, 24]} />
-        <meshStandardMaterial color="#7C5CFF" emissive="#7C5CFF" emissiveIntensity={0.6} />
+        <meshStandardMaterial color="#0F9D6B" emissive="#0F9D6B" emissiveIntensity={0.6} />
       </mesh>
     </Group>
   );
