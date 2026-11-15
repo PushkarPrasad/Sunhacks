@@ -166,3 +166,9 @@ package's LICENSE file where the field is missing).
 | `vitest` | 3.2.7 | MIT | dev | Unit tests |
 
 Device models, textures and illustrations are procedural or drawn in code; no third-party models, textures or logos are used.
+
+## Third-party assets
+
+| Asset | File | License | Source | Used for |
+| --- | --- | --- | --- | --- |
+| WebXR generic hand (right) | `public/models/hand/right.glb` | MIT (© 2019 Amazon) | https://github.com/immersive-web/webxr-input-profiles (`@webxr-input-profiles/assets@1.0.20`, `dist/profiles/generic-hand/right.glb`) | 3D hand on the Home "Drive it with your hands" slide, posed by our own forward kinematics |

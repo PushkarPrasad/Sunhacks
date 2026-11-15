@@ -8,8 +8,10 @@ import { ArrowLeft, ArrowRight, Cpu, Hand, Layers, PencilRuler, ScanSearch, Spli
 import { BRAND } from "@/lib/brand";
 import { onInput } from "@/lib/input/bus";
 import { useBuild } from "@/stores/build";
+import type { HandGesture } from "./HandRig";
 
 const HeroModel = dynamic(() => import("./HeroModel"), { ssr: false, loading: () => <div className="h-full w-full" /> });
+const HandRig = dynamic(() => import("./HandRig"), { ssr: false, loading: () => <div className="h-full w-full" /> });
 
 const SLIDES = ["Hero", "Problem", "How it works", "Hands-on", "Start"] as const;
 
@@ -270,85 +272,59 @@ function StepArt({ kind }: { kind: "explode" | "wire" | "check" | "board" }) {
   );
 }
 
-const POSES: { name: string; does: string }[] = [
-  { name: "Pinch", does: "select" },
-  { name: "Spread", does: "explode" },
-  { name: "Fist", does: "collapse" },
-  { name: "Swipe", does: "next page" },
-  { name: "Grab + twist", does: "rotate (glove)" },
+const POSES: { name: string; does: string; g: HandGesture }[] = [
+  { name: "Pinch", does: "select", g: "pinch" },
+  { name: "Spread", does: "explode", g: "spread" },
+  { name: "Fist", does: "collapse", g: "fist" },
+  { name: "Swipe", does: "next page", g: "swipe" },
+  { name: "Grab + twist", does: "rotate (glove)", g: "twist" },
 ];
 
 function HandsSlide() {
   const [k, setK] = useState(0);
+  const [tick, setTick] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setK((x) => (x + 1) % POSES.length), 2600);
+    const id = setInterval(() => setK((x) => (x + 1) % POSES.length), 3000);
     return () => clearInterval(id);
-  }, []);
+  }, [tick]);
+  const play = (n: number) => {
+    setK(n);
+    setTick((t) => t + 1); // restart the 3 s cycle from the clicked row
+  };
   return (
     <div className={`${wrap} grid grid-cols-[1fr_1fr] items-center gap-12`}>
       <div>
         <Rise>
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-peri">Hands-on</p>
           <h2 className="mt-4 font-serif text-[64px] leading-[0.98]">Drive it with your hands.</h2>
-          <p className="mt-5 max-w-[440px] text-[16px] text-muted">A webcam tracks your hand pose. A glove with a motion sensor and one switch lets you grab a model and turn it like a globe.</p>
+          <p className="mt-5 max-w-[440px] text-[16px] text-muted">A webcam tracks your hand pose. A glove with a motion sensor and an optional switch lets you grab a model and turn it like a globe.</p>
         </Rise>
         <ul className="mt-9 space-y-2" aria-label="Gestures">
           {POSES.map((p, n) => (
-            <li key={p.name} className={`flex items-center justify-between rounded-[10px] border px-4 py-2.5 text-[14px] transition-colors duration-500 ${n === k ? "border-copper/60 bg-copper-soft" : "border-line"}`}>
-              <span>{p.name}</span>
-              <span className="font-mono text-[12px] text-muted">{p.does}</span>
+            <li key={p.name}>
+              <button
+                type="button"
+                onClick={() => play(n)}
+                aria-pressed={n === k}
+                className={`flex w-full items-center justify-between rounded-[10px] border px-4 py-2.5 text-left text-[14px] transition-colors duration-500 hover:border-copper/60 ${n === k ? "border-copper/60 bg-copper-soft" : "border-line"}`}
+              >
+                <span>{p.name}</span>
+                <span className="font-mono text-[12px] text-muted">{p.does}</span>
+              </button>
             </li>
           ))}
         </ul>
       </div>
-      <Rise d={2} className="relative grid h-[440px] place-items-center rounded-[20px] border border-line bg-card/50">
+      <Rise d={2} className="relative h-[440px] overflow-hidden rounded-[20px] border border-line bg-card/50">
         <div className="absolute inset-10 rounded-full bg-[radial-gradient(circle,rgb(61_123_255/0.22),transparent_65%)] blur-2xl" aria-hidden="true" />
-        <GloveArt pose={k} />
-        <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-full border border-line px-3 py-1 text-[12px]">
+        <div className="absolute inset-0" aria-label={`3D hand showing the ${POSES[k].name.toLowerCase()} gesture`} role="img">
+          <HandRig gesture={POSES[k].g} startedAt={tick} />
+        </div>
+        <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-full border border-line bg-card/70 px-3 py-1 text-[12px] backdrop-blur">
           <Hand size={14} strokeWidth={1.5} className="text-ok" /> {POSES[k].name}
         </div>
       </Rise>
     </div>
-  );
-}
-
-/** Line drawing of the glove: a hand outline, the motion board on the back and the index-finger switch. */
-function GloveArt({ pose }: { pose: number }) {
-  const spread = pose === 1 ? 1 : pose === 2 ? -1 : 0;
-  const fingers = [
-    { x: 150, a: -14 },
-    { x: 182, a: -4 },
-    { x: 214, a: 5 },
-    { x: 244, a: 15 },
-  ];
-  return (
-    <svg viewBox="0 0 400 400" className="relative h-[360px] w-[360px]" aria-hidden="true">
-      <motion.g animate={{ rotate: pose === 3 ? [0, -12, 8, 0] : pose === 4 ? [0, 18, 0] : 0 }} transition={{ duration: 1.6 }} style={{ originX: "200px", originY: "330px" }}>
-        <path d="M130 330 C122 280 124 230 136 196 L264 196 C276 232 280 280 270 330 Z" fill="#1A1A2A" stroke="#A5B4FC" strokeOpacity=".5" strokeWidth="1.5" />
-        {fingers.map((f, n) => (
-          <motion.rect
-            key={n}
-            x={f.x}
-            y={pose === 2 ? 168 : 86}
-            width="26"
-            height={pose === 2 ? 40 : 118}
-            rx="13"
-            fill="#1A1A2A"
-            stroke="#A5B4FC"
-            strokeOpacity=".5"
-            strokeWidth="1.5"
-            animate={{ rotate: f.a * (1 + spread * 0.9), y: pose === 2 ? 168 : 86, height: pose === 2 ? 40 : 118 }}
-            transition={{ type: "spring", stiffness: 160, damping: 18 }}
-            style={{ originX: `${f.x + 13}px`, originY: "200px" }}
-          />
-        ))}
-        <motion.rect x="96" y="214" width="26" height="80" rx="13" fill="#1A1A2A" stroke="#A5B4FC" strokeOpacity=".5" strokeWidth="1.5" animate={{ rotate: pose === 0 ? 38 : -20 }} style={{ originX: "122px", originY: "290px" }} transition={{ type: "spring", stiffness: 160, damping: 18 }} />
-        <rect x="168" y="232" width="64" height="44" rx="5" fill="#141A33" stroke="#3D7BFF" strokeWidth="1.5" />
-        <rect x="186" y="244" width="16" height="16" rx="2" fill="#7C5CFF" />
-        <motion.circle cx="163" cy="200" r="6" fill="#3DDC97" animate={{ opacity: pose === 0 || pose === 4 ? [0.3, 1, 0.3] : 0.25 }} transition={{ duration: 1.2, repeat: Infinity }} />
-        <path d="M200 276 C200 300 176 300 163 206" fill="none" stroke="#7C5CFF" strokeWidth="1.5" strokeDasharray="4 4" />
-      </motion.g>
-    </svg>
   );
 }
 

@@ -5,6 +5,7 @@
 - Shared input store (`stores/input.ts`): camera fist or glove switch = grab; smoothed globe rotation from the grab-start baseline; shake recenters; any duplicate action within 300 ms dropped.
 - Connecting the glove starts the webcam tracker in the same click; picture-in-picture preview with landmarks; camera denial keeps the glove working with a one-line notice.
 - Standalone test bench at `/test/glove-camera.html`: glove, camera and fusion checklist with score, live landmarks, cube driven by fist + twist, error log (incl. the Serial Monitor hint).
+- Home "Drive it with your hands": the box-and-ovals drawing is replaced by a realistic 3D hand (WebXR generic hand, MIT) posed per gesture, with a mini drone for grab + twist and live-landmark mirroring.
 - Glove tab rebuilt: live roll/pitch/yaw bars, 3D board preview, last 8 events, Blink LED, Reconnect.
 
 ## V2

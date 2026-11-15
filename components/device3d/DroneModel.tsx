@@ -627,6 +627,14 @@ function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor,
 
 // ---------- public component ----------
 
+/** The drone's parts only (no lights, controls or canvas), for small props in other scenes. Real size ~ 0.5 units across. */
+export function MiniDrone({ spin = 3 }: { spin?: number }) {
+  const m = useMaterials();
+  const s = useRef(spin);
+  const groups = useRef<Record<string, THREE.Group | null>>({});
+  return <Parts m={m} spin={s} groups={groups} handlers={() => ({})} />;
+}
+
 export interface DroneModelProps {
   explode: number;
   shell?: Shell;

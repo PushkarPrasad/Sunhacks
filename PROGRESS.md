@@ -22,3 +22,4 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 - [x] P0-1 Glove protocol + `hardware/glove/glove.ino` (Arduino 101 sketch); Glove tab: state, live roll/pitch/yaw, 3D board preview, last 8 events, Blink LED, one-click reconnect
 - [x] P0-2 Camera starts in the same click as the glove; PiP preview (bottom right, landmarks, hide/close); one shared input store (`stores/input.ts`) with the fusion rules
 - [x] P0-3 `public/test/glove-camera.html` (checklist, camera + landmarks, CSS 3D cube, score, log); `e2e/glove-camera.spec.ts` passes 17/17 with simulated input
+- [x] P0-4 Home hands slide: WebXR generic hand (MIT) with skin material, FK-posed pinch / spread / fist / animated swipe / grab + twist holding a mini drone; rows clickable, 3 s auto-cycle, 400 ms ease; live landmarks drive the rig when the camera is on; "an optional switch"
