@@ -219,11 +219,12 @@ function brushedRough(): THREE.Texture {
   const N = 256;
   const { c, g } = canvas(N, N);
   const r = rng(3);
-  g.fillStyle = "#808080";
+  // Multiplies the material roughness: mostly 1.0 with faint darker streaks (bead-blasted, lightly brushed).
+  g.fillStyle = "#ffffff";
   g.fillRect(0, 0, N, N);
   for (let i = 0; i < 1400; i++) {
-    const v = 100 + r() * 70;
-    g.fillStyle = `rgba(${v},${v},${v},0.35)`;
+    const v = 200 + r() * 55;
+    g.fillStyle = `rgba(${v},${v},${v},0.5)`;
     g.fillRect(r() * N, r() * N, 20 + r() * 80, 1);
   }
   return finish(c, [2, 2], false);
@@ -242,6 +243,12 @@ function foilMaps(): { normalMap: THREE.Texture } {
 
 // ---------- materials ----------
 
+/** Marks a material as self-lit so hover tints leave it alone. */
+function glow<T extends THREE.Material>(m: T): T {
+  m.userData.glow = true;
+  return m;
+}
+
 export const MAT = {
   carbon: () =>
     once("carbon", () => {
@@ -249,7 +256,7 @@ export const MAT = {
       return new THREE.MeshPhysicalMaterial({ map, normalMap, normalScale: new THREE.Vector2(0.6, 0.6), roughness: 0.42, metalness: 0.15, clearcoat: 1, clearcoatRoughness: 0.12 });
     }),
   /** Anodized aluminium: metalness 1, roughness ~0.35, tinted. */
-  aluminum: (tint = "#c4c7cf") => once(`alu-${tint}`, () => new THREE.MeshPhysicalMaterial({ color: tint, metalness: 1, roughness: 0.35, roughnessMap: tex("brushed", brushedRough), clearcoat: 0.15, clearcoatRoughness: 0.4 })),
+  aluminum: (tint = "#c4c7cf") => once(`alu-${tint}`, () => new THREE.MeshPhysicalMaterial({ color: tint, metalness: 1, roughness: 0.38, roughnessMap: tex("brushed", brushedRough), clearcoat: 0.1, clearcoatRoughness: 0.5 })),
   steel: () => once("steel", () => new THREE.MeshStandardMaterial({ color: "#c9ccd2", metalness: 1, roughness: 0.28 })),
   blackSteel: () => once("blacksteel", () => new THREE.MeshStandardMaterial({ color: "#2a2b30", metalness: 0.9, roughness: 0.38 })),
   brass: () => once("brass", () => new THREE.MeshStandardMaterial({ color: "#c9a14a", metalness: 1, roughness: 0.3 })),
@@ -277,8 +284,8 @@ export const MAT = {
   ceramic: () => once("ceramic", () => new THREE.MeshStandardMaterial({ color: "#c8b892", roughness: 0.55 })),
   chip: () => once("chip", () => new THREE.MeshStandardMaterial({ color: "#151519", roughness: 0.4, metalness: 0.1 })),
   /** Emissive LED: emissive intensity > 1 so only these bloom. */
-  led: (color = "#3ddc97") => once(`led-${color}`, () => new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 3, toneMapped: false })),
-  screen: (map: THREE.Texture, key: string) => once(`screen-${key}`, () => new THREE.MeshStandardMaterial({ color: "#000000", emissive: "#ffffff", emissiveMap: map, emissiveIntensity: 1.25, roughness: 0.2 })),
+  led: (color = "#3ddc97") => once(`led-${color}`, () => glow(new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 4, toneMapped: false }))),
+  screen: (map: THREE.Texture, key: string) => once(`screen-${key}`, () => glow(new THREE.MeshStandardMaterial({ color: "#000000", emissive: "#ffffff", emissiveMap: map, emissiveIntensity: 1.1, roughness: 0.15, metalness: 0 }))),
 };
 
 export type MatKey = keyof typeof MAT;

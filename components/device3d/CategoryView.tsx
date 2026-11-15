@@ -15,6 +15,8 @@ import { onInput } from "@/lib/input/bus";
 import { useBuild } from "@/stores/build";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { DroneViewer } from "./DroneViewer";
+import { ProductViewer } from "./product/ProductViewer";
+import { MODELS } from "./models";
 import { StatusDot } from "@/components/ui/StatusDot";
 
 /** Categories drawn as full anatomy figures (numbered callouts); the rest use the plain exploded view. */
@@ -34,6 +36,7 @@ export function CategoryView({ id }: { id: string }) {
   // Phones & Laptops shows one device at a time.
   const [variant, setVariant] = useState<"phone" | "laptop">("phone");
   const blocks = id === "phones-laptops" && variant === "laptop" ? categoriesById.laptops.blocks : category.blocks;
+  const model = MODELS[id === "phones-laptops" ? `phones-laptops:${variant}` : id];
 
   useEffect(() => {
     const offs = [
@@ -79,6 +82,10 @@ export function CategoryView({ id }: { id: string }) {
       {id === "drones" ? (
         <section className="relative min-h-0 border-r border-line" aria-label="Drone model">
           <DroneViewer />
+        </section>
+      ) : model ? (
+        <section className="relative min-h-0 border-r border-line" aria-label={`${model.name} model`}>
+          <ProductViewer key={model.id} def={model} />
         </section>
       ) : (
       <section
@@ -165,7 +172,7 @@ export function CategoryView({ id }: { id: string }) {
           <span className="grid h-10 w-10 place-items-center rounded-full border border-line">
             <CategoryIcon name={category.icon} size={20} />
           </span>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-peri">Device{id === "drones" ? " · 12 parts" : ` · ${blocks.length} blocks`}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-peri">Device{id === "drones" ? " · 12 parts" : model ? ` · ${model.parts.length} parts` : ` · ${blocks.length} blocks`}</p>
         </div>
         <h1 className="mt-4 font-serif text-[52px] leading-none">{category.name}</h1>
         <p className="mt-3 max-w-[460px] text-[15px] leading-relaxed text-muted">{category.description}</p>

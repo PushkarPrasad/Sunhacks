@@ -27,3 +27,10 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 - [x] P0-6 Hoop Upload: toolbar "Upload" button with a basketball icon, `/builder?hoop=1`, pointer capture made safe; `e2e/hoop.spec.ts` (throw through the hoop imports the build, ?hoop=1 + Just upload it, real mouse drag) passes
 - [x] Owner add-on: Calibration tab (`/calibrate`, nav "Calibrate"): keep still, tilt each side, grab and twist, green check per step; unit + e2e tests
 - [x] P1-1 Global realism pass: `components/three/Studio.tsx` (local CC0 studio HDRI, soft key light + shadows, rim light, contact shadows, N8AO + bloom on emissives only + SMAA, ACES) on every 3D view; shared `lib/three/materials.ts` (carbon weave normal map + clearcoat, anodized aluminium, steel, brass, FR4 PCB with mask/pads/silkscreen, matte/gloss/printed plastics with layer lines, rubber, silicone, glass, cover glass, pouch foil, LEDs, screens)
+- [x] P1-2 Reaction-wheel cube (procedural; `public/models/cubli/` was empty): 150 mm frame of 6 bevelled plates, 12 rails, rounded corners, 24 instanced M3 screws; three spoked wheels with 12 brass weights each; gimbal BLDCs; controller PCB on brass standoffs; IMU board; 3S LiPo with balance lead + JST-XH; three-phase harness with zip ties. Plates explode along their normals. Shared framework: `components/device3d/product/` (ProductModel, ProductViewer, `<Part>`, `<Ex>`), `lib/three/geo.tsx`.
+
+### Realism scores (1-5: silhouette / proportions / materials / detail / lighting)
+| Model | Sil | Prop | Mat | Detail | Light | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| Drone (approved reference) | 4 | 4 | 4 | 5 | 4 | Studio HDRI only |
+| Balancing cube | 4 | 4 | 4 | 4 | 4 | Compared with photos of reaction-wheel cubes: plates, brass-weighted wheels and corner blocks match; aluminium roughness fixed after pass 1 (was mirror-like) |
