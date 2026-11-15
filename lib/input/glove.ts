@@ -14,7 +14,7 @@
 
 import { create } from "zustand";
 import { fireAction, logInputEvent, pushOrientation, recenter, setSwitch } from "@/stores/input";
-import { onKnock, onOrientation, onSwitch } from "./grab";
+import { onKnock, onOrientation, onSwitch, releaseGrab } from "./grab";
 import { GLOVE_COMMAND_CHAR, GLOVE_EVENT_CHAR, GLOVE_SERVICE, LineBuffer, parseGloveLine, type GloveMsg } from "./gloveProtocol";
 
 export type GloveStatus = "idle" | "searching" | "connected" | "reconnecting" | "stalled" | "disconnected" | "error";
@@ -190,7 +190,7 @@ function stopTimers() {
 
 function releaseGrabOnDrop() {
   setSwitch(false);
-  onSwitch(false);
+  releaseGrab();
 }
 
 /** Subscribe to the event characteristic on a (re)connected GATT server. */

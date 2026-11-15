@@ -123,6 +123,11 @@ export function onShake() {
 
 export const switchSeen = () => hasSwitch;
 
+/** Link dropped: let go of the model without marking a switch as seen (knock mode must survive a drop). */
+export function releaseGrab() {
+  if (useModelPose.getState().grabbed) end();
+}
+
 export function resetGrabForTests() {
   hasSwitch = false;
   last = null;

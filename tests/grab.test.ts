@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { Euler, Quaternion } from "three";
-import { gloveQuat, grabTarget, onKnock, onOrientation, onShake, onSwitch, quatAngleDeg, resetGrabForTests, setAxisFlips } from "@/lib/input/grab";
+import { gloveQuat, grabTarget, onKnock, releaseGrab, onOrientation, onShake, onSwitch, quatAngleDeg, resetGrabForTests, setAxisFlips } from "@/lib/input/grab";
 import { useModelPose } from "@/stores/modelPose";
 
 const q = () => {
@@ -102,5 +102,15 @@ describe("grab and rotate (quaternion clutch)", () => {
     const e = new Quaternion().setFromEuler(new Euler(20 * DEG, 10 * DEG, -30 * DEG, "XYZ"));
     expect(quatAngleDeg(g.clone().invert().multiply(e))).toBeLessThan(0.01);
     expect(quatAngleDeg(grabTarget(g, g, new Quaternion()))).toBeLessThan(0.01);
+  });
+
+
+  test("a link drop releases grab but keeps knock mode (no switch was seen)", () => {
+    useModelPose.setState({ views: 1 });
+    onOrientation({ roll: 0, pitch: 0, yaw: 0 });
+    expect(onKnock()).toBe(true);
+    releaseGrab();
+    expect(useModelPose.getState().grabbed).toBe(false);
+    expect(onKnock()).toBe(true); // still a grab toggle, not a click
   });
 });
