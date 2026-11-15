@@ -61,3 +61,16 @@ Judgment calls made while building, newest last.
     already has running on port 3000 keeps serving while the agent tests on port 3100.
 24. **V3: old category URLs redirect** (`/devices/phones` → `phones-laptops`, `robots` → `rovers`, `smartwatches` →
     `wearables`) so links from V2 screenshots and docs still land somewhere.
+17. **V4 pushes despite the spec's "never push".** The owner asked directly in chat to push the current state and the
+    final V4 to git; that request wins. Pushed to new branches (`v3`, `v4`) on the existing remote; `main` untouched.
+18. **Grab math in screen space.** Glove Euler angles are mapped to screen axes (`AXIS_MAP`: roll -> -Z, pitch -> X,
+    yaw -> Y) before building the quaternion, so the delta since the grab is already a screen-space rotation and
+    `qDelta * qModel0` turns the model the way the hand turns. Signs are a best guess for the glove on the back of the
+    hand; the Calibration tab has per-axis flips.
+19. **Knock-to-grab only on 3D views.** Views register through `usePoseView()`; a knock toggles grab only when one is
+    mounted and no switch has been seen, otherwise it is a click.
+20. **Watchdog grace for a busy page.** If the watchdog's own tick runs >1.5 s late, the page was blocked (3D scene
+    compile) and notifications are queued, not lost, so the check waits 1.5 s. Found by the grab e2e test.
+21. **Snap hysteresis on openness ends** (0.04) so a fully open hand cannot flicker between 0.91 and 1.
+22. **Pointer target scan** every 500 ms plus on route/scroll/resize instead of a `useSnapTarget` hook in every
+    component: works for all existing controls without touching them.
