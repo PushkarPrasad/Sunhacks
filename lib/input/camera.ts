@@ -150,7 +150,8 @@ export function feedHands(hands: Hand[], world: Pt[][] = [], now = performance.n
     now,
   );
   const st = useInput.getState();
-  if (st.openness !== o.value || st.opennessDriving !== o.driving) useInput.setState({ openness: o.value, opennessDriving: o.driving });
+  const rawO = Number.isFinite(o.raw) ? Math.round(o.raw * 1000) / 1000 : null;
+  if (st.openness !== o.value || st.opennessDriving !== o.driving || st.opennessRaw !== rawO) useInput.setState({ openness: o.value, opennessDriving: o.driving, opennessRaw: rawO });
   const s = useInput.getState();
   const seen = hands.length > 0;
   if (s.handSeen !== seen || s.cameraPose !== rec.pose) useInput.setState({ handSeen: seen, cameraPose: rec.pose });

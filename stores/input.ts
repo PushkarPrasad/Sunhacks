@@ -43,6 +43,8 @@ interface InputState {
   /** Palm openness 0..1 (held value) and whether the hand is actively driving the explode. */
   openness: number | null;
   opennessDriving: boolean;
+  /** Uncalibrated openness of the current frame (for the Calibration tab). */
+  opennessRaw: number | null;
 }
 
 export const useInput = create<InputState>(() => ({
@@ -58,6 +60,7 @@ export const useInput = create<InputState>(() => ({
   events: [],
   openness: null,
   opennessDriving: false,
+  opennessRaw: null,
 }));
 
 let seq = 0;
