@@ -4,6 +4,7 @@
 - Glove protocol matches `hardware/glove/glove.ino` (READY heartbeat, O:roll,pitch,yaw, SWIPE/SELECT/SHAKE, optional BTN); old formats ignored; writes queued with writeValueWithoutResponse.
 - Shared input store (`stores/input.ts`): camera fist or glove switch = grab; smoothed globe rotation from the grab-start baseline; shake recenters; any duplicate action within 300 ms dropped.
 - Connecting the glove starts the webcam tracker in the same click; picture-in-picture preview with landmarks; camera denial keeps the glove working with a one-line notice.
+- Standalone test bench at `/test/glove-camera.html`: glove, camera and fusion checklist with score, live landmarks, cube driven by fist + twist, error log (incl. the Serial Monitor hint).
 - Glove tab rebuilt: live roll/pitch/yaw bars, 3D board preview, last 8 events, Blink LED, Reconnect.
 
 ## V2

@@ -21,3 +21,4 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 ## V3 (final push, v3_prompt.md; hard stop 10:00 AM)
 - [x] P0-1 Glove protocol + `hardware/glove/glove.ino` (Arduino 101 sketch); Glove tab: state, live roll/pitch/yaw, 3D board preview, last 8 events, Blink LED, one-click reconnect
 - [x] P0-2 Camera starts in the same click as the glove; PiP preview (bottom right, landmarks, hide/close); one shared input store (`stores/input.ts`) with the fusion rules
+- [x] P0-3 `public/test/glove-camera.html` (checklist, camera + landmarks, CSS 3D cube, score, log); `e2e/glove-camera.spec.ts` passes 17/17 with simulated input

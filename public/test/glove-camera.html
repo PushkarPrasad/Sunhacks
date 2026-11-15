@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Glove + Camera Test</title>
+<style>
+  :root {
+    --paper: #0a0a10; --card: #12121c; --raised: #1a1a2a; --line: #2a2a3d; --line-strong: #3b3b55;
+    --ink: #eceaf5; --muted: #a3a1b8; --violet: #7c5cff; --blue: #3d7bff; --peri: #a5b4fc;
+    --ok: #3ddc97; --warn: #f5b14c; --bad: #ff6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: radial-gradient(900px 600px at 85% -10%, rgba(124,92,255,.18), transparent 60%),
+                radial-gradient(800px 600px at -10% 110%, rgba(61,123,255,.14), transparent 60%), var(--paper);
+    color: var(--ink); font: 14px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .app { display: grid; grid-template-columns: 380px 1fr; grid-template-rows: auto 1fr; gap: 16px; height: 100vh; padding: 20px 24px; }
+  header { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  h1 { margin: 0; font: 400 30px/1 Georgia, "Times New Roman", serif; letter-spacing: -.01em; }
+  .eyebrow { font: 11px ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--peri); margin-bottom: 6px; }
+  .score { font: 600 22px ui-monospace, monospace; }
+  .score small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 6px; }
+  .buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+  button {
+    height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line-strong); background: transparent;
+    color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; transition: transform .15s, border-color .15s, background .15s;
+  }
+  button:hover { transform: translateY(-1px); border-color: var(--violet); }
+  button.primary { background: var(--violet); border-color: var(--violet); color: #fff; box-shadow: 0 0 0 1px rgba(124,92,255,.4), 0 8px 30px rgba(124,92,255,.35); }
+  .card { background: rgba(18,18,28,.75); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; min-height: 0; }
+  .left { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+  .checks { overflow: auto; flex: 1; }
+  .checks h2 { margin: 10px 0 6px; font: 11px ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  .checks h2:first-child { margin-top: 0; }
+  .item { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 13px; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--line-strong); flex: none; display: grid; place-items: center; }
+  .item.done .dot { background: var(--ok); border-color: var(--ok); box-shadow: 0 0 10px rgba(61,220,151,.6); }
+  .item.done .dot::after { content: ""; width: 6px; height: 3px; border: solid #0a0a10; border-width: 0 0 2px 2px; transform: rotate(-45deg) translateY(-1px); }
+  .item.done { color: var(--ink); }
+  .item:not(.done) { color: var(--muted); }
+  .item .hint { margin-left: auto; font: 11px ui-monospace, monospace; color: var(--muted); }
+  .item.optional .label::after { content: " (optional)"; color: var(--muted); }
+  .log { height: 150px; overflow: auto; font: 11px/1.5 ui-monospace, monospace; }
+  .log .err { color: var(--bad); }
+  .log .ok { color: var(--ok); }
+  .log .info { color: var(--muted); }
+  .right { display: grid; grid-template-rows: 1fr 1fr; gap: 16px; min-height: 0; }
+  .stage { position: relative; overflow: hidden; display: grid; place-items: center; }
+  .stage .tag { position: absolute; left: 14px; top: 12px; font: 11px ui-monospace, monospace; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+  .stage .status { position: absolute; right: 14px; top: 12px; font: 11px ui-monospace, monospace; color: var(--muted); }
+  #cam { max-width: 100%; max-height: 100%; aspect-ratio: 4 / 3; height: calc(100% - 20px); border-radius: 12px; background: var(--raised); }
+  .scene { perspective: 900px; width: 220px; height: 220px; }
+  .cube { position: relative; width: 140px; height: 140px; margin: 40px; transform-style: preserve-3d; }
+  .face {
+    position: absolute; inset: 0; border-radius: 14px; border: 1px solid rgba(165,180,252,.5);
+    background: linear-gradient(135deg, rgba(104,76,230,.95), rgba(45,96,214,.92)); display: grid; place-items: center;
+    font: 600 13px ui-monospace, monospace; color: rgba(255,255,255,.85); backface-visibility: visible;
+  }
+  .f1 { transform: translateZ(70px); } .f2 { transform: rotateY(180deg) translateZ(70px); }
+  .f3 { transform: rotateY(90deg) translateZ(70px); } .f4 { transform: rotateY(-90deg) translateZ(70px); }
+  .f5 { transform: rotateX(90deg) translateZ(70px); background: linear-gradient(135deg, rgba(40,160,120,.95), rgba(45,96,214,.92)); }
+  .f6 { transform: rotateX(-90deg) translateZ(70px); }
+  .readout { position: absolute; left: 14px; bottom: 12px; font: 12px ui-monospace, monospace; color: var(--muted); }
+  .readout b { color: var(--ink); font-weight: 500; }
+  .grab { position: absolute; right: 14px; bottom: 12px; font: 12px ui-monospace, monospace; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--muted); }
+  .grab.on { border-color: var(--violet); color: #fff; background: rgba(124,92,255,.35); }
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .app { grid-template-columns: 1fr; height: auto; padding: 16px; }
+    .right { grid-template-rows: 320px 320px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <div class="eyebrow">Magic Smoke · test bench</div>
+      <h1>Glove + camera</h1>
+    </div>
+    <div class="score" id="score">0 / 16<small>passed</small></div>
+    <div class="buttons">
+      <button class="primary" id="btBtn">Connect Bluetooth</button>
+      <button id="usbBtn">Connect USB</button>
+      <button id="camBtn">Start Camera</button>
+      <button id="recenterBtn">Recenter</button>
+      <button id="blinkBtn">Blink LED</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+  </header>
+
+  <div class="left">
+    <div class="card checks" id="checks"></div>
+    <div class="card log" id="log" aria-live="polite"></div>
+  </div>
+
+  <div class="right">
+    <div class="card stage">
+      <span class="tag">Camera</span><span class="status" id="camStatus">off</span>
+      <canvas id="cam" width="640" height="480"></canvas>
+    </div>
+    <div class="card stage">
+      <span class="tag">Cube</span><span class="status" id="gloveStatus">glove not connected</span>
+      <div class="scene"><div class="cube" id="cube">
+        <div class="face f1">FRONT</div><div class="face f2">BACK</div><div class="face f3">RIGHT</div>
+        <div class="face f4">LEFT</div><div class="face f5">TOP</div><div class="face f6">BOTTOM</div>
+      </div></div>
+      <div class="readout" id="readout">roll <b>—</b> pitch <b>—</b> yaw <b>—</b></div>
+      <div class="grab" id="grab">not grabbing</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  // ---------- constants (same as hardware/glove/glove.ino and lib/input/gloveProtocol.ts) ----------
+  const SERVICE = "19b10000-e8f2-537e-4f6c-d104768a1214";
+  const EVENTS = "19b10001-e8f2-537e-4f6c-d104768a1214";
+  const COMMAND = "19b10002-e8f2-537e-4f6c-d104768a1214";
+  const MP = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.2.3";
+  const MODEL = "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
+  const DEDUPE_MS = 300;
+
+  // ---------- checklist ----------
+  const CHECKS = [
+    ["Glove", [
+      ["g_found", "Glove found"], ["g_live", "Live data (O: messages)"], ["g_roll", "Roll ±30°"], ["g_pitch", "Pitch ±25°"],
+      ["g_yaw", "Yaw ±30°"], ["g_swl", "Swipe left"], ["g_swr", "Swipe right"], ["g_sel", "Select (knock)"], ["g_shake", "Shake"],
+      ["g_sw", "Switch down and up", true],
+    ]],
+    ["Camera", [["c_hand", "Hand detected"], ["c_pinch", "Pinch"], ["c_spread", "Spread"], ["c_fist", "Fist"], ["c_swl", "Swipe left"], ["c_swr", "Swipe right"]]],
+    ["Fusion", [["f_twist", "Fist + twist rotates the cube > 45°"]]],
+  ];
+  const done = new Set();
+  const hints = {};
+  const $ = (id) => document.getElementById(id);
+
+  function renderChecks() {
+    const root = $("checks");
+    root.innerHTML = "";
+    for (const [group, items] of CHECKS) {
+      const h = document.createElement("h2");
+      h.textContent = group;
+      root.appendChild(h);
+      for (const [id, label, optional] of items) {
+        const row = document.createElement("div");
+        row.className = "item" + (done.has(id) ? " done" : "") + (optional && !done.has(id) && !seenSwitch ? " optional" : "");
+        row.dataset.check = id;
+        row.innerHTML = `<span class="dot"></span><span class="label"></span><span class="hint"></span>`;
+        row.querySelector(".label").textContent = label;
+        row.querySelector(".hint").textContent = hints[id] ?? "";
+        root.appendChild(row);
+      }
+    }
+    const total = CHECKS.flatMap(([, i]) => i).filter(([id, , opt]) => !opt || seenSwitch).length;
+    const passed = [...done].filter((id) => id !== "g_sw" || seenSwitch).length;
+    $("score").innerHTML = `${passed} / ${total}<small>passed</small>`;
+  }
+  function pass(id) {
+    if (done.has(id)) return;
+    done.add(id);
+    log(`✓ ${CHECKS.flatMap(([, i]) => i).find(([k]) => k === id)[1]}`, "ok");
+    renderChecks();
+  }
+  function hint(id, text) {
+    if (hints[id] === text) return;
+    hints[id] = text;
+    const el = document.querySelector(`[data-check="${id}"] .hint`);
+    if (el) el.textContent = text;
+  }
+
+  // ---------- log ----------
+  function log(msg, kind = "info") {
+    const el = document.createElement("div");
+    el.className = kind;
+    el.textContent = `${new Date().toLocaleTimeString([], { hour12: false })}  ${msg}`;
+    $("log").prepend(el);
+    while ($("log").childElementCount > 200) $("log").lastChild.remove();
+  }
+  window.addEventListener("error", (e) => log(`Error: ${e.message}`, "err"));
+  window.addEventListener("unhandledrejection", (e) => log(`Error: ${e.reason?.message ?? e.reason}`, "err"));
+
+  // ---------- fusion state ----------
+  let seenSwitch = false, switchDown = false, camFist = false;
+  let orient = null, base = null;               // live orientation and the baseline for range checks
+  let grabBase = null;                          // { o, rx, ry, rz } at grab start
+  let rot = { x: -20, y: 30, z: 0 };            // cube rotation in degrees
+  let target = { ...rot };
+  let lastFire = {};
+  let rangeSeen = { roll: [0, 0], pitch: [0, 0], yaw: [0, 0] };
+
+  const angleDelta = (a, b) => { let d = (b - a) % 360; if (d > 180) d -= 360; if (d < -180) d += 360; return d; };
+  function fire(action, source) {
+    const now = performance.now();
+    if (lastFire[action] !== undefined && now - lastFire[action] < DEDUPE_MS) { log(`dropped duplicate ${action} (${source})`); return false; }
+    lastFire[action] = now;
+    log(`${action} ← ${source}`);
+    return true;
+  }
+  const grabbing = () => camFist || switchDown;
+  function updateGrab(wasGrabbing) {
+    const g = grabbing();
+    $("grab").textContent = g ? `grabbing (${camFist ? "fist" : "switch"})` : "not grabbing";
+    $("grab").classList.toggle("on", g);
+    if (g && !wasGrabbing) grabBase = orient ? { o: { ...orient }, rx: target.x, ry: target.y, rz: target.z, fist: camFist } : null;
+    if (!g) grabBase = null;
+  }
+  function setGrab(source, down) {
+    const was = grabbing();
+    if (source === "camera") camFist = down; else switchDown = down;
+    updateGrab(was);
+  }
+  function recenter() {
+    target = { x: -20, y: 30, z: 0 };
+    if (grabbing() && orient) grabBase = { o: { ...orient }, rx: target.x, ry: target.y, rz: target.z, fist: camFist };
+    log("recenter");
+  }
+
+  // ---------- glove protocol ----------
+  function onGloveLine(raw) {
+    const line = String(raw).replace(/\0/g, "").trim();
+    if (!line) return;
+    if (line.startsWith("READY:")) { pass("g_found"); $("gloveStatus").textContent = `glove ${line.slice(6)}`; return; }
+    if (line === "BTN:DOWN" || line === "BTN:UP") {
+      seenSwitch = true;
+      const down = line === "BTN:DOWN";
+      if (!down && switchDown) pass("g_sw");
+      setGrab("glove", down);
+      renderChecks();
+      log(line);
+      return;
+    }
+    if (line.startsWith("G:")) {
+      const g = line.slice(2);
+      if (g === "SWIPE_L" && fire("prevPage", "glove")) pass("g_swl");
+      else if (g === "SWIPE_R" && fire("nextPage", "glove")) pass("g_swr");
+      else if (g === "SELECT" && fire("select", "glove")) pass("g_sel");
+      else if (g === "SHAKE") { pass("g_shake"); recenter(); }
+      else if (!["SWIPE_L", "SWIPE_R", "SELECT", "SHAKE"].includes(g)) log(`ignored ${line}`);
+      return;
+    }
+    if (line.startsWith("O:")) {
+      const v = line.slice(2).split(",").map(Number);
+      if (v.length !== 3 || !v.every(Number.isFinite)) return log(`bad line ${line}`, "err");
+      onOrientation({ roll: v[0], pitch: v[1], yaw: v[2] });
+      return;
+    }
+    log(`ignored ${line}`);
+  }
+
+  let oCount = 0;
+  function onOrientation(o) {
+    orient = o;
+    pass("g_found");
+    if (++oCount >= 10) pass("g_live");
+    if (!base) base = { ...o };
+    for (const k of ["roll", "pitch", "yaw"]) {
+      const d = angleDelta(base[k], o[k]);
+      rangeSeen[k] = [Math.min(rangeSeen[k][0], d), Math.max(rangeSeen[k][1], d)];
+    }
+    const need = { roll: 30, pitch: 25, yaw: 30 };
+    for (const k of ["roll", "pitch", "yaw"]) {
+      const [lo, hi] = rangeSeen[k];
+      hint(`g_${k}`, `${Math.round(lo)}° … +${Math.round(hi)}°`);
+      if (lo <= -need[k] && hi >= need[k]) pass(`g_${k}`);
+    }
+    $("readout").innerHTML = `roll <b>${o.roll}°</b> pitch <b>${o.pitch}°</b> yaw <b>${o.yaw}°</b>`;
+    if (grabbing() && !grabBase) grabBase = { o: { ...o }, rx: target.x, ry: target.y, rz: target.z, fist: camFist };
+    if (grabbing() && grabBase) {
+      const dp = angleDelta(grabBase.o.pitch, o.pitch), dy = angleDelta(grabBase.o.yaw, o.yaw), dr = angleDelta(grabBase.o.roll, o.roll);
+      target = { x: grabBase.rx + dp, y: grabBase.ry + dy, z: grabBase.rz - dr };
+      const turned = Math.max(Math.abs(dp), Math.abs(dy), Math.abs(dr));
+      if (camFist) hint("f_twist", `${Math.round(turned)}°`);
+      if (camFist && turned > 45) pass("f_twist");
+    }
+  }
+
+  // cube animation (smoothing)
+  function animate() {
+    for (const k of ["x", "y", "z"]) rot[k] += (target[k] - rot[k]) * 0.25;
+    $("cube").style.transform = `rotateX(${rot.x}deg) rotateY(${rot.y}deg) rotateZ(${rot.z}deg)`;
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // ---------- Bluetooth ----------
+  let btDevice = null, btCommand = null, port = null, reader = null, writeChain = Promise.resolve();
+  async function connectBluetooth() {
+    if (!navigator.bluetooth) return log("This browser has no Web Bluetooth. Use Chrome, or Connect USB.", "err");
+    try {
+      log("searching for the glove (filtered by service, not name)…");
+      btDevice = await navigator.bluetooth.requestDevice({ filters: [{ services: [SERVICE] }], optionalServices: [SERVICE] });
+      btDevice.addEventListener("gattserverdisconnected", () => { btCommand = null; $("gloveStatus").textContent = "glove disconnected"; log("Bluetooth disconnected. Press Connect Bluetooth to reconnect.", "err"); setGrab("glove", false); });
+      const server = await btDevice.gatt.connect();
+      const svc = await server.getPrimaryService(SERVICE);
+      const ev = await svc.getCharacteristic(EVENTS);
+      btCommand = await svc.getCharacteristic(COMMAND).catch(() => null);
+      const dec = new TextDecoder();
+      let buf = "";
+      ev.addEventListener("characteristicvaluechanged", () => {
+        const t = dec.decode(ev.target?.value ?? ev.value);
+        if (t.includes("\n")) { buf += t; const parts = buf.split(/\r?\n/); buf = parts.pop(); parts.forEach(onGloveLine); }
+        else onGloveLine(t);
+      });
+      await ev.startNotifications();
+      pass("g_found");
+      $("gloveStatus").textContent = `glove connected (Bluetooth${btDevice.name ? `, ${btDevice.name}` : ""})`;
+      log("Bluetooth connected", "ok");
+    } catch (e) {
+      if (e.name === "NotFoundError") log("No glove chosen.");
+      else log(`Bluetooth failed: ${e.message}`, "err");
+    }
+  }
+
+  // ---------- USB ----------
+  async function connectUsb() {
+    if (!navigator.serial) return log("This browser has no Web Serial. Use Chrome or Edge.", "err");
+    try {
+      port = await navigator.serial.requestPort();
+      try {
+        await port.open({ baudRate: 115200 });
+      } catch (e) {
+        log(`USB failed: ${e.message}. Close the Arduino Serial Monitor first, then try again.`, "err");
+        return;
+      }
+      $("gloveStatus").textContent = "glove connected (USB)";
+      log("USB connected at 115200", "ok");
+      const dec = new TextDecoder();
+      let buf = "";
+      reader = port.readable.getReader();
+      for (;;) {
+        const { value, done: end } = await reader.read();
+        if (end) break;
+        buf += dec.decode(value, { stream: true });
+        const parts = buf.split(/\r?\n/);
+        buf = parts.pop();
+        parts.forEach(onGloveLine);
+      }
+    } catch (e) {
+      if (e.name === "NotFoundError") log("No port chosen.");
+      else log(`USB failed: ${e.message}. If the port is busy, close the Arduino Serial Monitor first.`, "err");
+    } finally {
+      if (port) { $("gloveStatus").textContent = "glove disconnected"; setGrab("glove", false); }
+    }
+  }
+
+  function blink() {
+    const data = new TextEncoder().encode("B");
+    writeChain = writeChain.then(async () => {
+      if (btCommand) await (btCommand.writeValueWithoutResponse ? btCommand.writeValueWithoutResponse(data) : btCommand.writeValue(data));
+      else if (port?.writable) { const w = port.writable.getWriter(); try { await w.write(data); } finally { w.releaseLock(); } }
+      else throw new Error("Connect the glove first.");
+      log("sent B (blink LED)");
+    }).catch((e) => log(`Blink failed: ${e.message}`, "err"));
+  }
+
+  // ---------- camera ----------
+  const BONES = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+  const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  function classify(lm, wasPinch) {
+    const size = Math.max(1e-4, dist(lm[0], lm[9]));
+    const pr = dist(lm[4], lm[8]) / size;
+    const tips = [[8, 6], [12, 10], [16, 14], [20, 18]];
+    const ext = tips.filter(([t, p]) => dist(lm[0], lm[t]) > dist(lm[0], lm[p]) * 1.12).length;
+    if (pr < (wasPinch ? 0.48 : 0.33)) return "pinch";
+    if (ext === 0) return "fist";
+    let s = 0; for (let i = 1; i < 4; i++) s += dist(lm[tips[i - 1][0]], lm[tips[i][0]]);
+    if (ext === 4 && s / 3 / size > 0.42) return "spread";
+    if (ext >= 4) return "open";
+    return "point";
+  }
+  let video = null, landmarker = null, camHands = [];
+  let pose = "none", fistSince = -1, fistLast = -1, fistGrab = false, trail = [], swipeCool = 0, spreadSince = -1;
+
+  /** One frame of landmarks (camera space). Exported for the headless test. */
+  function onHands(hands, t) {
+    camHands = hands;
+    if (!hands.length) {
+      if (fistGrab) { fistGrab = false; setGrab("camera", false); }
+      fistSince = -1; trail = []; pose = "none";
+      $("camStatus").textContent = landmarker ? "no hand" : $("camStatus").textContent;
+      return;
+    }
+    pass("c_hand");
+    const lm = hands[0];
+    const prev = pose;
+    pose = classify(lm, prev === "pinch");
+    $("camStatus").textContent = fistGrab ? "fist (grab)" : pose;
+    if (pose === "pinch" && prev !== "pinch") { fire("select", "camera"); pass("c_pinch"); }
+    if (pose === "spread") { if (spreadSince < 0) spreadSince = t; if (t - spreadSince > 300 && !done.has("c_spread")) { fire("explode", "camera"); pass("c_spread"); } }
+    else spreadSince = -1;
+    if (pose === "fist") {
+      if (fistSince < 0) fistSince = t;
+      fistLast = t;
+      if (t - fistSince > 200) pass("c_fist");
+      if (!fistGrab && t - fistSince >= 450) { fistGrab = true; setGrab("camera", true); log("fist grab"); }
+    } else if (fistSince >= 0 && t - fistLast > 150) {
+      if (fistGrab) { fistGrab = false; setGrab("camera", false); log("fist release"); }
+      fistSince = -1;
+    }
+    trail.push({ t, x: 1 - lm[0].x, y: lm[0].y });
+    trail = trail.filter((p) => t - p.t <= 450);
+    if ((pose === "open" || pose === "spread") && t > swipeCool && trail.length > 2) {
+      const dx = trail[trail.length - 1].x - trail[0].x, dy = trail[trail.length - 1].y - trail[0].y;
+      if (Math.abs(dx) > 0.2 && Math.abs(dy) < Math.abs(dx) * 0.6) {
+        swipeCool = t + 900; trail = [];
+        if (dx > 0) { fire("nextPage", "camera"); pass("c_swr"); } else { fire("prevPage", "camera"); pass("c_swl"); }
+      }
+    }
+  }
+
+  function drawCam() {
+    const c = $("cam"), ctx = c.getContext("2d");
+    ctx.save();
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.translate(c.width, 0); ctx.scale(-1, 1);
+    if (video && video.readyState >= 2) ctx.drawImage(video, 0, 0, c.width, c.height);
+    else { ctx.fillStyle = "#1a1a2a"; ctx.fillRect(0, 0, c.width, c.height); }
+    for (const lm of camHands) {
+      ctx.strokeStyle = "rgba(165,180,252,.95)"; ctx.lineWidth = 3; ctx.beginPath();
+      for (const [a, b] of BONES) { ctx.moveTo(lm[a].x * c.width, lm[a].y * c.height); ctx.lineTo(lm[b].x * c.width, lm[b].y * c.height); }
+      ctx.stroke();
+      ctx.fillStyle = "#7c5cff";
+      for (const p of lm) { ctx.beginPath(); ctx.arc(p.x * c.width, p.y * c.height, 4, 0, Math.PI * 2); ctx.fill(); }
+    }
+    ctx.restore();
+    if (!video) {
+      ctx.fillStyle = "#a3a1b8"; ctx.font = "16px ui-monospace, monospace"; ctx.textAlign = "center";
+      ctx.fillText(camHands.length ? "" : "Camera off. Press Start Camera.", c.width / 2, c.height / 2);
+    }
+    requestAnimationFrame(drawCam);
+  }
+  drawCam();
+
+  async function startCamera() {
+    if (video) return;
+    $("camStatus").textContent = "starting";
+    const media = navigator.mediaDevices?.getUserMedia?.({ video: { width: 640, height: 480, facingMode: "user" } });
+    try {
+      if (!media) throw Object.assign(new Error("No camera API in this browser"), { name: "NotSupportedError" });
+      const stream = await media;
+      video = document.createElement("video");
+      video.muted = true; video.playsInline = true; video.srcObject = stream;
+      await video.play();
+      log("camera on; loading hand tracker…");
+      const { FilesetResolver, HandLandmarker } = await import(`${MP}/vision_bundle.mjs`);
+      const fileset = await FilesetResolver.forVisionTasks(`${MP}/wasm`);
+      landmarker = await HandLandmarker.createFromOptions(fileset, { baseOptions: { modelAssetPath: MODEL, delegate: "GPU" }, runningMode: "VIDEO", numHands: 2 });
+      log("hand tracker ready", "ok");
+      $("camStatus").textContent = "no hand";
+      let lastT = -1;
+      const loop = () => {
+        if (video.readyState >= 2 && video.currentTime !== lastT) {
+          lastT = video.currentTime;
+          const now = performance.now();
+          const res = landmarker.detectForVideo(video, now);
+          onHands(res.landmarks ?? [], now);
+        }
+        requestAnimationFrame(loop);
+      };
+      loop();
+    } catch (e) {
+      video = null;
+      $("camStatus").textContent = "off";
+      log(e.name === "NotAllowedError" ? "Camera blocked. Allow it in the address bar; the glove still works." : `Camera failed: ${e.message}`, "err");
+    }
+  }
+
+  function reset() {
+    done.clear(); seenSwitch = false; base = null; oCount = 0; lastFire = {};
+    rangeSeen = { roll: [0, 0], pitch: [0, 0], yaw: [0, 0] };
+    for (const k in hints) delete hints[k];
+    recenter();
+    renderChecks();
+    log("reset");
+  }
+
+  $("btBtn").onclick = () => { void connectBluetooth(); if (!video) void startCamera(); };
+  $("usbBtn").onclick = () => { void connectUsb(); if (!video) void startCamera(); };
+  $("camBtn").onclick = () => void startCamera();
+  $("recenterBtn").onclick = () => recenter();
+  $("blinkBtn").onclick = () => blink();
+  $("resetBtn").onclick = () => reset();
+
+  renderChecks();
+  log("Ready. Connect the glove; the camera starts with it.");
+
+  // Headless test hooks: simulated glove lines and fake landmarks.
+  window.__test = {
+    line: onGloveLine,
+    hands: (hands, t) => onHands(hands, t ?? performance.now()),
+    score: () => $("score").textContent,
+    done: () => [...done],
+    rotation: () => ({ ...target }),
+  };
+</script>
+</body>
+</html>
