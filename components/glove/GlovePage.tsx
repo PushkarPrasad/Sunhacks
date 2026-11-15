@@ -15,10 +15,10 @@ const noop = () => () => {};
 const STATUS_TEXT: Record<GloveStatus, string> = { idle: "Not connected", searching: "Searching", connected: "Glove connected", reconnecting: "Reconnecting…", stalled: "Stalled: reconnecting", disconnected: "Disconnected", error: "Not connected" };
 
 const MAP: [string, string][] = [
-  ["Fist or switch + turn wrist", "Rotate the model"],
+  ["Hold switch (or knock) + turn wrist", "Rotate the model"],
   ["Flick left / right", "Previous / next page"],
-  ["Knock", "Select"],
-  ["Shake", "Recenter"],
+  ["Knock", "Select, or grab with no switch"],
+  ["Shake", "Reset the view"],
 ];
 
 export function GlovePage() {
@@ -84,7 +84,7 @@ export function GlovePage() {
           ) : g.status === "disconnected" ? (
             <p className="mt-2.5 text-[12px] text-bad">The glove dropped out. Reconnect picks it up again.</p>
           ) : (
-            !connected && <p className="mt-2.5 text-[12px] text-muted">{supported ? "Power the glove and keep it still for 2 s, then connect. The camera starts too." : "Glove connection needs Chrome or Edge."}</p>
+            !connected && <p className="mt-2.5 text-[12px] text-muted">{supported ? "Power the glove and keep it still for 2 s, then connect. Its LED flashes once a second while it runs." : "Glove connection needs Chrome or Edge."}</p>
           )}
         </div>
 
