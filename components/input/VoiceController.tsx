@@ -130,7 +130,7 @@ export function VoiceController() {
 
   if (!listening && !result) return null;
   return (
-    <div className="pointer-events-none fixed bottom-16 left-1/2 z-50 flex -translate-x-1/2 animate-fade items-center gap-2 rounded-full bg-copper px-4 py-2 text-[13px] text-white shadow-[var(--shadow-float)]" role="status" aria-live="polite">
+    <div className="pointer-events-none fixed bottom-16 left-1/2 z-50 flex -translate-x-1/2 animate-fade items-center gap-2 rounded-[10px] bg-copper px-4 py-2 text-[13px] text-paper shadow-[var(--shadow-float)]" role="status" aria-live="polite">
       <Mic size={15} strokeWidth={1.5} className={listening ? "animate-pulse text-copper" : ""} />
       {listening ? text || "Listening… release Space when done" : result}
     </div>

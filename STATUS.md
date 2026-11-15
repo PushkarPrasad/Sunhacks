@@ -36,4 +36,9 @@ Run: `npm install && npm run build && npm start`, then http://localhost:3000 (Ch
 - In headless tests, clicking Connect within ~1 s of page load (before hydration) can be ignored; people are not affected.
 
 ## Final checks
-(filled in at the end)
+- Before the last merge (accessibility audit): lint, typecheck, 114 unit tests, `next build` and all 72 Playwright tests passed.
+- The audit branch was then merged (contrast on emerald buttons now uses dark text, 24 px dot targets, real links for
+  navigation, live regions, magnetic primary buttons). Its own run passed tsc, eslint (app/components), 114 unit tests and
+  `next build`. **The full Playwright suite was not re-run after this merge** (stopped early at the owner's request to
+  save usage). If something fails, the likeliest spots are the Devices cards (now a list item wrapping a link) and the
+  Home "Open a device" link.
