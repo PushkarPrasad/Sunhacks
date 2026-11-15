@@ -159,7 +159,15 @@ function onNotify() {
 
 function startWatchdog() {
   if (watchdog) clearInterval(watchdog);
+  let lastTick = Date.now();
+  let graceUntil = 0;
   watchdog = setInterval(() => {
+    const now = Date.now();
+    // If this tick ran late, the page itself was blocked (e.g. a 3D scene compiling); notifications are queued
+    // behind it, not lost. Give them time to arrive before judging the link.
+    if (now - lastTick > 1500) graceUntil = now + 1500;
+    lastTick = now;
+    if (now < graceUntil) return;
     const s = useGlove.getState();
     if (s.status !== "connected" || !s.lastMessageAt) return;
     if (Date.now() - s.lastMessageAt > STALL_MS) {

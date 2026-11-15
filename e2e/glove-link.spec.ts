@@ -60,6 +60,8 @@ test("grab and rotate: switch held, 90° on each axis, release keeps the model t
   await page.waitForTimeout(800);
   await page.getByRole("button", { name: /Connect Bluetooth/ }).click();
   await expect(pill(page)).toContainText("Connected");
+  // Like the real firmware, send READY every 3 s so the 4 s stall watchdog stays quiet during navigation.
+  await page.evaluate(() => setInterval(() => (window as unknown as { __fakeGlove: { send(l: string): boolean } }).__fakeGlove.send("READY:CURIE"), 3000));
   await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Devices" }).click();
   await page.getByRole("listitem").filter({ hasText: "Drones" }).first().click();
   await page.waitForURL("**/devices/drones");
@@ -72,10 +74,11 @@ test("grab and rotate: switch held, 90° on each axis, release keeps the model t
     ["roll", (t) => `O:${Math.round(90 * t)},0,0`, new Quaternion().setFromAxisAngle({ x: 0, y: 0, z: 1 } as never, -90 * DEG)],
   ];
   for (const [axis, path, expected] of cases) {
+    await expect(pill(page)).toContainText("Connected", { timeout: 8000 });
     await send(page, "G:SHAKE");
     await send(page, "O:0,0,0");
     await page.waitForTimeout(400);
-    await send(page, "BTN:DOWN");
+    expect(await send(page, "BTN:DOWN"), `${axis}: BTN:DOWN delivered`).toBe(true);
     await expect(page.getByTestId("grab-chip")).toHaveText("Grabbed");
     for (let i = 1; i <= 15; i++) {
       await send(page, path(i / 15));

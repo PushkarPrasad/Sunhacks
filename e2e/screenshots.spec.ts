@@ -15,7 +15,7 @@ for (const size of SIZES) {
     test("calibrate", async ({ page }) => {
       const errors = collectErrors(page);
       await page.goto("/calibrate");
-      await expect(page.getByRole("heading", { name: /Tune the glove/ })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Tune your hands" })).toBeVisible();
       await page.waitForTimeout(1500);
       await expectNoOverflow(page);
       await page.screenshot({ path: shot("18-calibrate") });
