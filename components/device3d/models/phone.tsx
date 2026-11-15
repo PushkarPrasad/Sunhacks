@@ -318,7 +318,7 @@ export const PHONE: ProductDef = {
   id: "phone",
   name: "Smartphone",
   Body,
-  camera: [3.4, 2.4, 6.6],
+  camera: [4.6, 2.8, 10.4],
   floor: -0.02,
   offset: [0, -1.85, 0],
   shadowScale: 6,

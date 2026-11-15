@@ -51,6 +51,7 @@ export function CategoryView({ id }: { id: string }) {
     () =>
       templatesForCategory(id)
         .filter((t) => id !== "phones-laptops" || LAPTOP_TEMPLATES.has(t.id) === (variant === "laptop"))
+        .slice(0, 2) // one screen: the rest are on the Templates page
         .map((t) => {
         const build = buildFromTemplate(t, (pid) => partsById[pid], { preview: true });
         const report = runChecks(build, parts);

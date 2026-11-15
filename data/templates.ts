@@ -305,6 +305,32 @@ export const templates: Template[] = [
   },
 
   // ---------------- Smartwatches ----------------
+  // ---------------- Wearables: the team's glove ----------------
+  {
+    id: "motion-glove",
+    name: "Motion Glove",
+    categoryId: "wearables",
+    description: "Our own glove, rebuilt with maker parts: an IMU on the back of the hand, a grab switch and a Bluetooth board on a LiPo.",
+    featured: true,
+    budgetUSD: 30,
+    instances: [
+      { ref: "mcu", partId: "xiao-esp32s3" },
+      { ref: "imu", partId: "mpu6050", label: "Motion sensor" },
+      { ref: "grab", partId: "button", label: "Grab switch" },
+      { ref: "bat", partId: "lipo-500" },
+    ],
+    wires: [
+      ["bat.+", "mcu.BAT+"],
+      ["bat.-", "mcu.BAT-"],
+      ["imu.VCC", "mcu.3V3"],
+      ["imu.GND", "mcu.GND"],
+      ["imu.SDA", "mcu.D4"],
+      ["imu.SCL", "mcu.D5"],
+      ["grab.A", "mcu.D2"],
+      ["grab.B", "mcu.GND"],
+    ],
+  },
+
   {
     id: "smartwatch",
     name: "Smartwatch",
