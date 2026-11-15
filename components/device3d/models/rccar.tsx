@@ -298,6 +298,7 @@ export const RC_CAR: ProductDef = {
   camera: [5.8, 3.4, 6.6],
   floor: 0,
   offset: [0, -0.7, 0],
+  exposure: 1.0,
   shadowScale: 8,
   aoRadius: 0.35,
   minDistance: 3.5,

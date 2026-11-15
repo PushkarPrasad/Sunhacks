@@ -184,6 +184,7 @@ export const GLOVE: ProductDef = {
   camera: [6.6, 6.4, 7.8],
   floor: -0.48,
   offset: [0, 0, 0.4],
+  exposure: 1.08,
   shadowScale: 9,
   aoRadius: 0.15,
   minDistance: 3,

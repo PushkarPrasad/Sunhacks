@@ -380,6 +380,7 @@ export const LAPTOP: ProductDef = {
   camera: [7.4, 5.4, 9.6],
   floor: -0.03,
   offset: [0, -1.2, 0.4],
+  exposure: 0.95,
   shadowScale: 10,
   aoRadius: 0.2,
   minDistance: 4,

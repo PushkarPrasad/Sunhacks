@@ -328,6 +328,7 @@ export const ROVER: ProductDef = {
   camera: [8.2, 5.4, 9.6],
   floor: 0,
   offset: [0, -1.25, 0],
+  exposure: 1.05,
   shadowScale: 9,
   aoRadius: 0.4,
   minDistance: 4,

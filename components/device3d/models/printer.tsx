@@ -296,6 +296,7 @@ export const PRINTER: ProductDef = {
   camera: [9.4, 6.6, 11.2],
   floor: 0,
   offset: [0, -3.0, 0],
+  exposure: 1.12,
   shadowScale: 12,
   aoRadius: 0.5,
   minDistance: 6,

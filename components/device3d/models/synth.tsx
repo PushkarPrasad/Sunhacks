@@ -224,6 +224,7 @@ export const SYNTH: ProductDef = {
   camera: [4.4, 5.2, 8.0],
   floor: -0.02,
   offset: [0, -0.6, 0],
+  exposure: 1.15,
   shadowScale: 9,
   aoRadius: 0.15,
   minDistance: 3,

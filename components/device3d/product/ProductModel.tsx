@@ -42,6 +42,8 @@ export interface ProductDef {
   floor: number;
   shadowScale?: number;
   aoRadius?: number;
+  /** Tone-mapping exposure for this scene (dark products need a little more). */
+  exposure?: number;
   /** Offset applied to the whole model so it sits centred. */
   offset?: [number, number, number];
   minDistance?: number;
@@ -230,7 +232,7 @@ function Scene({ def, explode, shell, hovered, selected, onHover, onSelect, onAn
   const Body = def.Body;
   return (
     <>
-      <Studio floor={def.floor} shadowScale={def.shadowScale ?? 6} aoRadius={def.aoRadius ?? 0.35} />
+      <Studio floor={def.floor} shadowScale={def.shadowScale ?? 6} aoRadius={def.aoRadius ?? 0.35} exposure={def.exposure ?? 1} />
       <Group ref={root} position={def.offset ?? [0, 0, 0]}>
         <PartCtx.Provider value={ctx}>
           <AmountCtx.Provider value={amount}>
