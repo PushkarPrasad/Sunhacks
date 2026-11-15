@@ -20,6 +20,8 @@ function arrowsOwned(target: EventTarget | null): boolean {
   return !!el?.closest?.("[data-arrows]");
 }
 
+const FALLBACK = { fallback: true };
+
 export function KeyboardMap() {
   const router = useRouter();
   const pathname = usePathname();
@@ -30,27 +32,27 @@ export function KeyboardMap() {
     const offPrev = onInput("prevPage", () => {
       if (prev) router.push(prev.path);
       return true;
-    });
+    }, FALLBACK);
     const offNext = onInput("nextPage", () => {
       if (next) router.push(next.path);
       return true;
-    });
+    }, FALLBACK);
     const offBack = onInput("back", () => {
       if (prev) router.push(prev.path);
       return true;
-    });
+    }, FALLBACK);
     const offChecks = onInput("showChecks", () => {
       router.push("/checks");
       return true;
-    });
+    }, FALLBACK);
     const offScratch = onInput("startScratch", () => {
       router.push("/builder?new=1");
       return true;
-    });
+    }, FALLBACK);
     const offExport = onInput("exportBoard", () => {
       router.push("/board");
       return true;
-    });
+    }, FALLBACK);
     return () => [offPrev, offNext, offBack, offChecks, offScratch, offExport].forEach((f) => f());
   }, [pathname, router]);
 

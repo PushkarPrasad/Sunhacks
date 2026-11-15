@@ -25,16 +25,21 @@ export interface InputEvent {
 
 type Handler = (e: InputEvent) => boolean | void;
 const handlers = new Map<InputAction, Handler[]>();
+const fallbacks = new Map<InputAction, Handler[]>();
 
-/** Subscribe; returns an unsubscribe function. Later subscribers run first and can return true to consume. */
-export function onInput(action: InputAction, handler: Handler): () => void {
-  const list = handlers.get(action) ?? [];
-  handlers.set(action, [handler, ...list]);
-  return () => handlers.set(action, (handlers.get(action) ?? []).filter((h) => h !== handler));
+/**
+ * Subscribe; returns an unsubscribe function. Later subscribers run first and can return true to consume.
+ * `fallback` handlers (the shell's page navigation) always run after every page handler, whatever the order
+ * they subscribed in, so a page (Home slides, Snake) can consume arrows before they change the page.
+ */
+export function onInput(action: InputAction, handler: Handler, opts: { fallback?: boolean } = {}): () => void {
+  const map = opts.fallback ? fallbacks : handlers;
+  map.set(action, [handler, ...(map.get(action) ?? [])]);
+  return () => map.set(action, (map.get(action) ?? []).filter((h) => h !== handler));
 }
 
 export function emitInput(action: InputAction, source: InputEvent["source"] = "ui", value?: number): boolean {
-  for (const h of handlers.get(action) ?? []) {
+  for (const h of [...(handlers.get(action) ?? []), ...(fallbacks.get(action) ?? [])]) {
     if (h({ action, source, value }) === true) return true;
   }
   return false;

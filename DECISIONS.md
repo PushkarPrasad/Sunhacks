@@ -54,3 +54,10 @@ Judgment calls made while building, newest last.
     every tile opens something that passes the checks engine. Tablets, Projectors, Game Consoles and Cameras are not
     in the new list; they stay routable (kind "hidden") and are named on the More tile. Phones and Laptops merged into
     one tile with a Phone/Laptop toggle.
+22. **V3: page navigation is a fallback on the input bus.** Handlers ran newest-first, so when the shell re-subscribed
+    after a page mounted it could steal arrow keys from the Home slides. Page navigation now registers with
+    `{ fallback: true }` and always runs after page handlers.
+23. **V3: verification builds use a separate dist dir** (`NEXT_DIST_DIR=.next-verify`) so a `next start` the owner
+    already has running on port 3000 keeps serving while the agent tests on port 3100.
+24. **V3: old category URLs redirect** (`/devices/phones` → `phones-laptops`, `robots` → `rovers`, `smartwatches` →
+    `wearables`) so links from V2 screenshots and docs still land somewhere.

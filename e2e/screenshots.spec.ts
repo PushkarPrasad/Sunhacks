@@ -25,6 +25,7 @@ for (const size of SIZES) {
 
     test("home how it works", async ({ page }) => {
       await page.goto("/");
+      await page.waitForLoadState("networkidle");
       await page.getByRole("tab", { name: "How it works" }).click();
       await expect(page.getByRole("heading", { name: /Explore\. Build\./ })).toBeVisible();
       await page.waitForTimeout(900);
@@ -45,7 +46,7 @@ for (const size of SIZES) {
     test("glove and about", async ({ page }) => {
       const errors = collectErrors(page);
       await page.goto("/glove");
-      await expect(page.getByRole("button", { name: /Find glove/ })).toBeVisible();
+      await expect(page.getByRole("button", { name: /Connect Bluetooth/ })).toBeVisible();
       await page.waitForTimeout(2500);
       await expectNoOverflow(page);
       await page.screenshot({ path: shot("15-glove") });
@@ -59,7 +60,7 @@ for (const size of SIZES) {
 
     test("hoop upload", async ({ page }) => {
       await loadTemplate(page, "gesture-ring");
-      await page.getByRole("button", { name: "Import build" }).click();
+      await page.getByRole("button", { name: /^Upload$/ }).click();
       await expect(page.getByRole("dialog", { name: "Upload files" })).toBeVisible();
       await page.locator("input[type=file]").setInputFiles({ name: "my-build.json", mimeType: "application/json", buffer: Buffer.from("{}") });
       await page.waitForTimeout(600);
@@ -77,16 +78,15 @@ for (const size of SIZES) {
       expect(errors).toEqual([]);
     });
 
-    test("category robots", async ({ page }) => {
+    test("category rovers", async ({ page }) => {
       const errors = collectErrors(page);
-      await page.goto("/devices/robots");
+      await page.goto("/devices/rovers");
       await expect(page.getByText("Robot Car")).toBeVisible();
-      await page.waitForTimeout(2500);
-      await page.getByRole("button", { name: "Motor driver", exact: true }).hover();
-      await page.waitForTimeout(500);
+      await expect(page.locator("[data-model=rover] canvas")).toBeVisible();
+      await page.waitForTimeout(3500);
       await expectNoOverflow(page);
       await page.waitForTimeout(700);
-      await page.screenshot({ path: shot("03-category-robots") });
+      await page.screenshot({ path: shot("03-category-rovers") });
       expect(errors).toEqual([]);
     });
 
@@ -149,7 +149,7 @@ for (const size of SIZES) {
       expect(errors).toEqual([]);
     });
 
-    for (const cat of ["phones", "laptops", "projectors"]) {
+    for (const cat of ["laptops", "projectors"]) {
       test(`anatomy ${cat}`, async ({ page }) => {
         const errors = collectErrors(page);
         await page.goto(`/devices/${cat}`);

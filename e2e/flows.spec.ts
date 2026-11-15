@@ -58,6 +58,7 @@ test("Gesture Ring exports Gerber and BOM", async ({ page }) => {
 
 test("keyboard: arrows move between pages, E toggles the exploded view", async ({ page }) => {
   await page.goto("/");
+  await page.waitForLoadState("networkidle"); // Home must hydrate before it can claim the arrows
   await page.locator("body").click({ position: { x: 5, y: 300 } });
   // Arrows step through the five Home slides first, then move to the next page.
   for (let k = 0; k < 4; k++) {
@@ -67,7 +68,8 @@ test("keyboard: arrows move between pages, E toggles the exploded view", async (
   await expect(page.getByRole("heading", { name: "Where do you want to begin?" })).toBeVisible();
   await page.keyboard.press("ArrowRight");
   await page.waitForURL("**/devices");
-  await page.goto("/devices/phones");
+  await page.goto("/devices/laptops");
+  await page.waitForLoadState("networkidle");
   await expect(page.getByRole("button", { name: /Collapse/ })).toBeVisible();
   await page.keyboard.press("e");
   await expect(page.getByRole("button", { name: /Explode/ })).toBeVisible();

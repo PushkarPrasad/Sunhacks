@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Verification builds can go to a separate folder (NEXT_DIST_DIR=.next-verify) so a running `next start` keeps working.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   cacheComponents: true,
   partialPrefetching: true,
   output: "standalone",

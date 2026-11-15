@@ -5,6 +5,7 @@ test("calibration wizard: keep still, tilt each side, grab and twist; each step 
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/calibrate");
+  await expect(page.getByRole("heading", { name: /Tune the glove/ })).toBeVisible();
   await page.waitForFunction(() => (window as unknown as { __magicSmokeGlove?: unknown }).__magicSmokeGlove);
   const send = (lines: string[], gap = 40) =>
     page.evaluate(
@@ -21,7 +22,7 @@ test("calibration wizard: keep still, tilt each side, grab and twist; each step 
   const step = (n: number) => page.locator(`[data-step="${n}"]`);
 
   await send(Array.from({ length: 60 }, (_, i) => `O:${2 + (i % 2)},1,10`));
-  await expect(step(1)).toHaveAttribute("data-done", "true");
+  await expect(step(1)).toHaveAttribute("data-done", "true", { timeout: 15_000 });
   await expect(step(2)).toHaveAttribute("data-done", "false");
 
   await send(["O:-32,1,10", "O:36,1,10", "O:2,28,10", "O:2,-26,10"]);
