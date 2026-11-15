@@ -242,7 +242,7 @@ export interface DeviceCategory {
   name: string;
   description: string;
   icon: string; // lucide icon name
-  kind: "custom" | "device" | "more";
+  kind: "custom" | "device" | "more" | "hidden";
   blocks: ArchitectureBlock[];
 }
 

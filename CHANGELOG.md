@@ -6,6 +6,7 @@
 - Connecting the glove starts the webcam tracker in the same click; picture-in-picture preview with landmarks; camera denial keeps the glove working with a one-line notice.
 - Standalone test bench at `/test/glove-camera.html`: glove, camera and fusion checklist with score, live landmarks, cube driven by fist + twist, error log (incl. the Serial Monitor hint).
 - Home "Drive it with your hands": the box-and-ovals drawing is replaced by a realistic 3D hand (WebXR generic hand, MIT) posed per gesture, with a mini drone for grab + twist and live-landmark mirroring.
+- Devices: new category order with Drones first, Start blank button, Phone/Laptop toggle, nine new starter builds, 12 V adapter part; tablets, projectors, consoles and cameras moved behind More (Coming Soon).
 - Glove tab rebuilt: live roll/pitch/yaw bars, 3D board preview, last 8 events, Blink LED, Reconnect.
 
 ## V2

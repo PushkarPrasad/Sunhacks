@@ -49,3 +49,7 @@ Judgment calls made while building, newest last.
     source within 300 ms is dropped, so a repeated glove flick inside 300 ms is dropped too.
 20. **V3: the camera engine moved out of React** (`lib/input/camera.ts`) so the glove click handler can call
     getUserMedia before any await. The Settings toggle and the glove share it.
+21. **V3 categories.** The twelve-tile order from the spec. New categories got real starter builds (two each) so
+    every tile opens something that passes the checks engine. Tablets, Projectors, Game Consoles and Cameras are not
+    in the new list; they stay routable (kind "hidden") and are named on the More tile. Phones and Laptops merged into
+    one tile with a Phone/Laptop toggle.

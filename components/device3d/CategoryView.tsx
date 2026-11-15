@@ -18,7 +18,9 @@ import { DroneViewer } from "./DroneViewer";
 import { StatusDot } from "@/components/ui/StatusDot";
 
 /** Categories drawn as full anatomy figures (numbered callouts); the rest use the plain exploded view. */
-const ANATOMY = new Set(["phones", "laptops", "projectors"]);
+const ANATOMY = new Set(["phones", "laptops", "projectors", "phones-laptops"]);
+
+const LAPTOP_TEMPLATES = new Set(["laptop-handheld", "status-terminal"]);
 
 const ExplodedDevice = dynamic(() => import("./ExplodedDevice"), { ssr: false, loading: () => <div className="h-full w-full" /> });
 
@@ -29,7 +31,9 @@ export function CategoryView({ id }: { id: string }) {
   const [focusIndex, setFocusIndex] = useState(-1);
   const router = useRouter();
   const loadTemplate = useBuild((s) => s.loadTemplate);
-  const blocks = category.blocks;
+  // Phones & Laptops shows one device at a time.
+  const [variant, setVariant] = useState<"phone" | "laptop">("phone");
+  const blocks = id === "phones-laptops" && variant === "laptop" ? categoriesById.laptops.blocks : category.blocks;
 
   useEffect(() => {
     const offs = [
@@ -42,14 +46,16 @@ export function CategoryView({ id }: { id: string }) {
 
   const starters = useMemo(
     () =>
-      templatesForCategory(id).map((t) => {
+      templatesForCategory(id)
+        .filter((t) => id !== "phones-laptops" || LAPTOP_TEMPLATES.has(t.id) === (variant === "laptop"))
+        .map((t) => {
         const build = buildFromTemplate(t, (pid) => partsById[pid], { preview: true });
         const report = runChecks(build, parts);
         const fails = report.findings.filter((f) => f.severity === "fail").length;
         const warns = report.findings.filter((f) => f.severity === "warn").length;
         return { t, report, fails, warns, count: t.instances.length };
       }),
-    [id],
+    [id, variant],
   );
 
   const shown = blocks.find((b) => b.id === active) ?? (focusIndex >= 0 ? blocks[focusIndex] : null);
@@ -83,12 +89,32 @@ export function CategoryView({ id }: { id: string }) {
         onKeyDown={onKeyDown}
       >
         <div className="dot-grid absolute inset-0 [background-size:20px_20px] opacity-60" />
-        <ExplodedDevice blocks={blocks} active={active} onActive={setActive} exploded={exploded} anatomy={ANATOMY.has(id)} />
+        <ExplodedDevice key={variant} blocks={blocks} active={active} onActive={setActive} exploded={exploded} anatomy={ANATOMY.has(id)} />
         <div className="pointer-events-none absolute left-8 top-7">
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{ANATOMY.has(id) ? "Anatomy" : "Generic architecture"}</p>
           <p className="mt-1 text-[13px] text-muted">Hover or use the arrow keys to inspect a block</p>
         </div>
         <div className="absolute right-6 top-6 flex gap-2">
+          {id === "phones-laptops" && (
+            <div className="flex rounded-full border border-line-strong bg-card/80 p-0.5 text-[13px] backdrop-blur" role="radiogroup" aria-label="Device">
+              {(["phone", "laptop"] as const).map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  role="radio"
+                  aria-checked={variant === v}
+                  onClick={() => {
+                    setVariant(v);
+                    setActive(null);
+                    setFocusIndex(-1);
+                  }}
+                  className={`h-8 rounded-full px-3 capitalize ${variant === v ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          )}
           <button
             type="button"
             onClick={() => setExploded((e) => !e)}

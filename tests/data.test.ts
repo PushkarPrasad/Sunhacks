@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { fp } from "@tscircuit/footprinter";
-import { categories } from "@/data/categories";
+import { categories, deviceCategories, visibleCategories } from "@/data/categories";
 import { parts, partsById } from "@/data/parts";
 import { templates } from "@/data/templates";
 import { compat } from "@/data/compat";
@@ -41,16 +41,17 @@ describe("seed data", () => {
     }
   });
 
-  test("categories are in the exact order with Custom first and More last", () => {
-    expect(categories.map((c) => c.name)).toEqual([
-      "Custom", "Phones", "Laptops", "Tablets", "Projectors", "Smartwatches", "Smart Home", "Robots", "Game Consoles", "Audio", "Cameras", "Drones", "More (Coming Soon)",
+  test("visible categories are in the V3 order, drones first and More last; Start blank is not a category", () => {
+    expect(visibleCategories.map((c) => c.name)).toEqual([
+      "Drones", "Balancing Robots", "Rovers", "Robot Arms", "Wearables", "Space & CanSats", "RC Vehicles",
+      "Smart Home & IoT", "3D Printers & CNC", "Audio & Synths", "Phones & Laptops", "More (Coming Soon)",
     ]);
-    for (const c of categories.slice(1, 11)) expect(c.blocks.length, c.id).toBeGreaterThanOrEqual(6);
-    expect(categories.find((c) => c.id === "drones")!.blocks.length).toBeGreaterThan(0);
+    expect(categories.some((c) => c.kind === "custom")).toBe(false);
+    for (const c of deviceCategories) expect(c.blocks.length, c.id).toBeGreaterThanOrEqual(4);
   });
 
   test("every device category has 2+ visible templates; required templates exist", () => {
-    for (const c of categories.filter((x) => x.kind === "device")) {
+    for (const c of deviceCategories) {
       expect(templates.filter((t) => t.categoryId === c.id && !t.hidden).length, c.id).toBeGreaterThanOrEqual(2);
     }
     for (const id of ["pocket-lora-messenger", "laptop-handheld", "pi-touch-tablet", "mini-projector-controller", "smartwatch", "plant-monitor", "robot-car", "handheld-console", "smart-speaker", "wifi-camera", "gesture-ring", "overengineered-soda-can"]) {

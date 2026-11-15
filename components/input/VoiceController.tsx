@@ -36,7 +36,9 @@ export function parseCommand(raw: string): VoiceCommand {
   if (/home/.test(t) && !/smart home/.test(t)) return { kind: "go", path: "/" };
   for (const c of categories) {
     if (c.kind !== "device") continue;
-    const names = [c.name.toLowerCase(), c.name.toLowerCase().replace(/s$/, ""), c.id.replace("-", " ")];
+    // "Phones & Laptops" answers to "phones", "phone", "laptops"...; "Smart Home & IoT" to "smart home".
+    const words = c.name.toLowerCase().split(/\s*&\s*/);
+    const names = [...words, ...words.map((w) => w.replace(/s$/, "")), c.id.replace(/-/g, " ")];
     if (names.some((n) => t.includes(n))) return { kind: "go", path: `/devices/${c.id}` };
   }
   if (/device/.test(t)) return { kind: "go", path: "/devices" };
