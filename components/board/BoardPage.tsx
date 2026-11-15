@@ -9,6 +9,7 @@ import { useCircuit } from "@/lib/hooks/useCircuit";
 import { onInput } from "@/lib/input/bus";
 import { DEMO_USD_PER_SOL, SOLANA_RECIPIENT, solanaPayUrl } from "@/lib/integrations/solana";
 import { useBuild } from "@/stores/build";
+import { CountUp } from "@/components/ui/CountUp";
 import { QuadView } from "./QuadView";
 
 type Kind = "gerber" | "bom" | "kicad" | "json";
@@ -91,9 +92,9 @@ export function BoardPage() {
     return (
       <div className="grid h-full place-items-center text-center">
         <div>
-          <p className="font-serif text-[40px]">No board yet.</p>
+          <h1 className="font-serif text-[40px] font-normal">No board yet.</h1>
           <p className="mt-2 text-muted">Place and wire modules in the builder first.</p>
-          <Link href="/builder" className="mt-6 inline-flex h-10 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-5 text-[13px] text-white hover:bg-copper-hover">
+          <Link data-magnetic href="/builder" className="mt-6 inline-flex h-10 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-5 text-[13px] text-paper hover:bg-copper-hover">
             Open the builder
           </Link>
         </div>
@@ -165,7 +166,7 @@ export function BoardPage() {
                 role="radio"
                 aria-checked={qty === q}
                 onClick={() => setQty(q)}
-                className={`flex-1 rounded-md border py-1 font-mono text-[12px] ${qty === q ? "border-copper bg-copper text-white" : "border-line hover:border-line-strong"}`}
+                className={`flex-1 rounded-md border py-1 font-mono text-[12px] ${qty === q ? "border-copper bg-copper text-paper" : "border-line hover:border-line-strong"}`}
               >
                 {q}
               </button>
@@ -174,15 +175,15 @@ export function BoardPage() {
           <dl className="mt-3 space-y-1.5 font-mono text-[12px]">
             <div className="flex justify-between">
               <dt className="text-muted">Boards ×{qty}</dt>
-              <dd>${quote?.boardUSD.toFixed(2) ?? "—"}</dd>
+              <dd className="tabular-nums">{quote ? <CountUp value={quote.boardUSD} format={(n) => `$${n.toFixed(2)}`} /> : "$—"}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-muted">Parts ×1</dt>
-              <dd>${report.totals.bomUSD.toFixed(2)}</dd>
+              <dd className="tabular-nums"><CountUp value={report.totals.bomUSD} format={(n) => `$${n.toFixed(2)}`} /></dd>
             </div>
             <div className="flex justify-between border-t border-line pt-1.5 text-[13px]">
               <dt>First build</dt>
-              <dd>${total}</dd>
+              <dd className="tabular-nums"><CountUp value={Number(total)} format={(n) => `$${n.toFixed(2)}`} /></dd>
             </div>
           </dl>
           <p className="mt-2 text-[11px] text-muted" title={quote?.assumptions.join("\n")}>
@@ -219,7 +220,7 @@ function PayModal({ usd, name, onClose }: { usd: number; name: string; onClose: 
         <p className="mt-1 text-[11px] text-muted">
           ${usd.toFixed(2)} at a fixed demo rate of ${DEMO_USD_PER_SOL}/SOL. Scan with a wallet set to devnet.
         </p>
-        <a href={url} className="mt-4 inline-flex h-9 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-4 text-[12px] text-white hover:bg-copper-hover">
+        <a data-magnetic href={url} className="mt-4 inline-flex h-9 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-4 text-[12px] text-paper hover:bg-copper-hover">
           Open in wallet
         </a>
       </div>

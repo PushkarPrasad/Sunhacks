@@ -44,7 +44,7 @@ export function CalibratePage() {
                 aria-current={i === step ? "step" : undefined}
                 className={`flex w-full items-center gap-3 rounded-[10px] border px-3 py-2.5 text-left text-[14px] transition ${i === step ? "border-line-strong bg-raised text-ink" : "border-transparent text-muted hover:border-line hover:text-ink"}`}
               >
-                <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border text-[11px] ${done[i] ? "border-copper bg-copper text-white" : "border-line-strong font-mono"}`} data-testid={`step-check-${i}`}>
+                <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border text-[11px] ${done[i] ? "border-copper bg-copper text-paper" : "border-line-strong font-mono"}`} data-testid={`step-check-${i}`}>
                   {done[i] ? <Check size={13} strokeWidth={2.5} /> : i + 1}
                 </span>
                 {s}
@@ -90,7 +90,7 @@ function StepHeader({ n, title, line }: { n: number; title: string; line: string
 function NextButton({ ok, onNext, label = "Next step" }: { ok: boolean; onNext?: () => void; label?: string }) {
   if (!onNext) return null;
   return (
-    <button type="button" disabled={!ok} onClick={onNext} className="mt-auto self-end rounded-[10px] bg-copper px-5 py-2.5 text-[13px] text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.12)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-40">
+    <button data-magnetic type="button" disabled={!ok} onClick={onNext} className="mt-auto self-end rounded-[10px] bg-copper px-5 py-2.5 text-[13px] text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.12)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-40">
       {label}
     </button>
   );
@@ -159,7 +159,7 @@ function GloveStep({ onDone, onNext }: { onDone: () => void; onNext: () => void 
         <div className="space-y-4">
           {status !== "connected" ? (
             <div className="flex gap-2">
-              <button type="button" onClick={() => void (status === "disconnected" ? reconnect() : connectGlove("bluetooth"))} className="flex h-10 items-center gap-2 rounded-[10px] bg-copper px-4 text-[13px] text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.12)] transition hover:bg-copper-hover">
+              <button type="button" onClick={() => void (status === "disconnected" ? reconnect() : connectGlove("bluetooth"))} data-magnetic className="flex h-10 items-center gap-2 rounded-[10px] bg-copper px-4 text-[13px] text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.12)] transition hover:bg-copper-hover">
                 <Bluetooth size={15} strokeWidth={1.75} /> {status === "disconnected" ? "Reconnect" : "Connect Bluetooth"}
               </button>
               <button type="button" onClick={() => void connectGlove("usb")} className="flex h-10 items-center gap-2 rounded-[10px] border border-line-strong px-4 text-[13px] transition hover:border-copper">
@@ -194,8 +194,8 @@ function GloveStep({ onDone, onNext }: { onDone: () => void; onNext: () => void 
               <div className="relative mt-1 h-1.5 rounded-full bg-line">
                 <span className="absolute top-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-copper" style={{ left: `${50 + ((o?.[k] ?? 0) / 180) * 50}%` }} />
               </div>
-              <label className="mt-1 flex items-center gap-2 text-[11px] text-muted">
-                <input type="checkbox" checked={flips[k]} onChange={() => toggleFlip(k)} className="accent-[var(--color-copper)]" /> Flip {k}
+              <label className="mt-1 flex min-h-6 cursor-pointer items-center gap-2 text-[11px] text-muted hover:text-ink">
+                <input type="checkbox" checked={flips[k]} onChange={() => toggleFlip(k)} className="h-4 w-4 accent-[var(--color-copper)]" /> Flip {k}
               </label>
             </div>
           ))}
@@ -210,7 +210,7 @@ function Phase({ label, active, done, pct, children }: { label: string; active: 
   return (
     <div className={`rounded-[12px] border p-4 transition ${active ? "border-line-strong bg-raised/50" : "border-line"} ${!active && !done ? "opacity-60" : ""}`}>
       <p className="flex items-center gap-2 text-[14px]">
-        <span className={`grid h-5 w-5 place-items-center rounded-full border ${done ? "border-copper bg-copper text-white" : "border-line-strong"}`}>{done && <Check size={11} strokeWidth={2.5} />}</span>
+        <span className={`grid h-5 w-5 place-items-center rounded-full border ${done ? "border-copper bg-copper text-paper" : "border-line-strong"}`}>{done && <Check size={11} strokeWidth={2.5} />}</span>
         {label}
       </p>
       <div className="mt-2 text-[12px] text-muted">{children}</div>
@@ -262,7 +262,7 @@ function CameraStep({ onDone, onNext }: { onDone: () => void; onNext: () => void
           type="button"
           onClick={() => void startHandControl()}
           disabled={camera === "on" || camera === "starting"}
-          className="rounded-[10px] bg-copper px-5 py-2.5 text-[14px] text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_8px_24px_-12px_rgb(15_157_107/0.7)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-50"
+          data-magnetic className="rounded-[10px] bg-copper px-5 py-2.5 text-[14px] text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_8px_24px_-12px_rgb(15_157_107/0.7)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-50"
         >
           {camera === "on" ? "Hand control on" : camera === "starting" ? "Starting…" : "Start hand control"}
         </button>
@@ -445,7 +445,7 @@ function ClickStep({ onDone }: { onDone: () => void }) {
             type="button"
             data-testid={`click-target-${k}`}
             onClick={() => setHit((h) => h.map((v, j) => (j === k ? true : v)))}
-            className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-[10px] border px-4 py-2 text-[12px] transition ${hit[k] ? "border-copper bg-copper text-white" : "border-line-strong hover:border-copper"}`}
+            className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-[10px] border px-4 py-2 text-[12px] transition ${hit[k] ? "border-copper bg-copper text-paper" : "border-line-strong hover:border-copper"}`}
             style={{ left: `${x}%`, top: `${y}%` }}
           >
             {hit[k] ? "Hit" : `Target ${k + 1}`}

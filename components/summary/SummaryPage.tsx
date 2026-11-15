@@ -78,8 +78,8 @@ export function SummaryPage() {
     return (
       <div className="grid h-full place-items-center text-center">
         <div>
-          <p className="font-serif text-[40px]">Nothing to summarise yet.</p>
-          <Link href="/devices" className="mt-6 inline-flex h-10 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-5 text-[13px] text-white hover:bg-copper-hover">
+          <h1 className="font-serif text-[40px] font-normal">Nothing to summarise yet.</h1>
+          <Link data-magnetic href="/devices" className="mt-6 inline-flex h-10 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-5 text-[13px] text-paper hover:bg-copper-hover">
             Start a build
           </Link>
         </div>
@@ -197,7 +197,7 @@ export function SummaryPage() {
               setCopied(true);
               setTimeout(() => setCopied(false), 1600);
             }}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-[10px] bg-copper shadow-[var(--shadow-btn)] text-[13px] text-white hover:bg-copper-hover disabled:opacity-50"
+            data-magnetic className="flex h-10 w-full items-center justify-center gap-2 rounded-[10px] bg-copper shadow-[var(--shadow-btn)] text-[13px] text-paper hover:bg-copper-hover disabled:opacity-50"
           >
             {copied ? <Check size={15} strokeWidth={2} /> : <Copy size={15} strokeWidth={1.5} />}
             {copied ? "Copied" : "Copy share link"}

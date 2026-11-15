@@ -51,7 +51,7 @@ export function GlovePage() {
           </div>
           <div className="mt-3 flex gap-2">
             {g.status === "disconnected" ? (
-              <button type="button" onClick={() => void reconnect()} className="flex h-10 flex-1 items-center justify-center gap-2 rounded-[10px] bg-copper text-[13px] text-white shadow-[var(--shadow-btn)] transition hover:-translate-y-px hover:bg-copper-hover">
+              <button type="button" onClick={() => void reconnect()} data-magnetic className="flex h-10 flex-1 items-center justify-center gap-2 rounded-[10px] bg-copper text-[13px] text-paper shadow-[var(--shadow-btn)] transition hover:-translate-y-px hover:bg-copper-hover">
                 <RefreshCw size={15} strokeWidth={1.75} /> Reconnect
               </button>
             ) : !connected ? (
@@ -60,7 +60,7 @@ export function GlovePage() {
                   type="button"
                   onClick={() => void connectGlove("bluetooth")}
                   disabled={g.status === "searching"}
-                  className="flex h-10 flex-1 items-center justify-center gap-2 rounded-[10px] bg-copper text-[13px] text-white shadow-[var(--shadow-btn)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-60"
+                  data-magnetic className="flex h-10 flex-1 items-center justify-center gap-2 rounded-[10px] bg-copper text-[13px] text-paper shadow-[var(--shadow-btn)] transition hover:-translate-y-px hover:bg-copper-hover disabled:opacity-60"
                 >
                   <Bluetooth size={15} strokeWidth={1.75} /> Connect Bluetooth
                 </button>

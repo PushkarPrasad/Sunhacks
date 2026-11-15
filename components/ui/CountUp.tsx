@@ -17,10 +17,11 @@ function reducedMotion(): boolean {
 export function CountUp({ value, format, ms = 700 }: { value: number; format: (n: number) => string; ms?: number }) {
   const [shown, setShown] = useState(0);
   const from = useRef(0);
+  const live = useRef(0);
 
   useEffect(() => {
     if (!Number.isFinite(value) || reducedMotion()) {
-      from.current = value;
+      from.current = live.current = value;
       const id = requestAnimationFrame(() => setShown(value));
       return () => cancelAnimationFrame(id);
     }
@@ -30,14 +31,16 @@ export function CountUp({ value, format, ms = 700 }: { value: number; format: (n
     const tick = (now: number) => {
       const k = Math.min(1, (now - start) / ms);
       const e = 1 - Math.pow(1 - k, 3);
-      setShown(a + (value - a) * e);
+      live.current = a + (value - a) * e;
+      setShown(live.current);
       if (k < 1) raf = requestAnimationFrame(tick);
       else from.current = value;
     };
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
-      from.current = value;
+      // Interrupted: the next count starts from what is on screen, so it never jumps.
+      from.current = live.current;
     };
   }, [value, ms]);
 

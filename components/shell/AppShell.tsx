@@ -8,6 +8,7 @@ import { useUi } from "@/stores/ui";
 import { KeyboardMap } from "@/components/input/KeyboardMap";
 import { HapticsWatcher } from "@/components/input/HapticsWatcher";
 import { VoiceController } from "@/components/input/VoiceController";
+import { useMagnetic } from "@/components/ui/useMagnetic";
 import { PageNav } from "./PageNav";
 import { TopBar } from "./TopBar";
 
@@ -17,6 +18,7 @@ const GestureLayer = dynamic(() => import("@/components/input/GestureLayer").the
 export function AppShell({ children }: { children: ReactNode }) {
   const highContrast = useUi((s) => s.highContrast);
   const motion = useUi((s) => s.motion);
+  useMagnetic();
 
   useEffect(() => {
     useUi.persist.rehydrate();
@@ -36,7 +38,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <TopBar />
-      <main id="main" className="relative min-h-0 flex-1 overflow-hidden">
+      <main id="main" tabIndex={-1} className="relative min-h-0 flex-1 overflow-hidden">
         {children}
       </main>
       <PageNav />

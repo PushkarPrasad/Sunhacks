@@ -30,8 +30,8 @@ export function CircuitView({ view, compact = false }: { view: "schematic" | "pc
       )}
       {data && view === "3d" && <Board3D circuitJson={data.circuitJson} build={build} />}
       {loading && (
-        <div className={`absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-1.5 text-[12px] shadow-[var(--shadow-float)] ${dark ? "bg-paper text-ink" : "bg-copper text-white"}`} role="status">
-          <span className="h-1.5 w-1.5 animate-ping rounded-full bg-copper" /> {data ? "Re-routing the carrier board…" : "Placing modules and routing the carrier board…"}
+        <div className={`absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-1.5 text-[12px] shadow-[var(--shadow-float)] ${dark ? "bg-paper text-ink" : "bg-copper text-paper"}`} role="status">
+          <span aria-hidden="true" className={`h-1.5 w-1.5 animate-ping rounded-full ${dark ? "bg-copper" : "bg-paper"}`} /> {data ? "Re-routing the carrier board…" : "Placing modules and routing the carrier board…"}
         </div>
       )}
       {error && <p className="absolute left-1/2 top-4 -translate-x-1/2 rounded-full bg-bad px-4 py-1.5 text-[12px] text-paper">{error}</p>}

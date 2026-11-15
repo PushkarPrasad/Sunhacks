@@ -111,9 +111,30 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-copper);
+  outline: 2px solid var(--color-copper-hover);
   outline-offset: 2px;
   border-radius: 6px;
+}
+/* The skip link target only receives programmatic focus; no ring around the whole page. */
+main:focus-visible {
+  outline: none;
+}
+/* Controls: no double-tap zoom delay, no grey tap flash. */
+button,
+a,
+[role="button"],
+[role="tab"],
+[role="radio"],
+input,
+select,
+label {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (pointer: fine) {
+  html {
+    overscroll-behavior: none;
+  }
 }
 
 ::selection {
@@ -133,7 +154,9 @@ body {
   :root:not([data-motion="full"]) *::before,
   :root:not([data-motion="full"]) *::after {
     animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

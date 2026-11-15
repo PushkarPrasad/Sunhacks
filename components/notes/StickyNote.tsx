@@ -45,7 +45,7 @@ export function StickyNote({ finding, onApply, onDismiss, width = 232, text, cla
       {(onApply || onDismiss) && (
         <div className="mt-3 flex items-center gap-2">
           {onApply && finding.fix && (
-            <button type="button" onClick={onApply} className="flex h-7 items-center gap-1 rounded-[10px] bg-copper px-3 text-[12px] text-white shadow-[var(--shadow-btn)] transition-colors hover:bg-copper-hover">
+            <button type="button" onClick={onApply} className="flex h-7 items-center gap-1 rounded-[10px] bg-copper px-3 text-[12px] text-paper shadow-[var(--shadow-btn)] transition-colors hover:bg-copper-hover">
               <Check size={13} strokeWidth={2} /> {t("note.apply")}
             </button>
           )}

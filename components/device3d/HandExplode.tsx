@@ -20,10 +20,10 @@ export function OpennessMeter() {
   const v = useInput((s) => s.openness);
   if (!driving || v === null) return null;
   return (
-    <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted" data-testid="openness-meter" aria-label={`Hand openness ${Math.round(v * 100)} percent`}>
+    <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted" data-testid="openness-meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v * 100)} aria-label="Hand openness">
       Hand
       <span className="relative h-1 w-16 overflow-hidden rounded-full bg-line">
-        <span className="absolute inset-y-0 left-0 rounded-full bg-ok transition-[width] duration-150 ease-out" style={{ width: `${v * 100}%` }} />
+        <span className="absolute inset-0 origin-left rounded-full bg-ok transition-transform duration-150 ease-out" style={{ transform: `scaleX(${v})` }} />
       </span>
     </span>
   );

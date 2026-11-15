@@ -234,7 +234,7 @@ function AnatomyOverlay({ blocks, anchors, active, onActive, show }: { blocks: A
           className={`pointer-events-auto absolute flex h-6 -translate-y-1/2 items-center gap-2 rounded-full border px-2.5 text-[11px] transition-colors ${p.side === "right" ? "" : "flex-row-reverse justify-start"} ${active === p.id ? "border-copper bg-copper text-paper" : "border-line bg-card/95 text-ink hover:border-ink"}`}
           style={{ left: p.lx, top: p.ly, width: LABEL_W }}
         >
-          <span className={`font-mono text-[10px] ${active === p.id ? "text-white/80" : "text-muted"}`}>{String(p.n).padStart(2, "0")}</span>
+          <span className={`font-mono text-[10px] ${active === p.id ? "text-paper/80" : "text-muted"}`}>{String(p.n).padStart(2, "0")}</span>
           <span className={`flex-1 truncate ${p.side === "left" ? "text-right" : ""}`}>{p.name}</span>
         </button>
       ))}

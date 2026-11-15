@@ -59,7 +59,7 @@ function ShareLoader() {
             loadBuild({ ...shared, id: `copy_${Date.now().toString(36)}` });
             router.push("/builder");
           }}
-          className="mt-8 inline-flex h-11 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-6 text-[14px] text-white hover:bg-copper-hover disabled:opacity-50"
+          data-magnetic className="mt-8 inline-flex h-11 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-6 text-[14px] text-paper hover:bg-copper-hover disabled:opacity-50"
         >
           Open a copy in the builder
         </button>
