@@ -1,7 +1,7 @@
 # Magic Smoke: Project Rundown
 
-Written from the team's seed (`RUNDOWN_seed.md`) and checked against the code on 2026-11-15. Where the seed
-described something that is planned but not built yet, this version says so.
+Written from the team's seed (`RUNDOWN_seed.md`) and checked against the code on 2026-11-15 (updated for V3). Where
+the seed described something that is planned but not built yet, this version says so.
 
 ## The problem
 
@@ -15,9 +15,11 @@ way to design the PCB, and no easy way to see what was wired where, and why.
 
 ## What we built
 
-Magic Smoke lets you open up a 3D model of an everyday device, see the parts inside it, and start your own build from
-it, or from a blank canvas. The drone is a detailed, realistic procedural model you can explode, x-ray and inspect part
-by part; the other devices currently use simpler procedural exploded views. As you place parts and wire them, the site
+Magic Smoke lets you open up a 3D model of a device, see the parts inside it, and start your own build from it, or from
+a blank canvas. Every category on the Devices page opens a detailed procedural model built to real dimensions (drone,
+reaction-wheel cube, rocker-bogie rover, six-axis arm, motion glove, CanSat, weather station, RC buggy, 3D printer,
+desktop synth, phone and laptop) that you can explode, see through, x-ray and inspect part by part. They share one
+studio setup: a local studio HDRI, soft shadows, ambient occlusion and bloom only on LEDs and screens. As you place parts and wire them, the site
 checks power, voltages, pins, bus addresses, cost and board fit in real time, and leaves suggestions as sticky notes
 with one-click fixes. One click turns the build into a schematic and a routed carrier PCB, with Gerber, BOM, KiCad and
 Circuit JSON exports and a cost estimate. You can drive it with your hands through webcam hand tracking, and the site
@@ -34,12 +36,18 @@ Who it's for: student engineering teams, makers, educators, and anyone curious a
   (pinch, open palm, spread, fist), exponential smoothing with a dead zone, hold times and cooldowns: pinch selects,
   an open-palm swipe changes page, holding a spread hand explodes a model, a fist collapses it, and a two-hand pinch
   zooms and rotates. **A trained gesture classifier is planned but not built yet** (see Machine learning).
-- The glove: an Arduino 101 (Intel Curie: accelerometer, gyroscope and Bluetooth) with a micro switch on the index
-  finger. The glove firmware is not part of this repository. The website side (`lib/input/glove.ts`, the Glove page)
-  connects over Web Bluetooth or, as a fallback, USB (Web Serial), shows the live state, sensor and last gesture, and
-  maps "hold the switch and turn your wrist" to rotating the 3D model like a globe.
-- Combining them: the webcam handles pointing and hand poses, the glove handles grabbing and rotating, page flicks and
-  confirming. If both report the same action within 300 ms it fires once. The keyboard always works.
+- The glove: an Arduino 101 (Intel Curie: accelerometer, gyroscope and Bluetooth) with an optional switch on the index
+  finger. Its sketch is `hardware/glove/glove.ino`: a complementary filter gives roll, pitch and yaw at 25 Hz, flicks
+  become swipes, a knock selects, a shake recenters, and everything is sent as one text line per message over Bluetooth
+  notify or USB serial. The website side (`lib/input/glove.ts`, the Glove and Calibrate pages) connects over Web
+  Bluetooth (found by service UUID) or USB, shows live roll/pitch/yaw, the last eight events and a Blink LED button,
+  and walks you through a three-step calibration (keep still, tilt each side, grab and twist).
+- Grab and twist: a camera fist or the glove switch counts as a grab; while grabbed, the glove's wrist turns rotate the
+  model like a globe from where the grab started. Connecting the glove also starts the camera in the same click.
+- Combining them: one shared input store (`stores/input.ts`) owns the rules. The webcam handles pointing and hand
+  poses, the glove handles rotation, flicks and knocks. A second event of the same action within 300 ms, from either
+  source, is dropped. The keyboard always works. A standalone test bench at `/test/glove-camera.html` checks every
+  glove and camera gesture with a score.
 - No app or driver to install: Web Bluetooth, Web Serial and the webcam all work in Chrome.
 
 ## Open source we built on
@@ -51,8 +59,10 @@ See the full dependency table at the end. The main pieces:
 - three.js, react-three-fiber and drei: real-time 3D.
 - Next.js, React, TypeScript, Tailwind CSS, Zustand and Motion: the web app.
 - Hoop Upload uses its own small 2D physics loop; matter-js is not used.
-- Not in this repository: the glove firmware and its libraries (the seed lists Madgwick AHRS, ArduinoBLE and
-  CurieBLE).
+- Glove firmware: `hardware/glove/glove.ino` uses only the Arduino 101 core's CurieIMU and CurieBLE libraries (Intel
+  Curie Boards package, LGPL-2.1); no Madgwick or ArduinoBLE.
+- Realism: `@react-three/postprocessing` and `postprocessing` for ambient occlusion, bloom and SMAA; a CC0 studio HDRI
+  from Poly Haven; the MIT WebXR generic hand mesh for the Home slide and the glove model (see Third-party assets).
 - Design guidance during development: the Taste Skill rules (Leonxlnx/taste-skill) were read and applied in V2, with
   one deliberate exception (violet stays, per the owner's palette). Image-to-Code, Web Design Guidelines,
   awesome-design-md and the Anatomy skill were not used in this pass. Browser testing uses `@playwright/test`.
@@ -65,7 +75,9 @@ Inspiration: open-source "Jarvis-style" hand-control demos that move a cursor wi
 - The webcam and glove fusion: the globe-grab rotation and the 300 ms de-duplication (`lib/input/glove.ts`).
 - The checks engine (`lib/checks`), the sticky-note rules and one-click fixes (`lib/build/ops.ts`), the device
   templates (`data/`), and the procedural 3D models (`components/device3d`).
-- Planned, not built yet: the calibration wizard and the personal gesture classifier.
+- The calibration wizard (rule-based checks on the glove's live data, `lib/input/calibration.ts`), the glove sketch and
+  the glove + camera test bench.
+- Planned, not built yet: the personal gesture classifier.
 
 We haven't contributed changes upstream to any of these projects. We plan to publish our gesture layer and glove
 firmware as open source under the MIT license.
@@ -82,7 +94,7 @@ this version.** There is no dataset or accuracy figure yet; gestures currently c
 - Next.js and TypeScript: fast to build with, typed to catch mistakes, easy to deploy.
 - MediaPipe: fast, accurate, free, and runs locally, which keeps camera data private.
 - tscircuit: the only open-source tool we found that does schematic, PCB layout, autorouting and factory exports in JavaScript.
-- Procedural 3D models instead of downloaded ones: full control over every part, no licensing or trademark problems, and every part can be labelled and exploded.
+- Procedural 3D models instead of downloaded ones: full control over every part, no licensing or trademark problems, and every part can be labelled and exploded. The one exception is the hand mesh, an MIT-licensed WebXR asset we pose ourselves.
 - Arduino 101: we had one, and it has the motion sensors and Bluetooth built in, which cut wiring to a single switch.
 - Gemini, TinyFish and MongoDB: part-suggestion ranking and note wording, live part prices and quotes, and saved builds. All three run on local mocks until API keys are added.
 - Development: built with AI coding assistants (Claude Code), with the team directing the design, hardware and decisions.
@@ -104,7 +116,7 @@ The small round "N" in the corner was the Next.js developer tools indicator. It 
 
 Covered with working code:
 - Best Overall, Future of Work (Time and Cost Saved panel on Summary), Audience Vote (share link and QR code),
-  Most Impractical (Hoop Upload basketball gag), Best Hardware (web side of the glove; firmware is outside this repo).
+  Most Impractical (Hoop Upload basketball gag), Best Hardware (glove sketch in `hardware/glove/`, web connection, calibration and test bench).
 
 Built, but running on mock data until API keys are added:
 - Gemini, TinyFish, MongoDB Atlas.
