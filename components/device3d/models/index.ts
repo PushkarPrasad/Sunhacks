@@ -7,6 +7,7 @@ import { PHONE } from "./phone";
 import { LAPTOP } from "./laptop";
 import { GLOVE } from "./glove";
 import { CANSAT } from "./cansat";
+import { WEATHER } from "./weather";
 
 export const MODELS: Record<string, ProductDef> = {
   "balancing-robots": CUBE,
@@ -16,4 +17,5 @@ export const MODELS: Record<string, ProductDef> = {
   "phones-laptops:laptop": LAPTOP,
   wearables: GLOVE,
   "space-cansats": CANSAT,
+  "smart-home": WEATHER,
 };
