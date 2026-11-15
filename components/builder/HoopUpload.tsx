@@ -230,7 +230,11 @@ export function HoopUpload({ onClose }: { onClose: () => void }) {
               b.held = true;
               b.flying = false;
               samples.current = [{ ...p, t: performance.now() }];
-              e.currentTarget.setPointerCapture(e.pointerId);
+              try {
+                e.currentTarget.setPointerCapture(e.pointerId);
+              } catch {
+                // synthetic or already-released pointer: dragging still works inside the canvas
+              }
             }}
             onPointerMove={(e) => {
               const b = ball.current;

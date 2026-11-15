@@ -1,10 +1,10 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, Download, Play, Redo2, Undo2, Upload } from "lucide-react";
+import { ArrowRight, Download, Play, Redo2, Undo2 } from "lucide-react";
 import { templatesById } from "@/data/templates";
 import { useChecks } from "@/lib/hooks/useChecks";
 import { useBuild } from "@/stores/build";
@@ -26,7 +26,7 @@ const TABS: { id: BuilderTab; label: string }[] = [
 ];
 
 /** Handles /builder?new=1 and /builder?template=id (from server-rendered links). */
-function UrlActions() {
+function UrlActions({ onHoop }: { onHoop: () => void }) {
   const params = useSearchParams();
   const router = useRouter();
   const hydrated = useBuild((s) => s.hydrated);
@@ -36,13 +36,27 @@ function UrlActions() {
       useBuild.getState().newBuild();
       router.replace("/builder");
     }
+    if (params.get("hoop") === "1") {
+      onHoop();
+      router.replace("/builder");
+    }
     const t = params.get("template");
     if (t && templatesById[t]) {
       useBuild.getState().loadTemplate(t);
       router.replace("/builder");
     }
-  }, [params, router, hydrated]);
+  }, [params, router, hydrated, onHoop]);
   return null;
+}
+
+/** Small basketball icon for the Upload button (Hoop Upload). */
+function Basketball() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.5" fill="#F08A3C" fillOpacity=".25" />
+      <path d="M2.5 12h19M12 2.5v19M5.3 5.3c2.4 2.2 3.4 4.4 3.4 6.7s-1 4.5-3.4 6.7M18.7 5.3c-2.4 2.2-3.4 4.4-3.4 6.7s1 4.5 3.4 6.7" />
+    </svg>
+  );
 }
 
 export function BuilderPage() {
@@ -56,6 +70,7 @@ export function BuilderPage() {
   const report = useChecks();
   const [playing, setPlaying] = useState(false);
   const [importing, setImporting] = useState(false);
+  const openHoop = useCallback(() => setImporting(true), []);
   const template = build.templateId ? templatesById[build.templateId] : undefined;
 
   useEffect(() => {
@@ -74,7 +89,7 @@ export function BuilderPage() {
   return (
     <div className="flex h-full flex-col">
       <Suspense fallback={null}>
-        <UrlActions />
+        <UrlActions onHoop={openHoop} />
       </Suspense>
       <div className="flex h-14 shrink-0 items-center gap-4 border-b border-line px-5">
         <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -106,8 +121,13 @@ export function BuilderPage() {
               <Play size={14} strokeWidth={2} /> Run
             </button>
           )}
-          <button type="button" onClick={() => setImporting(true)} className="flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] text-muted transition hover:-translate-y-px hover:bg-raised hover:text-ink">
-            <Upload size={15} strokeWidth={1.5} /> Import build
+          <button
+            type="button"
+            onClick={() => setImporting(true)}
+            title="Upload a build file (Hoop Upload)"
+            className="flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-[13px] text-ink transition hover:-translate-y-px hover:border-copper hover:bg-raised"
+          >
+            <Basketball /> Upload
           </button>
           <button
             type="button"

@@ -1,3 +1,12 @@
+# Status: V3 final push in progress (see PROGRESS.md)
+
+## How to open things (V3)
+- **Hoop Upload:** Builder toolbar, top right: the **Upload** button with the small basketball. Or go straight to
+  `http://localhost:3000/builder?hoop=1`. Drop or choose a build `.json` (Save build file, the download icon next to
+  Upload, makes one), press on the ball, drag and let go so it drops through the hoop. "Just upload it" skips the game.
+- **Glove tab:** top nav, Glove (`/glove`). Connect Bluetooth (or USB); the camera starts in the same click.
+- **Combined test page:** `http://localhost:3000/test/glove-camera.html` (also linked from the Glove tab, "Test page").
+
 # Status: V2 (owner's reduced list) done
 
 Run: `npm install && npm run build && npm start`, then http://localhost:3000. No keys needed.
