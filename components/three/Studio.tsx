@@ -66,7 +66,7 @@ export function Studio({ floor = -0.85, shadowScale = 6, envIntensity = 0.85, ke
       {effects && (
         <EffectComposer multisampling={0}>
           <N8AO aoRadius={aoRadius} distanceFalloff={1} intensity={1.6} quality="medium" halfRes />
-          <Bloom luminanceThreshold={2.2} luminanceSmoothing={0.1} intensity={0.6} mipmapBlur />
+          <Bloom luminanceThreshold={4} luminanceSmoothing={0.1} intensity={0.6} mipmapBlur />
           <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
           <SMAA />
         </EffectComposer>
