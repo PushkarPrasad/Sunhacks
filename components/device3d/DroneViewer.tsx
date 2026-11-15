@@ -1,6 +1,7 @@
 "use client";
 
 import { GrabChip } from "@/components/device3d/GrabChip";
+import { OpennessMeter, useHandExplode } from "@/components/device3d/HandExplode";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "motion/react";
@@ -19,6 +20,7 @@ const SHELLS: { id: Shell; label: string }[] = [
 /** Interactive drone: shell modes, continuous explode (slider, wheel, E, hand spread), hover labels, inspector. */
 export function DroneViewer() {
   const [explode, setExplode] = useState(0.55);
+  useHandExplode(setExplode);
   const [shell, setShell] = useState<Shell>("solid");
   const [hovered, setHovered] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
@@ -87,10 +89,11 @@ export function DroneViewer() {
           ))}
         </div>
       </div>
-      <label className="glass absolute bottom-6 left-1/2 flex w-[300px] -translate-x-1/2 items-center gap-3 rounded-full border border-line px-4 py-2 text-[12px] text-muted">
+      <label className="glass absolute bottom-6 left-1/2 flex min-w-[300px] -translate-x-1/2 items-center gap-3 rounded-full border border-line px-4 py-2 text-[12px] text-muted">
         <span>Assembled</span>
         <input type="range" min={0} max={100} value={Math.round(explode * 100)} onChange={(e) => setExplode(Number(e.target.value) / 100)} className="flex-1 accent-[var(--color-copper)]" aria-label="Explode" />
         <span>Exploded</span>
+        <OpennessMeter />
       </label>
 
       <AnimatePresence>

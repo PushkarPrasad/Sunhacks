@@ -6,12 +6,17 @@
 
 import { fireAction, useInput } from "@/stores/input";
 import { GestureRecognizer, type GestureEvent, type Hand, type Pt } from "./gestures";
+import { loadHandCal, onHandCal } from "./handCal";
+import { OpennessTracker } from "./openness";
 
 const MP_VERSION = "1.2.3";
 const WASM = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm`;
 const MODEL = "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
 
-type Landmarker = { detectForVideo: (v: HTMLVideoElement, t: number) => { landmarks: Pt[][]; worldLandmarks?: Pt[][] }; close: () => void };
+type Landmarker = {
+  detectForVideo: (v: HTMLVideoElement, t: number) => { landmarks: Pt[][]; worldLandmarks?: Pt[][]; handedness?: { score: number }[][] };
+  close: () => void;
+};
 type Listener = (e: GestureEvent) => void;
 type FrameListener = (hands: Pt[][], world: Pt[][]) => void;
 
@@ -24,6 +29,14 @@ let rec: GestureRecognizer | null = null;
 const listeners = new Set<Listener>();
 const frameListeners = new Set<FrameListener>();
 let latest: { hands: Pt[][]; world: Pt[][] } = { hands: [], world: [] };
+let openness: OpennessTracker | null = null;
+function tracker(): OpennessTracker {
+  if (!openness) {
+    openness = new OpennessTracker(loadHandCal().openness);
+    onHandCal((c) => openness && (openness.range = c.openness));
+  }
+  return openness;
+}
 
 export const cameraVideo = () => video;
 export const latestHands = () => latest;
@@ -43,12 +56,7 @@ function route(e: GestureEvent) {
     case "swipe":
       fireAction(e.dir === "right" ? "nextPage" : "prevPage", "camera", e.dir === "right" ? "Swipe right" : "Swipe left");
       break;
-    case "explode":
-      fireAction("explode", "camera", "Spread (explode)");
-      break;
-    case "collapse":
-      fireAction("collapse", "camera", "Fist tap (collapse)");
-      break;
+    // explode / collapse are continuous now (palm openness, lib/input/openness.ts), not discrete events.
   }
   for (const l of listeners) l(e);
 }
@@ -122,7 +130,7 @@ function loop(id: number) {
       lastT = video.currentTime;
       const res = landmarker.detectForVideo(video, now);
       const hands: Hand[] = (res.landmarks ?? []).map((landmarks) => ({ landmarks }));
-      feedHands(hands, res.worldLandmarks ?? [], now);
+      feedHands(hands, res.worldLandmarks ?? [], now, (res.handedness ?? []).map((h) => h[0]?.score ?? 0));
     }
     raf = requestAnimationFrame(tick);
   };
@@ -130,11 +138,19 @@ function loop(id: number) {
 }
 
 /** Runs one frame of landmarks through the recogniser. Exported so tests can inject fake hands. */
-export function feedHands(hands: Hand[], world: Pt[][] = [], now = performance.now()) {
+export function feedHands(hands: Hand[], world: Pt[][] = [], now = performance.now(), scores: number[] = []) {
   if (!rec) rec = new GestureRecognizer({ width: window.innerWidth, height: window.innerHeight });
   rec.resize(window.innerWidth, window.innerHeight);
   latest = { hands: hands.map((h) => h.landmarks), world };
   for (const e of rec.update(hands, now)) route(e);
+  // Continuous openness from the first hand's world landmarks (gated, filtered, engaged after 300 ms still).
+  const w0 = world[0];
+  const o = tracker().update(
+    hands[0] && w0 && w0.length >= 21 ? { world: w0.map((p) => ({ x: p.x, y: p.y, z: p.z ?? 0 })), image: hands[0].landmarks.map((p) => ({ x: p.x, y: p.y, z: p.z ?? 0 })), score: scores[0] ?? 0.9 } : null,
+    now,
+  );
+  const st = useInput.getState();
+  if (st.openness !== o.value || st.opennessDriving !== o.driving) useInput.setState({ openness: o.value, opennessDriving: o.driving });
   const s = useInput.getState();
   const seen = hands.length > 0;
   if (s.handSeen !== seen || s.cameraPose !== rec.pose) useInput.setState({ handSeen: seen, cameraPose: rec.pose });
@@ -156,6 +172,8 @@ export function stopCamera() {
   video = null;
   rec = null;
   latest = { hands: [], world: [] };
+  openness = null;
+  useInput.setState({ opennessDriving: false });
   useInput.setState({ camera: "off", handSeen: false, cameraPose: "none" });
 }
 

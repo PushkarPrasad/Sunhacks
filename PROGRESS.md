@@ -50,10 +50,10 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 - [x] Verification (05:55): lint clean, typecheck clean, 87 unit tests, production build, 67 Playwright tests (every page at 1440x900 and 1280x800 incl. every model category and Calibrate, glove/camera bench, hoop throw, calibration wizard). Fixed on the way: arrow keys could skip the Home slides (input-bus priority), e2e specs updated for V3 names, starter-build budgets
 
 ## V4 (Reliability, Precision, Emerald)
-Next up: P0-3 continuous palm-openness explode, then P0-4 snap-to-target pointer.
+Next up: P0-4 snap-to-target pointer (+ e2e for openness and click accuracy), then P0-5 PiP removal.
 - [x] P0-1 Glove reliability: firmware v4 (Appendix A, verbatim); singleton Bluetooth layer (survives client navigation), auto-reconnect 0.5/1/2/4 s then 5 s for 2 min with re-subscribe, 4 s stall watchdog, queued writes, nav status pill, link log on the Glove tab. Test: e2e/glove-link.spec.ts (fake Web Bluetooth).
 - [x] P0-2 Grab and rotate: glove-only clutch (held switch, or knock toggle with no switch on 3D views), quaternion delta math (qDelta = qGlove·qGlove0⁻¹, target = qDelta·qModel0), 2° dead zone, slerp 0.25/frame, AXIS_MAP + per-axis flips, shake resets, Grabbed chip + emerald ring. Tests: tests/grab.test.ts (11), e2e grab 90° per axis within 5°.
-- [ ] P0-3 Continuous palm-openness explode
+- [x] P0-3 Continuous palm-openness explode: world-landmark joint-angle curl, per-user range, One Euro (1.0, 0.02), snaps with hysteresis, confidence/palm-facing gates, 300 ms still engage, hold on loss; drives the explode slider with a meter. Tests: tests/openness.test.ts (10, synthetic hands with noise).
 - [ ] P0-4 Snap-to-target pointer
 - [~] P0-5 Camera only from Calibration (entry point + Settings toggle removed; PiP removal with P0-4)
 - [ ] P0-6 Calibration wizard + test page
