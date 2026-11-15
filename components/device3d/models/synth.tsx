@@ -221,7 +221,7 @@ export const SYNTH: ProductDef = {
   id: "synth",
   name: "Desktop synthesizer",
   Body,
-  camera: [4.4, 5.2, 8.0],
+  camera: [5.4, 6.4, 9.8],
   floor: -0.02,
   offset: [0, -0.6, 0],
   exposure: 1.15,

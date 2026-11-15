@@ -295,7 +295,7 @@ export const RC_CAR: ProductDef = {
   id: "rccar",
   name: "RC buggy",
   Body,
-  camera: [5.8, 3.4, 6.6],
+  camera: [7.4, 4.4, 8.8],
   floor: 0,
   offset: [0, -0.7, 0],
   exposure: 1.0,

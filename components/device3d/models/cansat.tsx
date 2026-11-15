@@ -237,7 +237,7 @@ export const CANSAT: ProductDef = {
   id: "cansat",
   name: "CanSat",
   Body,
-  camera: [6.2, 4.6, 7.6],
+  camera: [7.2, 5.0, 8.8],
   floor: 0,
   offset: [0, -1.5, 0],
   shadowScale: 6,
