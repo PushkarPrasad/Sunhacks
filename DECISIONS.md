@@ -35,3 +35,9 @@ Judgment calls made while building, newest last.
     draft scope; other categories use the plain exploded view.
 13. **Draft scope** set by the owner: firmware, MATLAB, Solana, Tiger Data, multilingual notes, Snake, Maritime,
     Lambda, Docker, voice and haptics are deferred. Code that already existed for some of these stays in place.
+14. **Violet stays despite the Taste Skill.** Taste's "Never" list bans violet in a page's own design; the owner's V2
+    spec explicitly sets violet #7C5CFF as the primary accent, so the owner's spec wins. The rest of Taste's rules
+    (hero alone on its screen, one section per screen, hover answers, no captions, verb+object buttons) apply.
+15. **V1 token names kept** (`paper`, `ink`, `copper`) with V2 values, so the palette swap touched one file.
+16. **Webcam preview removed**; hand tracking still turns on from Settings and shows only the ring cursor
+    (the Calibration wizard, where the preview belongs, is deferred).

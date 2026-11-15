@@ -154,7 +154,7 @@ export function CategoryView({ id }: { id: string }) {
                   <p className="font-serif text-[26px] leading-tight">{t.name}</p>
                   <p className="mt-1 text-[13px] leading-snug text-muted">{t.description}</p>
                 </div>
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line-strong transition-colors group-hover:border-ink group-hover:bg-ink group-hover:text-paper">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line-strong transition-colors group-hover:border-ink group-hover:bg-copper-hover group-hover:text-white">
                   <ArrowRight size={16} strokeWidth={1.5} />
                 </span>
               </div>

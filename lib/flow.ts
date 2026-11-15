@@ -9,6 +9,16 @@ export const FLOW = [
   { path: "/summary", label: "Summary" },
 ] as const;
 
+/** Slim top navigation (V2). The page flow above still drives arrows, dots and swipes. */
+export const NAV = [
+  { path: "/", label: "Home" },
+  { path: "/devices", label: "Devices" },
+  { path: "/builder", label: "Builder" },
+  { path: "/board", label: "Board" },
+  { path: "/glove", label: "Glove" },
+  { path: "/about", label: "About" },
+] as const;
+
 export function flowIndex(pathname: string): number {
   if (pathname === "/") return 0;
   if (pathname.startsWith("/devices") || pathname.startsWith("/templates")) return 1;

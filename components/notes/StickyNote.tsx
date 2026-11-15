@@ -31,7 +31,7 @@ export function StickyNote({ finding, onApply, onDismiss, width = 232, text, cla
   const rot = rotationFor(finding.id);
   return (
     <article
-      className={`paper-note relative animate-pop rounded-[3px] px-3.5 pb-3 pt-3.5 text-ink ${className}`}
+      className={`paper-note relative animate-pop rounded-[3px] px-3.5 pb-3 pt-3.5 text-note-ink ${className}`}
       style={{ width, transform: `rotate(${rot}deg)`, ["--note-rot" as string]: `${rot}deg`, ...style }}
       aria-label={`${finding.severity === "fail" ? "Problem" : "Warning"}: ${title}`}
       lang={lang}
@@ -41,16 +41,16 @@ export function StickyNote({ finding, onApply, onDismiss, width = 232, text, cla
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/mascot.svg" alt="" aria-hidden="true" className="absolute -right-2 -top-3 h-7 w-7 rotate-6 opacity-90" />
       <p className="pr-4 text-[13px] font-semibold leading-snug">{title}</p>
-      <p className="mt-1 text-[12px] leading-snug text-ink/80">{body}</p>
+      <p className="mt-1 text-[12px] leading-snug text-note-ink/80">{body}</p>
       {(onApply || onDismiss) && (
         <div className="mt-2.5 flex items-center gap-2">
           {onApply && finding.fix && (
-            <button type="button" onClick={onApply} className="flex h-7 items-center gap-1 rounded-full bg-ink px-3 text-[12px] text-paper transition-colors hover:bg-copper">
+            <button type="button" onClick={onApply} className="flex h-7 items-center gap-1 rounded-full bg-copper px-3 text-[12px] text-white transition-colors hover:bg-copper-hover">
               <Check size={13} strokeWidth={2} /> {t("note.apply")}
             </button>
           )}
           {onDismiss && (
-            <button type="button" onClick={onDismiss} className="flex h-7 items-center gap-1 rounded-full px-2 text-[12px] text-ink/70 transition-colors hover:bg-ink/10 hover:text-ink">
+            <button type="button" onClick={onDismiss} className="flex h-7 items-center gap-1 rounded-full px-2 text-[12px] text-note-ink/70 transition-colors hover:bg-note-ink/10 hover:text-note-ink">
               <X size={13} strokeWidth={2} /> {t("note.dismiss")}
             </button>
           )}

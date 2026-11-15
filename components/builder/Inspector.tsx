@@ -33,12 +33,9 @@ function Overview() {
   const build = useBuild((s) => s.build);
   const total = build.instances.reduce((s, i) => s + (partsById[i.partId]?.priceUSD ?? 0), 0);
   const tips = [
-    ["Pin → pin", "Draw a wire"],
-    ["Drag a module", "Move it"],
-    ["R", "Rotate the selection"],
-    ["Delete", "Remove the selection"],
-    ["+ / −", "Zoom"],
-    ["Esc", "Cancel a wire"],
+    ["Pin → pin", "Wire"],
+    ["R · Del", "Rotate · delete"],
+    ["Esc", "Cancel"],
   ];
   return (
     <div className="flex h-full flex-col px-5 py-5">
@@ -149,7 +146,7 @@ function PartInspector({ inst, part }: { inst: Instance; part: Part }) {
               role="tab"
               aria-selected={tab === t}
               onClick={() => setTab(t)}
-              className={`flex-1 rounded-full py-1.5 text-[12px] transition-colors ${tab === t ? "bg-ink text-paper" : "text-muted hover:text-ink"}`}
+              className={`flex-1 rounded-full py-1.5 text-[12px] transition-colors ${tab === t ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
             >
               {t === "specs" ? "Specs" : t === "pins" ? `Pins · ${part.pins.length}` : "Pairs well with"}
             </button>
@@ -245,7 +242,7 @@ function Specs({ inst, part }: { inst: Instance; part: Part }) {
                   type="button"
                   onClick={() => setAddress(a)}
                   title={a === part.i2cAddresses!.default ? "Default" : part.i2cAddresses!.selectHow}
-                  className={`rounded px-1.5 py-0.5 font-mono text-[11px] ${addr === a ? "bg-ink text-paper" : "border border-line text-muted hover:border-ink"}`}
+                  className={`rounded px-1.5 py-0.5 font-mono text-[11px] ${addr === a ? "bg-copper text-white" : "border border-line text-muted hover:border-ink"}`}
                 >
                   {a}
                 </button>
@@ -351,7 +348,7 @@ function Pairs({ part }: { part: Part }) {
                 const c = useView.getState().center();
                 addPart(p.id, Math.round(c.x / 8) * 8, Math.round(c.y / 8) * 8);
               }}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line-strong hover:border-ink hover:bg-ink hover:text-paper"
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line-strong hover:border-ink hover:bg-copper-hover hover:text-white"
             >
               <Plus size={15} strokeWidth={1.5} />
             </button>

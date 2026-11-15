@@ -57,7 +57,7 @@ export function SummaryPage() {
       } catch {
         url = `${window.location.origin}/share#${encodeBuild(build)}`;
       }
-      const qr = await QRCode.toDataURL(url, { margin: 1, width: 360, errorCorrectionLevel: "M", color: { dark: "#16181C", light: "#FBF9F500" } });
+      const qr = await QRCode.toDataURL(url, { margin: 1, width: 360, errorCorrectionLevel: "M", color: { dark: "#0A0A10", light: "#ECEAF5" } });
       if (alive) setShare({ url, qr });
     })();
     return () => {
@@ -78,7 +78,7 @@ export function SummaryPage() {
       <div className="grid h-full place-items-center text-center">
         <div>
           <p className="font-serif text-[40px]">Nothing to summarise yet.</p>
-          <Link href="/devices" className="mt-6 inline-flex h-10 items-center rounded-full bg-ink px-5 text-[13px] text-paper hover:bg-copper">
+          <Link href="/devices" className="mt-6 inline-flex h-10 items-center rounded-full bg-copper px-5 text-[13px] text-white hover:bg-copper-hover">
             Start a build
           </Link>
         </div>
@@ -153,7 +153,7 @@ export function SummaryPage() {
           <div className="mt-6 space-y-3" aria-label="Design time comparison">
             {[
               { label: "By hand", h: manualH, cls: "bg-line-strong" },
-              { label: "Copperline", h: toolH, cls: "bg-copper" },
+              { label: "Magic Smoke", h: toolH, cls: "bg-copper" },
             ].map((b) => (
               <div key={b.label}>
                 <div className="flex justify-between text-[11px] text-muted">
@@ -166,11 +166,9 @@ export function SummaryPage() {
               </div>
             ))}
           </div>
-          <ul className="mt-auto space-y-1 border-t border-line pt-3 text-[11px] leading-snug text-muted">
-            <li>By hand: {MANUAL_BASE_H} h setup, 15 min per module (datasheet, symbol, footprint), 5 min per wire.</li>
-            <li>Here: 15 min setup and 2 min per module.</li>
-            <li>Labour at ${RATE}/h. A respin costs one more board order and about {RESPIN_DAYS} days.</li>
-          </ul>
+          <p className="mt-auto border-t border-line pt-3 text-[11px] text-muted" title={`By hand: ${MANUAL_BASE_H} h setup, 15 min per module, 5 min per wire. Here: 15 min plus 2 min per module. Respin: one more board order, about ${RESPIN_DAYS} days.`}>
+            Assumes ${RATE}/h labour and a {RESPIN_DAYS}-day respin.
+          </p>
         </div>
       </section>
 
@@ -182,7 +180,7 @@ export function SummaryPage() {
           </p>
           <div className="my-auto">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            {share ? <img src={share.qr} alt="QR code linking to this build" width={220} height={220} className="mx-auto" /> : <div className="mx-auto h-[220px] w-[220px] animate-pulse rounded-lg bg-line/50" />}
+            {share ? <img src={share.qr} alt="QR code linking to this build" width={220} height={220} className="mx-auto rounded-lg" /> : <div className="mx-auto h-[220px] w-[220px] animate-pulse rounded-lg bg-line/50" />}
             <p className="mt-3 text-[12px] text-muted">Scan to open it, or to vote for it.</p>
           </div>
           <button
@@ -194,7 +192,7 @@ export function SummaryPage() {
               setCopied(true);
               setTimeout(() => setCopied(false), 1600);
             }}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-ink text-[13px] text-paper hover:bg-copper disabled:opacity-50"
+            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-copper text-[13px] text-white hover:bg-copper-hover disabled:opacity-50"
           >
             {copied ? <Check size={15} strokeWidth={2} /> : <Copy size={15} strokeWidth={1.5} />}
             {copied ? "Copied" : "Copy share link"}

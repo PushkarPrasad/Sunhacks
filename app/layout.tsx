@@ -1,23 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { AppShell } from "@/components/shell/AppShell";
+import { BRAND } from "@/lib/brand";
 import "./globals.css";
 
 const serif = Instrument_Serif({ weight: "400", style: ["normal", "italic"], subsets: ["latin"], variable: "--font-instrument-serif" });
-const sans = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
+const sans = Geist({ subsets: ["latin"], variable: "--font-inter" });
+const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 
 export const metadata: Metadata = {
-  title: "Copperline · Hardware project builder",
-  description: "Start from a device or a blank board, wire real modules, check power and pins, and export a carrier PCB.",
+  title: `${BRAND.name} · ${BRAND.tagline}`,
+  description: BRAND.description,
   icons: { icon: "/icon.svg" },
 };
 
-export const viewport: Viewport = { themeColor: "#F5F2EC" };
+export const viewport: Viewport = { themeColor: "#0A0A10", colorScheme: "dark" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="en" style={{ colorScheme: "dark" }} className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
       <body>
         <AppShell>{children}</AppShell>
       </body>

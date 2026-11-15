@@ -1,5 +1,10 @@
 # Changelog
 
+## V2
+- Renamed to Magic Smoke; dark violet/blue palette, Geist type, glows and grain; DESIGN.md.
+- Home is five story slides (hero, problem, how it works, hands-on, start) with spring transitions.
+- Removed the webcam preview and the corner gesture toggle; hid the Next.js dev indicator; slimmer nav.
+
 ## Unreleased
 - Draft complete: anatomy figures (Phones, Laptops, Projectors) with screen-space callouts.
 - Board quad view (Schematic, PCB, 3D, Parts) with synced selection; SVGs isolated in shadow roots.

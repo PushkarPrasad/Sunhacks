@@ -279,7 +279,7 @@ export function Canvas({ report }: { report: ChecksReport }) {
       )}
 
       {pendingPin && (
-        <div className="pointer-events-none absolute left-1/2 top-4 -translate-x-1/2 rounded-full bg-ink px-4 py-1.5 text-[12px] text-paper shadow-[var(--shadow-float)]">
+        <div className="pointer-events-none absolute left-1/2 top-4 -translate-x-1/2 rounded-full bg-copper px-4 py-1.5 text-[12px] text-white shadow-[var(--shadow-float)]">
           Wiring from <span className="font-mono">{build.instances.find((i) => i.id === pendingPin.instanceId)?.label}.{pendingPin.pin}</span>. Click another pin, or Esc to cancel.
         </div>
       )}

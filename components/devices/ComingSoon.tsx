@@ -15,7 +15,7 @@ export function ComingSoon() {
           <Link href="/devices" className="flex h-10 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] hover:border-ink">
             <ArrowLeft size={15} strokeWidth={1.5} /> All devices
           </Link>
-          <Link href="/builder?new=1" className="flex h-10 items-center rounded-full bg-ink px-4 text-[13px] text-paper hover:bg-copper">
+          <Link href="/builder?new=1" className="flex h-10 items-center rounded-full bg-copper px-4 text-[13px] text-white hover:bg-copper-hover">
             Start from scratch
           </Link>
         </div>

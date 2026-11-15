@@ -87,7 +87,7 @@ export function Palette() {
                 setQuery("");
                 setPage(0);
               }}
-              className={`flex flex-col items-center gap-1 rounded-lg py-2 text-[10px] transition-colors ${active ? "bg-ink text-paper" : "text-muted hover:bg-line/60 hover:text-ink"}`}
+              className={`flex flex-col items-center gap-1 rounded-lg py-2 text-[10px] transition-colors ${active ? "bg-copper text-white" : "text-muted hover:bg-line/60 hover:text-ink"}`}
             >
               <t.icon size={16} strokeWidth={1.5} />
               {t.label}

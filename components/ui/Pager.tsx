@@ -18,7 +18,7 @@ export function Pager({ page, pages, onChange, label = "page" }: { page: number;
             aria-label={`Go to ${label} ${i + 1}`}
             aria-current={i === page}
             onClick={() => onChange(i)}
-            className={`h-1.5 rounded-full transition-all ${i === page ? "w-4 bg-ink" : "w-1.5 bg-line-strong hover:bg-muted"}`}
+            className={`h-1.5 rounded-full transition-all ${i === page ? "w-4 bg-copper" : "w-1.5 bg-line-strong hover:bg-muted"}`}
           />
         ))}
       </div>

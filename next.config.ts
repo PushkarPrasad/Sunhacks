@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   output: "standalone",
+  devIndicators: false,
   serverExternalPackages: [
     "@tscircuit/core",
     "circuit-to-svg",

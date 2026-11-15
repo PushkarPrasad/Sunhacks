@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import QRCode from "qrcode";
-import { Braces, Cloud, FileArchive, FileCode2, FileSpreadsheet, UploadCloud, Wallet, X } from "lucide-react";
+import { Braces, FileArchive, FileCode2, FileSpreadsheet, UploadCloud, X } from "lucide-react";
 import { useChecks } from "@/lib/hooks/useChecks";
 import { useCircuit } from "@/lib/hooks/useCircuit";
 import { onInput } from "@/lib/input/bus";
-import { DEMO_USD_PER_SOL, SOLANA_ENABLED, SOLANA_RECIPIENT, solanaPayUrl } from "@/lib/integrations/solana";
+import { DEMO_USD_PER_SOL, SOLANA_RECIPIENT, solanaPayUrl } from "@/lib/integrations/solana";
 import { useBuild } from "@/stores/build";
 import { QuadView } from "./QuadView";
 
@@ -82,19 +82,6 @@ export function BoardPage() {
   });
   useEffect(() => onInput("exportBoard", () => (void downloadRef.current("gerber"), true)), []);
 
-  const saveCloud = async () => {
-    setBusy("s3");
-    try {
-      const r = (await (await fetch("/api/s3", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(build) })).json()) as { mode: string; url?: string };
-      if (r.mode === "live" && r.url) setMessage("Saved to S3");
-      else {
-        setMessage("Cloud storage is not configured; downloading instead.");
-        await download("gerber");
-      }
-    } finally {
-      setBusy(null);
-    }
-  };
 
   const uploadHoop = async () => {
     setBusy("hoop");
@@ -130,7 +117,7 @@ export function BoardPage() {
         <div>
           <p className="font-serif text-[40px]">No board yet.</p>
           <p className="mt-2 text-muted">Place and wire modules in the builder first.</p>
-          <Link href="/builder" className="mt-6 inline-flex h-10 items-center rounded-full bg-ink px-5 text-[13px] text-paper hover:bg-copper">
+          <Link href="/builder" className="mt-6 inline-flex h-10 items-center rounded-full bg-copper px-5 text-[13px] text-white hover:bg-copper-hover">
             Open the builder
           </Link>
         </div>
@@ -184,11 +171,8 @@ export function BoardPage() {
               </button>
             ))}
           </div>
-          <button type="button" onClick={uploadHoop} disabled={!circuit.data || busy !== null} className="mt-2 flex h-9 w-full items-center justify-center gap-2 rounded-full bg-ink text-[12px] text-paper hover:bg-copper disabled:opacity-50">
+          <button type="button" onClick={uploadHoop} disabled={!circuit.data || busy !== null} className="mt-2 flex h-9 w-full items-center justify-center gap-2 rounded-full bg-copper text-[12px] text-white hover:bg-copper-hover disabled:opacity-50">
             <UploadCloud size={14} strokeWidth={1.5} /> {busy === "hoop" ? "Uploading…" : "Upload project to Hoop"}
-          </button>
-          <button type="button" onClick={saveCloud} disabled={!circuit.data || busy !== null} className="mt-2 flex h-9 w-full items-center justify-center gap-2 rounded-full border border-line-strong text-[12px] hover:border-ink disabled:opacity-50">
-            <Cloud size={14} strokeWidth={1.5} /> {busy === "s3" ? "Saving…" : "Save Gerbers to cloud"}
           </button>
           <p className="mt-1.5 h-4 text-[11px] text-muted" role="status">
             {message}
@@ -208,7 +192,7 @@ export function BoardPage() {
                 role="radio"
                 aria-checked={qty === q}
                 onClick={() => setQty(q)}
-                className={`flex-1 rounded-md border py-1 font-mono text-[12px] ${qty === q ? "border-ink bg-ink text-paper" : "border-line hover:border-line-strong"}`}
+                className={`flex-1 rounded-md border py-1 font-mono text-[12px] ${qty === q ? "border-ink bg-copper text-white" : "border-line hover:border-line-strong"}`}
               >
                 {q}
               </button>
@@ -228,23 +212,11 @@ export function BoardPage() {
               <dd>${total}</dd>
             </div>
           </dl>
-          <p className="mt-2 text-[11px] leading-snug text-muted" title={quote?.assumptions.join("\n")}>
-            {quote ? `${quote.leadDays} day lead time · ${quote.assumptions[0]}. ${quote.assemblyNote}.` : ""}
+          <p className="mt-2 text-[11px] text-muted" title={quote?.assumptions.join("\n")}>
+            {quote ? `${quote.leadDays}-day lead time · 2-layer FR-4` : ""}
           </p>
         </div>
 
-        <div className="mt-auto">
-          <button
-            type="button"
-            disabled={!SOLANA_ENABLED || !SOLANA_RECIPIENT || !quote}
-            onClick={() => setPay(true)}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-ink text-[13px] text-paper transition-colors hover:bg-copper disabled:bg-line-strong disabled:text-muted"
-          >
-            <Wallet size={15} strokeWidth={1.5} /> Pay for Board Order
-            <span className="rounded bg-paper/15 px-1.5 py-px text-[10px]">Solana devnet demo</span>
-          </button>
-          {!SOLANA_ENABLED && <p className="mt-1.5 text-center text-[11px] text-muted">Off. Set NEXT_PUBLIC_SOLANA_DEVNET=true to try the devnet demo.</p>}
-        </div>
       </aside>
 
       {pay && quote && <PayModal usd={quote.boardUSD} name={build.name} onClose={() => setPay(false)} />}
@@ -254,7 +226,7 @@ export function BoardPage() {
 
 function PayModal({ usd, name, onClose }: { usd: number; name: string; onClose: () => void }) {
   const sol = Math.max(0.01, usd / DEMO_USD_PER_SOL);
-  const url = solanaPayUrl({ recipient: SOLANA_RECIPIENT, amountSol: sol, label: "Copperline (devnet demo)", message: `Board order: ${name}` });
+  const url = solanaPayUrl({ recipient: SOLANA_RECIPIENT, amountSol: sol, label: "Magic Smoke (devnet demo)", message: `Board order: ${name}` });
   const [qr, setQr] = useState<string | null>(null);
   useEffect(() => {
     QRCode.toDataURL(url, { margin: 1, width: 240, color: { dark: "#16181C", light: "#FBF9F5" } }).then(setQr);
@@ -274,7 +246,7 @@ function PayModal({ usd, name, onClose }: { usd: number; name: string; onClose: 
         <p className="mt-1 text-[11px] text-muted">
           ${usd.toFixed(2)} at a fixed demo rate of ${DEMO_USD_PER_SOL}/SOL. Scan with a wallet set to devnet.
         </p>
-        <a href={url} className="mt-4 inline-flex h-9 items-center rounded-full bg-ink px-4 text-[12px] text-paper hover:bg-copper">
+        <a href={url} className="mt-4 inline-flex h-9 items-center rounded-full bg-copper px-4 text-[12px] text-white hover:bg-copper-hover">
           Open in wallet
         </a>
       </div>

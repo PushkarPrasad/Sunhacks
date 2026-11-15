@@ -92,7 +92,7 @@ export function BuilderPage() {
               role="tab"
               aria-selected={tab === t.id}
               onClick={() => setUi({ builderTab: t.id })}
-              className={`rounded-full px-4 py-1.5 text-[13px] transition-colors ${tab === t.id ? "bg-ink text-paper" : "text-muted hover:text-ink"}`}
+              className={`rounded-full px-4 py-1.5 text-[13px] transition-colors ${tab === t.id ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
             >
               {t.label}
             </button>
@@ -100,7 +100,7 @@ export function BuilderPage() {
         </div>
         <div className="flex flex-1 items-center justify-end gap-1">
           {template?.game && (
-            <button type="button" onClick={() => setPlaying(true)} className="mr-2 flex h-9 items-center gap-2 rounded-full bg-copper px-4 text-[13px] text-paper hover:bg-ink">
+            <button type="button" onClick={() => setPlaying(true)} className="mr-2 flex h-9 items-center gap-2 rounded-full bg-copper px-4 text-[13px] text-white hover:bg-copper-hover">
               <Play size={14} strokeWidth={2} /> Run
             </button>
           )}

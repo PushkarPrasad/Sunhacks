@@ -1,27 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #f5f2ec;
-  --color-card: #fbf9f5;
-  --color-ink: #16181c;
-  --color-muted: #6b6b6b;
-  --color-line: #e2ddd3;
-  --color-line-strong: #cfc8bb;
-  --color-copper: #b5652e;
-  --color-copper-soft: #f1e3d7;
-  --color-ok: #3f7d58;
-  --color-warn: #c08a2b;
-  --color-bad: #b4483c;
-  --color-pcb: #1b1d20;
+  /* Dark V2 palette (see DESIGN.md). Token names are kept from V1 so components do not change:
+     paper = page ground, card = raised surface, ink = primary text, copper = primary accent (violet). */
+  --color-paper: #0a0a10;
+  --color-card: #12121c;
+  --color-raised: #1a1a2a;
+  --color-ink: #eceaf5;
+  --color-muted: #a3a1b8;
+  --color-line: #2a2a3d;
+  --color-line-strong: #3b3b55;
+  --color-copper: #7c5cff;
+  --color-copper-hover: #9479ff;
+  --color-copper-soft: rgb(124 92 255 / 0.16);
+  --color-blue: #3d7bff;
+  --color-peri: #a5b4fc;
+  --color-ok: #3ddc97;
+  --color-warn: #f5b14c;
+  --color-bad: #ff6b6b;
+  --color-pcb: #0e0e16;
   --color-note: #f4e3a1;
+  --color-note-ink: #1b1a26;
 
   --font-serif: var(--font-instrument-serif), "Fraunces", Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 
   --radius-card: 12px;
-  --shadow-float: 0 1px 2px rgb(22 24 28 / 0.04), 0 8px 24px -12px rgb(22 24 28 / 0.16);
-  --shadow-note: 0 1px 1px rgb(22 24 28 / 0.06), 0 10px 18px -12px rgb(22 24 28 / 0.35);
+  --shadow-float: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -12px rgb(0 0 0 / 0.6);
+  --shadow-note: 0 1px 1px rgb(0 0 0 / 0.3), 0 14px 24px -14px rgb(0 0 0 / 0.7);
+  --shadow-glow: 0 0 0 1px rgb(124 92 255 / 0.35), 0 8px 28px -8px rgb(124 92 255 / 0.55);
 
   --animate-page-in: page-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-pop: pop 260ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
@@ -59,13 +67,13 @@
 
 /* High-contrast mode: darker secondary text, stronger lines, deeper accent. */
 :root[data-contrast="high"] {
-  --color-muted: #3a3a3a;
-  --color-line: #9d9587;
-  --color-line-strong: #6f685c;
-  --color-copper: #8a4519;
-  --color-ok: #24563a;
-  --color-warn: #7d5a12;
-  --color-bad: #8c2f25;
+  --color-muted: #cfcde0;
+  --color-line: #4a4a66;
+  --color-line-strong: #6a6a8a;
+  --color-copper: #a38dff;
+  --color-ok: #5ff0b0;
+  --color-warn: #ffc76e;
+  --color-bad: #ff8a8a;
 }
 
 html,
@@ -76,9 +84,14 @@ body {
 }
 
 body {
-  background: var(--color-paper);
+  background:
+    radial-gradient(60rem 40rem at 85% -10%, rgb(124 92 255 / 0.16), transparent 60%),
+    radial-gradient(50rem 36rem at -10% 110%, rgb(61 123 255 / 0.12), transparent 60%),
+    var(--color-paper);
+  color-scheme: dark;
   color: var(--color-ink);
   font-family: var(--font-sans);
+  position: relative;
   -webkit-font-smoothing: antialiased;
   font-feature-settings: "ss01", "cv11";
 }
@@ -122,10 +135,27 @@ body {
 }
 
 .dot-grid {
-  background-image: radial-gradient(circle, rgb(22 24 28 / 0.09) 1px, transparent 1.2px);
+  background-image: radial-gradient(circle, rgb(236 234 245 / 0.07) 1px, transparent 1.2px);
 }
 
 .paper-note {
   background: var(--color-note);
   box-shadow: var(--shadow-note);
+}
+
+/* Fine grain over the whole page; keeps the dark grounds from looking flat. */
+body::after {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.glass {
+  background: rgb(18 18 28 / 0.66);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
 }

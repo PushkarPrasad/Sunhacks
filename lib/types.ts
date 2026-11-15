@@ -1,4 +1,4 @@
-// Core domain types for Copperline. Everything the checks engine, builder and circuit generator share.
+// Core domain types for Magic Smoke. Everything the checks engine, builder and circuit generator share.
 
 export type PartCategory =
   | "controllers"

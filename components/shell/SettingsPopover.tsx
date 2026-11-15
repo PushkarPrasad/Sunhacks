@@ -63,7 +63,7 @@ export function SettingsPopover() {
                 role="radio"
                 aria-checked={ui.lang === l.id}
                 onClick={() => ui.set({ lang: l.id })}
-                className={`rounded-md border px-2 py-1.5 text-[13px] ${ui.lang === l.id ? "border-ink bg-ink text-paper" : "border-line hover:border-line-strong"}`}
+                className={`rounded-md border px-2 py-1.5 text-[13px] ${ui.lang === l.id ? "border-ink bg-copper text-white" : "border-line hover:border-line-strong"}`}
               >
                 {l.label}
               </button>

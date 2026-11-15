@@ -39,7 +39,7 @@ export function QuadView({ build, data }: { build: Build; data: CircuitResult })
   const pcbId = selected ? maps.pcb.get(selected) : undefined;
   const schId = selected ? maps.sch.get(selected) : undefined;
   const pcbCss = pcbId ? `[data-pcb-component-id="${pcbId}"] { stroke: #F4E3A1 !important; fill: #F4E3A1 !important; }` : "";
-  const schCss = schId ? `[data-schematic-component-id="${schId}"] { stroke: #B5652E !important; } [data-schematic-component-id="${schId}"] rect { fill: #F1E3D7 !important; }` : "";
+  const schCss = schId ? `[data-schematic-component-id="${schId}"] { stroke: #9479FF !important; } [data-schematic-component-id="${schId}"] rect { fill: #2A2148 !important; }` : "";
 
   const onPick = (path: EventTarget[], kind: "pcb" | "sch") => {
     const attr = kind === "pcb" ? "data-pcb-component-id" : "data-schematic-component-id";
@@ -117,7 +117,7 @@ function PartsPane({ build, selected, onSelect, placed }: { build: Build; select
         {pages > 1 && (
           <span className="flex shrink-0 gap-1">
             {Array.from({ length: pages }, (_, k) => (
-              <button key={k} type="button" aria-label={`Parts page ${k + 1}`} onClick={() => setPage(k)} className={`h-1.5 rounded-full ${k === page ? "w-4 bg-ink" : "w-1.5 bg-line-strong"}`} />
+              <button key={k} type="button" aria-label={`Parts page ${k + 1}`} onClick={() => setPage(k)} className={`h-1.5 rounded-full ${k === page ? "w-4 bg-copper" : "w-1.5 bg-line-strong"}`} />
             ))}
           </span>
         )}

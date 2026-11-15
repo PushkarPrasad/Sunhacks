@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
 import { emitInput } from "@/lib/input/bus";
 import { GestureRecognizer, type GestureEvent, type Hand } from "@/lib/input/gestures";
-import { useUi } from "@/stores/ui";
 
 // Webcam hand tracking with MediaPipe Tasks Vision. Loaded only when the user turns gestures on.
 const MP_VERSION = "1.2.3";
@@ -15,13 +13,12 @@ const CLICKABLE = "button, a[href], [role=tab], [role=radio], [role=switch], [da
 type Status = "starting" | "ready" | "no-hand" | "error";
 
 export function GestureLayer() {
-  const setUi = useUi((s) => s.set);
   const video = useRef<HTMLVideoElement>(null);
   const ring = useRef<HTMLDivElement>(null);
   const fill = useRef<HTMLDivElement>(null);
-  const [status, setStatus] = useState<Status>("starting");
+  const [, setStatus] = useState<Status>("starting");
   const [error, setError] = useState<string | null>(null);
-  const [last, setLast] = useState<string | null>(null);
+  const [, setLast] = useState<string | null>(null);
 
   useEffect(() => {
     let stopped = false;
@@ -135,25 +132,13 @@ export function GestureLayer() {
       <div ref={ring} aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-[60] h-8 w-8 rounded-full border-2 border-copper opacity-0 transition-opacity" style={{ willChange: "transform" }}>
         <div ref={fill} className="absolute inset-1 origin-center rounded-full bg-copper/70" style={{ transform: "scale(0)" }} />
       </div>
-      <div data-gesture-ui className="fixed bottom-16 right-4 z-40 w-[208px] animate-fade overflow-hidden rounded-[12px] border border-line bg-card shadow-[var(--shadow-float)]" role="status" aria-live="polite">
-        <div className="relative">
-          <video ref={video} muted playsInline className="h-[132px] w-full -scale-x-100 bg-ink object-cover" />
-          {last && <span className="absolute left-2 top-2 rounded-full bg-ink/80 px-2 py-0.5 text-[11px] text-paper">{last}</span>}
-          <button type="button" aria-label="Turn gestures off" onClick={() => setUi({ gestures: false })} className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-ink/60 text-paper hover:bg-ink">
-            <X size={13} strokeWidth={1.5} />
-          </button>
-        </div>
-        <div className="px-3 py-2 text-[11px] leading-snug text-muted">
-          {status === "starting" && "Starting the camera…"}
-          {status === "no-hand" && "Show one hand to the camera."}
-          {status === "ready" && (
-            <span>
-              <b className="font-medium text-ink">Pinch</b> select · <b className="font-medium text-ink">swipe</b> page · <b className="font-medium text-ink">spread</b> explode · <b className="font-medium text-ink">fist</b> collapse · two-hand pinch zoom
-            </span>
-          )}
-          {status === "error" && <span className="text-bad">{error}</span>}
-        </div>
-      </div>
+      {/* Hidden camera feed for tracking only; no on-screen preview (V2). */}
+      <video ref={video} muted playsInline aria-hidden="true" className="pointer-events-none fixed h-px w-px opacity-0" />
+      {error && (
+        <p role="status" className="glass fixed bottom-16 left-1/2 z-50 -translate-x-1/2 rounded-full border border-line px-4 py-1.5 text-[12px] text-bad">
+          {error}
+        </p>
+      )}
     </>
   );
 }

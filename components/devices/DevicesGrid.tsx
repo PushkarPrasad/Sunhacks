@@ -46,7 +46,7 @@ export function DevicesGrid() {
               onClick={() => open(c.id, c.kind)}
               className={`group relative flex min-h-0 flex-col justify-between rounded-[12px] border p-5 text-left transition-[border-color,background-color] duration-300 ${
                 muted ? "border-dashed border-line-strong bg-transparent text-muted hover:border-muted" : "border-line bg-card hover:border-ink"
-              } ${c.kind === "custom" ? "bg-ink text-paper hover:border-copper" : ""}`}
+              } ${c.kind === "custom" ? "bg-copper text-white hover:border-copper" : ""}`}
             >
               <div className="flex items-start justify-between">
                 <span
