@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+- Draft complete: anatomy figures (Phones, Laptops, Projectors) with screen-space callouts.
+- Board quad view (Schematic, PCB, 3D, Parts) with synced selection; SVGs isolated in shadow roots.
+- Hoop Upload (configurable endpoint, mock download fallback).
+- New parts land in free canvas space; notes fade while wiring; Apply clicks no longer captured by the canvas.
 - Hand-gesture recogniser (pure, tested) + MediaPipe webcam layer with copper ring cursor.
 - Keyboard map and input bus shared by keyboard, gesture ring, gestures and voice.
 - Checks, Board, Summary, Templates and Share pages; Gerber/BOM/KiCad/JSON export.

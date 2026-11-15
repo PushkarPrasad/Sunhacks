@@ -98,7 +98,7 @@ function mergeGeometries(geoms: THREE.BufferGeometry[]): THREE.BufferGeometry {
   return out;
 }
 
-function Scene({ cj, build }: { cj: El[]; build: Build }) {
+function Scene({ cj, build, selected, onSelect }: { cj: El[]; build: Build; selected?: string | null; onSelect?: (label: string) => void }) {
   const m = useBoardModel(cj, build);
   const controls = useRef<OrbitControlsImpl>(null);
   useEffect(() => {
@@ -150,18 +150,25 @@ function Scene({ cj, build }: { cj: El[]; build: Build }) {
           </mesh>
         ))}
         {m.modules.map((mod) => (
-          <Group key={mod.label} position={[mod.x * S, BOARD_T / 2, -mod.y * S]}>
+          <Group
+            key={mod.label}
+            position={[mod.x * S, BOARD_T / 2, -mod.y * S]}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect?.(mod.label);
+            }}
+          >
             {/* header strip(s); passives solder straight to the board */}
             {!mod.passive && (
               <mesh position={[0, (2.5 * S) / 2, 0]}>
                 <boxGeometry args={[Math.max(mod.fpW, 2.54) * S, 2.5 * S, Math.max(mod.fpH, 2.54) * S]} />
-                <meshStandardMaterial color="#16181C" roughness={0.6} transparent opacity={mod.body ? 0.95 : 1} />
+                <meshStandardMaterial color={selected === mod.label && !mod.body ? "#B5652E" : "#16181C"} roughness={0.6} transparent opacity={mod.body ? 0.95 : 1} />
               </mesh>
             )}
             {mod.body && (
               <mesh position={[0, (mod.passive ? 0 : HEADER) + (mod.body.d * S) / 2, 0]}>
                 <boxGeometry args={[mod.body.w * S, mod.body.d * S, mod.body.h * S]} />
-                <meshStandardMaterial color="#FBF9F5" roughness={0.85} />
+                <meshStandardMaterial color={selected === mod.label ? "#E9B98F" : "#FBF9F5"} roughness={0.85} />
                 <Edges color="#16181C" lineWidth={1} transparent opacity={0.35} />
               </mesh>
             )}
@@ -185,12 +192,12 @@ function Scene({ cj, build }: { cj: El[]; build: Build }) {
   );
 }
 
-export default function Board3D({ circuitJson, build }: { circuitJson: El[]; build: Build }) {
+export default function Board3D({ circuitJson, build, selected, onSelect }: { circuitJson: El[]; build: Build; selected?: string | null; onSelect?: (label: string) => void }) {
   const board = circuitJson.find((e) => e.type === "pcb_board") as { width: number; height: number } | undefined;
   const span = Math.max(board?.width ?? 60, board?.height ?? 60) * S;
   return (
     <Canvas camera={{ position: [span * 1.15, span * 1.3, span * 1.6], fov: 35 }} dpr={[1, 2]} gl={{ antialias: true, preserveDrawingBuffer: true }}>
-      <Scene cj={circuitJson} build={build} />
+      <Scene cj={circuitJson} build={build} selected={selected} onSelect={onSelect} />
     </Canvas>
   );
 }

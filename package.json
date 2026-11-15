@@ -11,9 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "screenshots": "playwright test e2e/screenshots.spec.ts",
-    "seed:export": "node --experimental-strip-types scripts/export-seed.ts",
-    "seed:mongo": "node --experimental-strip-types scripts/seed-mongo.ts"
+    "screenshots": "playwright test e2e/screenshots.spec.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1169.0",

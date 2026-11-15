@@ -16,6 +16,9 @@ import { useBuild } from "@/stores/build";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { StatusDot } from "@/components/ui/StatusDot";
 
+/** Categories drawn as full anatomy figures (numbered callouts); the rest use the plain exploded view. */
+const ANATOMY = new Set(["phones", "laptops", "projectors"]);
+
 const ExplodedDevice = dynamic(() => import("./ExplodedDevice"), { ssr: false, loading: () => <div className="h-full w-full" /> });
 
 export function CategoryView({ id }: { id: string }) {
@@ -74,9 +77,9 @@ export function CategoryView({ id }: { id: string }) {
         onKeyDown={onKeyDown}
       >
         <div className="dot-grid absolute inset-0 [background-size:20px_20px] opacity-60" />
-        <ExplodedDevice blocks={blocks} active={active} onActive={setActive} exploded={exploded} />
+        <ExplodedDevice blocks={blocks} active={active} onActive={setActive} exploded={exploded} anatomy={ANATOMY.has(id)} />
         <div className="pointer-events-none absolute left-8 top-7">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Generic architecture</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{ANATOMY.has(id) ? "Anatomy" : "Generic architecture"}</p>
           <p className="mt-1 text-[13px] text-muted">Hover or use the arrow keys to inspect a block</p>
         </div>
         <div className="absolute right-6 top-6 flex gap-2">
@@ -103,7 +106,7 @@ export function CategoryView({ id }: { id: string }) {
               </>
             )}
           </div>
-          <ul className="flex flex-wrap justify-end gap-1.5" aria-label="Blocks">
+          <ul className={`flex flex-wrap justify-end gap-1.5 ${ANATOMY.has(id) ? "sr-only" : ""}`} aria-label="Blocks">
             {blocks.map((b, i) => (
               <li key={b.id}>
                 <button

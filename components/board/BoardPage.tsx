@@ -3,14 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import QRCode from "qrcode";
-import { Box, Braces, Cloud, FileArchive, FileCode2, FileSpreadsheet, Layers, Wallet, X } from "lucide-react";
+import { Braces, Cloud, FileArchive, FileCode2, FileSpreadsheet, UploadCloud, Wallet, X } from "lucide-react";
 import { useChecks } from "@/lib/hooks/useChecks";
 import { useCircuit } from "@/lib/hooks/useCircuit";
 import { onInput } from "@/lib/input/bus";
 import { DEMO_USD_PER_SOL, SOLANA_ENABLED, SOLANA_RECIPIENT, solanaPayUrl } from "@/lib/integrations/solana";
 import { useBuild } from "@/stores/build";
-import { useUi } from "@/stores/ui";
-import { CircuitView } from "./CircuitView";
+import { QuadView } from "./QuadView";
 
 type Kind = "gerber" | "bom" | "kicad" | "json";
 const EXPORTS: { kind: Kind; label: string; sub: string; icon: typeof FileArchive }[] = [
@@ -35,8 +34,6 @@ interface Quote {
 export function BoardPage() {
   const build = useBuild((s) => s.build);
   const hydrated = useBuild((s) => s.hydrated);
-  const view = useUi((s) => s.boardView);
-  const setUi = useUi((s) => s.set);
   const report = useChecks();
   const circuit = useCircuit(build, hydrated && build.instances.length > 0);
   const [busy, setBusy] = useState<string | null>(null);
@@ -99,6 +96,30 @@ export function BoardPage() {
     }
   };
 
+  const uploadHoop = async () => {
+    setBusy("hoop");
+    setMessage(null);
+    try {
+      const res = await fetch("/api/hoop", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(build) });
+      if (res.headers.get("content-type")?.includes("zip")) {
+        const blob = await res.blob();
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = /filename="([^"]+)"/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "project.zip";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+        setMessage(res.headers.get("x-hoop-mode") === "error" ? "Hoop upload failed; downloaded the package." : "Hoop is not configured (mock); downloaded the project package.");
+      } else {
+        const j = (await res.json()) as { url?: string; error?: string };
+        setMessage(j.error ?? (j.url ? "Uploaded to Hoop." : "Uploaded to Hoop."));
+      }
+    } catch {
+      setMessage("Upload failed.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
   const fails = report.findings.filter((f) => f.severity === "fail").length;
   const total = (report.totals.bomUSD + (quote?.boardUSD ?? report.totals.boardUSD)).toFixed(2);
 
@@ -119,22 +140,15 @@ export function BoardPage() {
   return (
     <div className="grid h-full grid-cols-[1fr_400px]">
       <section className="relative min-h-0">
-        <CircuitView view={view} />
-        <div className="absolute left-5 top-5 z-10 flex items-center gap-0.5 rounded-full border border-line bg-card p-0.5 shadow-[var(--shadow-float)]" role="tablist" aria-label="Board view">
-          {(["pcb", "3d"] as const).map((v) => (
-            <button
-              key={v}
-              type="button"
-              role="tab"
-              aria-selected={view === v}
-              onClick={() => setUi({ boardView: v })}
-              className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[13px] ${view === v ? "bg-ink text-paper" : "text-muted hover:text-ink"}`}
-            >
-              {v === "pcb" ? <Layers size={14} strokeWidth={1.5} /> : <Box size={14} strokeWidth={1.5} />}
-              {v === "pcb" ? "PCB" : "3D"}
-            </button>
-          ))}
-        </div>
+        {circuit.data ? (
+          <QuadView build={build} data={circuit.data} />
+        ) : (
+          <div className="grid h-full place-items-center bg-pcb text-[13px] text-paper/70" role="status">
+            <span className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 animate-ping rounded-full bg-copper" /> {circuit.error ?? "Placing modules and routing the carrier board…"}
+            </span>
+          </div>
+        )}
       </section>
 
       <aside className="flex min-h-0 flex-col gap-5 border-l border-line px-6 py-6">
@@ -170,6 +184,9 @@ export function BoardPage() {
               </button>
             ))}
           </div>
+          <button type="button" onClick={uploadHoop} disabled={!circuit.data || busy !== null} className="mt-2 flex h-9 w-full items-center justify-center gap-2 rounded-full bg-ink text-[12px] text-paper hover:bg-copper disabled:opacity-50">
+            <UploadCloud size={14} strokeWidth={1.5} /> {busy === "hoop" ? "Uploading…" : "Upload project to Hoop"}
+          </button>
           <button type="button" onClick={saveCloud} disabled={!circuit.data || busy !== null} className="mt-2 flex h-9 w-full items-center justify-center gap-2 rounded-full border border-line-strong text-[12px] hover:border-ink disabled:opacity-50">
             <Cloud size={14} strokeWidth={1.5} /> {busy === "s3" ? "Saving…" : "Save Gerbers to cloud"}
           </button>

@@ -44,7 +44,7 @@ test("Apply on a sticky note inserts a level shifter and clears the voltage fail
 test("Gesture Ring exports Gerber and BOM", async ({ page }) => {
   await loadTemplate(page, "gesture-ring");
   await page.goto("/board");
-  await page.waitForSelector("text=traces routed", { timeout: 60_000 });
+  await expect(page.getByRole("region", { name: "Parts" })).toBeVisible({ timeout: 60_000 });
   const [gerber] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: /Gerber zip/ }).click()]);
   expect(gerber.suggestedFilename()).toBe("gesture-ring-gerbers.zip");
   const [bom] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: /BOM CSV/ }).click()]);

@@ -22,7 +22,16 @@ Judgment calls made while building, newest last.
    page has focus, Left/Right change page. Shift+Left/Right always change page. In the builder canvas,
    arrows nudge the selected module.
 8. **Parts seed is TypeScript (`data/parts.ts`)** with small helpers for pin lists, so 38-pin controllers stay
-   readable; `npm run seed:export` writes JSON for MongoDB.
+   readable. The app reads the seed directly; MongoDB stores saved builds (a catalogue seed script is still to do).
 9. **MATLAB curves are not faked.** `data/matlab/` ships empty apart from a README; the checks engine uses the
    MATLAB tables when the scripts have been run, otherwise the documented simple formula, and the UI says
    which model was used.
+10. **Hoop Upload endpoint is configurable.** Hoop's API was not available during the build, so `/api/hoop`
+    packages Gerbers + BOM + Circuit JSON + build JSON and POSTs multipart to `HOOP_UPLOAD_URL` with
+    `Authorization: Bearer HOOP_API_KEY`. Without it, it is a labelled mock that downloads the package.
+11. **Board page is a quad view** (Schematic, PCB, 3D, Parts) sharing one selection. Selection maps designators to
+    the `data-pcb-component-id` / `data-schematic-component-id` attributes circuit-to-svg emits.
+12. **Anatomy figures** (numbered callouts with leader lines) for Phones, Laptops and Projectors only, per the
+    draft scope; other categories use the plain exploded view.
+13. **Draft scope** set by the owner: firmware, MATLAB, Solana, Tiger Data, multilingual notes, Snake, Maritime,
+    Lambda, Docker, voice and haptics are deferred. Code that already existed for some of these stays in place.

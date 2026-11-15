@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useBuild } from "@/stores/build";
 import { useCircuit } from "@/lib/hooks/useCircuit";
+import { SvgHost } from "./SvgHost";
 import { ZoomPan } from "./ZoomPan";
 
 const Board3D = dynamic(() => import("./Board3D"), { ssr: false });
@@ -19,12 +20,12 @@ export function CircuitView({ view, compact = false }: { view: "schematic" | "pc
     <div className={`relative h-full w-full overflow-hidden ${dark ? "bg-pcb text-paper" : view === "3d" ? "bg-paper" : "bg-paper"}`}>
       {data && view === "schematic" && (
         <ZoomPan>
-          <div className="h-full w-full p-6 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: data.schematicSvg }} />
+          <SvgHost className="h-full w-full p-6" svg={data.schematicSvg} />
         </ZoomPan>
       )}
       {data && view === "pcb" && (
         <ZoomPan dark>
-          <div className="h-full w-full p-8 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: data.pcbSvg }} />
+          <SvgHost className="h-full w-full p-8" svg={data.pcbSvg} />
         </ZoomPan>
       )}
       {data && view === "3d" && <Board3D circuitJson={data.circuitJson} build={build} />}

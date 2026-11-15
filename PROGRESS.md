@@ -1,13 +1,12 @@
-# Progress
+# DRAFT COMPLETE
 
-Draft scope (owner request): 1) all pages polished with mocks, anatomy figures for Phones/Laptops/Projectors;
-2) Board quad view with synced selection, Gerber + BOM export, Summary, Hoop Upload; 3) keyboard map + webcam
-hand tracking; 4) Gemini, TinyFish, MongoDB adapters with mocks.
+Draft scope (owner request), all four steps done:
 
-- [x] 1. Pages: Home, Devices, Category, Builder, Checks, Board, Summary, Templates, Share
-- [ ] 1. Anatomy figures (Phones, Laptops, Projectors)
-- [ ] 2. Board quad view with synced selection
-- [x] 2. Gerber + BOM export, Summary page
-- [ ] 2. Hoop Upload
-- [x] 3. Keyboard map, webcam hand tracking (MediaPipe, lazy)
-- [x] 4. Gemini, TinyFish, MongoDB adapters with mocks
+- [x] 1. All pages work end to end with mocks: Home, Devices, Category, Builder, Checks, Board, Summary, Templates, Share
+- [x] 1. Anatomy figures (numbered callouts) for Phones, Laptops, Projectors; plain exploded view for the rest
+- [x] 2. Board quad view (Schematic, PCB, 3D, Parts) with synced selection
+- [x] 2. Gerber and BOM export (also KiCad and Circuit JSON), Summary page, Hoop Upload (mock until configured)
+- [x] 3. Keyboard map and webcam hand tracking (MediaPipe, lazy-loaded)
+- [x] 4. Gemini, TinyFish and MongoDB adapters with mocks
+
+Stopped here as instructed. Deferred items are listed in STATUS.md.

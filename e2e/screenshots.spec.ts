@@ -93,21 +93,30 @@ for (const size of SIZES) {
       expect(errors).toEqual([]);
     });
 
-    test("board page pcb and 3d", async ({ page }) => {
+    test("board quad view with synced selection", async ({ page }) => {
       const errors = collectErrors(page);
       await loadTemplate(page, "gesture-ring");
       await page.goto("/board");
-      await page.waitForSelector("text=traces routed", { timeout: 60_000 });
-      await expect(page.getByText(/day lead time/)).toBeVisible();
-      await expectNoOverflow(page);
-      await page.waitForTimeout(700);
-      await page.screenshot({ path: shot("12-board-pcb") });
-      await page.getByRole("tab", { name: "3D" }).click();
+      await expect(page.getByRole("region", { name: "Parts" })).toBeVisible({ timeout: 60_000 });
+      await page.getByRole("region", { name: "Parts" }).getByRole("button", { name: /^U1/ }).click();
+      await expect(page.getByText(/U1 · Seeed XIAO ESP32-S3/)).toBeVisible();
       await page.waitForTimeout(1500);
-      await page.waitForTimeout(700);
-      await page.screenshot({ path: shot("13-board-3d") });
+      await expectNoOverflow(page);
+      await page.screenshot({ path: shot("12-board-quad") });
       expect(errors).toEqual([]);
     });
+
+    for (const cat of ["phones", "laptops", "projectors"]) {
+      test(`anatomy ${cat}`, async ({ page }) => {
+        const errors = collectErrors(page);
+        await page.goto(`/devices/${cat}`);
+        await expect(page.getByText("Anatomy")).toBeVisible();
+        await page.waitForTimeout(2500);
+        await expectNoOverflow(page);
+        await page.screenshot({ path: shot(`13-anatomy-${cat}`) });
+        expect(errors).toEqual([]);
+      });
+    }
 
     test("summary", async ({ page }) => {
       const errors = collectErrors(page);
