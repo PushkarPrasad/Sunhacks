@@ -165,7 +165,7 @@ package's LICENSE file where the field is missing).
 | `typescript` | 5.9.3 | Apache-2.0 | dev | Type checking |
 | `vitest` | 3.2.7 | MIT | dev | Unit tests |
 
-Device models, textures and illustrations are procedural or drawn in code; no third-party models, textures or logos are used.
+Device models, textures and illustrations are procedural or drawn in code; the only third-party assets are listed below. No logos are used.
 
 ## Third-party assets
 
