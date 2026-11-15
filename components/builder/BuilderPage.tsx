@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, Play, Redo2, Undo2 } from "lucide-react";
+import { ArrowRight, Download, Play, Redo2, Undo2, Upload } from "lucide-react";
 import { templatesById } from "@/data/templates";
 import { useChecks } from "@/lib/hooks/useChecks";
 import { useBuild } from "@/stores/build";
@@ -15,6 +15,7 @@ import { Inspector } from "./Inspector";
 import { Palette } from "./Palette";
 
 const CircuitView = dynamic(() => import("@/components/board/CircuitView").then((m) => m.CircuitView), { ssr: false });
+const HoopUpload = dynamic(() => import("./HoopUpload").then((m) => m.HoopUpload), { ssr: false });
 const SnakeGame = dynamic(() => import("@/components/game/SnakeGame").then((m) => m.SnakeGame), { ssr: false });
 
 const TABS: { id: BuilderTab; label: string }[] = [
@@ -54,6 +55,7 @@ export function BuilderPage() {
   const setUi = useUi((s) => s.set);
   const report = useChecks();
   const [playing, setPlaying] = useState(false);
+  const [importing, setImporting] = useState(false);
   const template = build.templateId ? templatesById[build.templateId] : undefined;
 
   useEffect(() => {
@@ -104,6 +106,24 @@ export function BuilderPage() {
               <Play size={14} strokeWidth={2} /> Run
             </button>
           )}
+          <button type="button" onClick={() => setImporting(true)} className="flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] text-muted transition hover:-translate-y-px hover:bg-raised hover:text-ink">
+            <Upload size={15} strokeWidth={1.5} /> Import build
+          </button>
+          <button
+            type="button"
+            aria-label="Save build file"
+            title="Save build file"
+            onClick={() => {
+              const a = document.createElement("a");
+              a.href = URL.createObjectURL(new Blob([JSON.stringify(build, null, 2)], { type: "application/json" }));
+              a.download = `${build.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "build"}.json`;
+              a.click();
+              setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+            }}
+            className="mr-1 grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-raised hover:text-ink"
+          >
+            <Download size={16} strokeWidth={1.5} />
+          </button>
           <button type="button" aria-label="Undo" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo} className="grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-line/60 hover:text-ink disabled:opacity-30">
             <Undo2 size={17} strokeWidth={1.5} />
           </button>
@@ -131,6 +151,7 @@ export function BuilderPage() {
         </div>
         <Inspector />
       </div>
+      {importing && <HoopUpload onClose={() => setImporting(false)} />}
       {playing && template?.game && <SnakeGame template={template} onClose={() => setPlaying(false)} />}
     </div>
   );

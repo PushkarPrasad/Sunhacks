@@ -1,6 +1,7 @@
 # Changelog
 
 ## V2
+- Hoop Upload is now a basketball file drop in the Builder (Import build); Save build file added; old upload service removed.
 - Procedural high-detail drone (carbon frame, brushless motors, props, ESC/FC stack, LiPo, camera, VTX, RX, GPS, canopy) with Solid/Transparent/X-ray shell, spring explode (slider, wheel, E, gestures), hover labels and part inspector; Home hero and new Drones category with two templates and four new parts.
 - Renamed to Magic Smoke; dark violet/blue palette, Geist type, glows and grain; DESIGN.md.
 - Home is five story slides (hero, problem, how it works, hands-on, start) with spring transitions.

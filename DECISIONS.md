@@ -26,9 +26,9 @@ Judgment calls made while building, newest last.
 9. **MATLAB curves are not faked.** `data/matlab/` ships empty apart from a README; the checks engine uses the
    MATLAB tables when the scripts have been run, otherwise the documented simple formula, and the UI says
    which model was used.
-10. **Hoop Upload endpoint is configurable.** Hoop's API was not available during the build, so `/api/hoop`
-    packages Gerbers + BOM + Circuit JSON + build JSON and POSTs multipart to `HOOP_UPLOAD_URL` with
-    `Authorization: Bearer HOOP_API_KEY`. Without it, it is a labelled mock that downloads the package.
+10. **Hoop Upload is a basketball gag in the Builder (V2).** The V1 upload service was removed. Importing a build
+    means throwing a file-ball through a hoop (mouse/trackpad only, own 2D physics loop instead of matter-js to avoid
+    a dependency); "Just upload it" skips the game. KiCad files are accepted but not converted yet.
 11. **Board page is a quad view** (Schematic, PCB, 3D, Parts) sharing one selection. Selection maps designators to
     the `data-pcb-component-id` / `data-schematic-component-id` attributes circuit-to-svg emits.
 12. **Anatomy figures** (numbered callouts with leader lines) for Phones, Laptops and Projectors only, per the

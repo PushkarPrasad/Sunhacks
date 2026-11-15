@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import QRCode from "qrcode";
-import { Braces, FileArchive, FileCode2, FileSpreadsheet, UploadCloud, X } from "lucide-react";
+import { Braces, FileArchive, FileCode2, FileSpreadsheet, X } from "lucide-react";
 import { useChecks } from "@/lib/hooks/useChecks";
 import { useCircuit } from "@/lib/hooks/useCircuit";
 import { onInput } from "@/lib/input/bus";
@@ -83,30 +83,6 @@ export function BoardPage() {
   useEffect(() => onInput("exportBoard", () => (void downloadRef.current("gerber"), true)), []);
 
 
-  const uploadHoop = async () => {
-    setBusy("hoop");
-    setMessage(null);
-    try {
-      const res = await fetch("/api/hoop", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(build) });
-      if (res.headers.get("content-type")?.includes("zip")) {
-        const blob = await res.blob();
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = /filename="([^"]+)"/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "project.zip";
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-        setMessage(res.headers.get("x-hoop-mode") === "error" ? "Hoop upload failed; downloaded the package." : "Hoop is not configured (mock); downloaded the project package.");
-      } else {
-        const j = (await res.json()) as { url?: string; error?: string };
-        setMessage(j.error ?? (j.url ? "Uploaded to Hoop." : "Uploaded to Hoop."));
-      }
-    } catch {
-      setMessage("Upload failed.");
-    } finally {
-      setBusy(null);
-    }
-  };
-
   const fails = report.findings.filter((f) => f.severity === "fail").length;
   const total = (report.totals.bomUSD + (quote?.boardUSD ?? report.totals.boardUSD)).toFixed(2);
 
@@ -171,9 +147,6 @@ export function BoardPage() {
               </button>
             ))}
           </div>
-          <button type="button" onClick={uploadHoop} disabled={!circuit.data || busy !== null} className="mt-2 flex h-9 w-full items-center justify-center gap-2 rounded-full bg-copper text-[12px] text-white hover:bg-copper-hover disabled:opacity-50">
-            <UploadCloud size={14} strokeWidth={1.5} /> {busy === "hoop" ? "Uploading…" : "Upload project to Hoop"}
-          </button>
           <p className="mt-1.5 h-4 text-[11px] text-muted" role="status">
             {message}
           </p>
