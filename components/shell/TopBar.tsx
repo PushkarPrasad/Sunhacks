@@ -18,7 +18,7 @@ export function TopBar() {
       <Link href="/" className="flex items-center gap-2.5" aria-label={`${BRAND.name} home`}>
         <Logo />
         <span className="font-serif text-[22px] leading-none tracking-tight">
-          Magic <span className="italic text-copper">Smoke</span>
+          Flu<span className="italic text-copper">xo</span>
         </span>
       </Link>
       <nav aria-label="Main" className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1">

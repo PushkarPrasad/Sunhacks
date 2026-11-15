@@ -1,4 +1,4 @@
-# Magic Smoke: Project Rundown
+# Fluxo: Project Rundown
 
 Written from the team's seed (`RUNDOWN_seed.md`) and checked against the code on 2026-11-15 (updated for V3). Where
 the seed described something that is planned but not built yet, this version says so.
@@ -15,7 +15,7 @@ way to design the PCB, and no easy way to see what was wired where, and why.
 
 ## What we built
 
-Magic Smoke lets you open up a 3D model of a device, see the parts inside it, and start your own build from it, or from
+Fluxo lets you open up a 3D model of a device, see the parts inside it, and start your own build from it, or from
 a blank canvas. Every category on the Devices page opens a detailed procedural model built to real dimensions (drone,
 reaction-wheel cube, rocker-bogie rover, six-axis arm, motion glove, CanSat, weather station, RC buggy, 3D printer,
 desktop synth, phone and laptop) that you can explode, see through, x-ray and inspect part by part. They share one

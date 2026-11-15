@@ -4,11 +4,11 @@ import { motion } from "motion/react";
 import { BRAND } from "@/lib/brand";
 
 // Team photos: drop a square image at /public/team/<first-name>.jpg and set `photo` below.
-const TEAM: { name: string; role: string; hue: string; photo?: string }[] = [
-  { name: "Aayoush Iyer", role: "Role coming soon", hue: "from-[#0F9D6B] to-[#0A6B49]" },
-  { name: "Meghana Yerragovula", role: "Role coming soon", hue: "from-[#0A6B49] to-[#C8A96A]" },
-  { name: "Nicole Galvan Ayon", role: "Role coming soon", hue: "from-[#14B47C] to-[#0A6B49]" },
-  { name: "Pushkar Prasad", role: "Role coming soon", hue: "from-[#14B47C] to-[#0F9D6B]" },
+const TEAM: { name: string; hue: string; photo?: string }[] = [
+  { name: "Aayoush Iyer", hue: "from-[#0F9D6B] to-[#0A6B49]" },
+  { name: "Meghana Yerragovula", hue: "from-[#0A6B49] to-[#C8A96A]" },
+  { name: "Nicole Galvan Ayon", hue: "from-[#14B47C] to-[#0A6B49]" },
+  { name: "Pushkar Prasad", hue: "from-[#14B47C] to-[#0F9D6B]" },
 ];
 
 const initials = (n: string) =>
@@ -28,10 +28,8 @@ export function AboutPage() {
           <br />
           <span className="italic text-copper">wishing we had.</span>
         </h1>
-        <div className="mt-8 max-w-[520px] space-y-4 text-[16px] leading-relaxed text-muted">
-          <p>We are engineering students. One of us leads a student team on a NASA project; the rest of us are friends studying electrical engineering.</p>
-          <p>On every project, the same thing slowed us down: no good way to design the PCB, and no easy way to see what we were wiring, how, and why.</p>
-          <p className="text-ink">We grew up on the fluid, futuristic interfaces from the movies we watched as kids, so we built the one we always wanted.</p>
+        <div className="mt-8 max-w-[520px] text-[16px] leading-relaxed text-muted">
+          <p>As engineering students, we kept running into the same problem: projects that just wouldn&apos;t work, and no easy way to find out why before we&apos;d spent the time and money. All four of us work on a NASA team at ASU building rovers, and a tool like this would let us simulate and test versions of our designs, then see every issue and benefit before we build. The motion, the fluidity and the ease of use come from the movies we grew up on, the ones that made us want to be engineers in the first place.</p>
         </div>
       </motion.div>
       <ul className="grid grid-cols-2 gap-5" aria-label="Team">
@@ -52,7 +50,6 @@ export function AboutPage() {
               </span>
             )}
             <p className="mt-5 text-[17px] font-medium leading-tight">{m.name}</p>
-            <p className="mt-1 text-[13px] text-muted">{m.role}</p>
           </motion.li>
         ))}
       </ul>
