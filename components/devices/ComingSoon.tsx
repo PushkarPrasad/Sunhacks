@@ -5,7 +5,7 @@ export function ComingSoon() {
   return (
     <div className="grid h-full place-items-center px-12">
       <div className="max-w-[520px] text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">More (Coming Soon)</p>
+        <p className="eyebrow">More (Coming Soon)</p>
         <h1 className="mt-4 font-serif text-[56px] leading-none">More devices are on the way.</h1>
         <p className="mt-5 text-[15px] leading-relaxed text-muted">
           Tablets, projectors, game consoles, cameras and weather stations are next. Until then, Start blank opens an

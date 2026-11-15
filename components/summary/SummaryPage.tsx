@@ -12,6 +12,7 @@ import { encodeBuild } from "@/lib/share";
 import { useBuild } from "@/stores/build";
 import { Pager } from "@/components/ui/Pager";
 import { StatusDot } from "@/components/ui/StatusDot";
+import { CountUp } from "@/components/ui/CountUp";
 
 const PER_PAGE = 9;
 // Assumptions for the Time and Cost Saved panel (shown on the page).
@@ -89,7 +90,7 @@ export function SummaryPage() {
     <div className="relative mx-auto grid h-full max-w-[1360px] grid-cols-[1.1fr_1fr_340px] gap-8 px-10 pb-6 pt-8">
       {/* Parts */}
       <section className="flex min-h-0 flex-col">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Summary</p>
+        <p className="eyebrow">Summary</p>
         <h1 className="mt-2 font-serif text-[44px] leading-[1.02]">{build.name}</h1>
         <p className="mt-2 text-[13px] text-muted">
           {modules} modules · {build.wires.length} wires · {rows.length} distinct parts
@@ -124,8 +125,8 @@ export function SummaryPage() {
       {/* Totals + time saved */}
       <section className="flex min-h-0 flex-col gap-4 pt-[30px]">
         <div className="grid grid-cols-2 gap-3">
-          <Stat label="Total cost" value={`$${t.totalUSD.toFixed(2)}`} sub={`$${t.bomUSD.toFixed(2)} parts + $${t.boardUSD.toFixed(2)} boards`} />
-          <Stat label="Average current" value={`${Math.round(t.averageCurrent_mA)} mA`} sub={`${Math.round(t.peakCurrent_mA)} mA peak`} />
+          <Stat label="Total cost" value={<CountUp value={t.totalUSD} format={(n) => `$${n.toFixed(2)}`} />} sub={`$${t.bomUSD.toFixed(2)} parts + $${t.boardUSD.toFixed(2)} boards`} />
+          <Stat label="Average current" value={<CountUp value={t.averageCurrent_mA} format={(n) => `${Math.round(n)} mA`} />} sub={`${Math.round(t.peakCurrent_mA)} mA peak`} />
           <Stat
             label="Battery life"
             value={t.batteryLife_h !== null ? `≈ ${formatHours(t.batteryLife_h)}` : "USB"}
@@ -140,13 +141,17 @@ export function SummaryPage() {
           </div>
           <div className="mt-4 grid grid-cols-2 gap-4">
             <div>
-              <p className="font-mono text-[28px] leading-none">{savedH.toFixed(1)} h</p>
+              <p className="font-mono text-[28px] leading-none tabular-nums">
+                <CountUp value={savedH} format={(n) => `${n.toFixed(1)} h`} />
+              </p>
               <p className="mt-1 text-[12px] text-muted">
                 design time saved ({manualH.toFixed(1)} h by hand vs {toolH.toFixed(1)} h here)
               </p>
             </div>
             <div>
-              <p className="font-mono text-[28px] leading-none">${Math.round(savedH * RATE + (fails === 0 ? t.boardUSD : 0))}</p>
+              <p className="font-mono text-[28px] leading-none tabular-nums">
+                <CountUp value={savedH * RATE + (fails === 0 ? t.boardUSD : 0)} format={(n) => `$${Math.round(n)}`} />
+              </p>
               <p className="mt-1 text-[12px] text-muted">{fails === 0 ? `labour + one avoided board respin (${RESPIN_DAYS} days)` : "labour; fix the failing checks to also avoid a respin"}</p>
             </div>
           </div>
@@ -226,14 +231,14 @@ export function SummaryPage() {
   );
 }
 
-function Stat({ label, value, sub, status }: { label: string; value: string; sub: string; status?: "ok" | "warn" | "fail" }) {
+function Stat({ label, value, sub, status }: { label: string; value: React.ReactNode; sub: string; status?: "ok" | "warn" | "fail" }) {
   return (
-    <div className="rounded-[12px] border border-line bg-card p-4">
-      <p className="flex items-center gap-1.5 text-[12px] text-muted">
+    <div className="lift rounded-[12px] border border-line bg-card p-4">
+      <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
         {status && <StatusDot status={status} />}
         {label}
       </p>
-      <p className="mt-2 font-mono text-[24px] leading-none">{value}</p>
+      <p className="mt-2.5 font-mono text-[24px] leading-none tabular-nums">{value}</p>
       <p className="mt-1.5 truncate text-[11px] text-muted">{sub}</p>
     </div>
   );

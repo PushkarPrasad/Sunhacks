@@ -189,7 +189,7 @@ function HowSlide() {
       <div className="mt-12 grid grid-cols-4 gap-5">
         {STEPS.map((s, k) => (
           <Rise key={s.title} d={1 + k}>
-            <div className="group h-full rounded-[16px] border border-line bg-card/70 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-copper/60">
+            <div className="group h-full rounded-[16px] border border-line bg-card/70 p-5 lift hover:border-line-strong">
               <div className="h-[150px] overflow-hidden rounded-[10px] border border-line bg-paper/80">
                 <StepArt kind={s.art} />
               </div>
@@ -356,7 +356,7 @@ function StartSlide() {
             <button
               type="button"
               onClick={c.go}
-              className={`group flex h-[260px] w-full flex-col justify-between rounded-[20px] border p-8 text-left transition duration-300 hover:-translate-y-1 ${c.primary ? "border-copper/60 bg-[linear-gradient(135deg,rgb(15_157_107/0.28),rgb(10_107_73/0.12))] hover:shadow-[var(--shadow-glow)]" : "border-line bg-card/70 hover:border-copper/60"}`}
+              className={`group flex h-[260px] w-full flex-col justify-between rounded-[20px] border p-8 text-left transition duration-300 hover:-translate-y-0.5 ${c.primary ? "border-copper/60 bg-[linear-gradient(135deg,rgb(15_157_107/0.16),rgb(10_107_73/0.04))] hover:shadow-[var(--shadow-glow)]" : "border-line bg-card/70 hover:border-line-strong"}`}
             >
               <span className={`grid h-12 w-12 place-items-center rounded-[10px] ${c.primary ? "bg-copper shadow-[var(--shadow-btn)] text-white" : "border border-line-strong"}`}>
                 <c.icon size={22} strokeWidth={1.5} />

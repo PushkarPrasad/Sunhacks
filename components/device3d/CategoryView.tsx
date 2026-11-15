@@ -100,7 +100,7 @@ export function CategoryView({ id }: { id: string }) {
         <div className="dot-grid absolute inset-0 [background-size:20px_20px] opacity-60" />
         <ExplodedDevice key={variant} blocks={blocks} active={active} onActive={setActive} exploded={exploded} anatomy={ANATOMY.has(id)} />
         <div className="pointer-events-none absolute left-8 top-7">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{ANATOMY.has(id) ? "Anatomy" : "Generic architecture"}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">{ANATOMY.has(id) ? "Anatomy" : "Generic architecture"}</p>
           <p className="mt-1 text-[13px] text-muted">Hover or use the arrow keys to inspect a block</p>
         </div>
         <div className="absolute right-6 top-6 flex gap-2">
@@ -179,7 +179,7 @@ export function CategoryView({ id }: { id: string }) {
         <h1 className="mt-4 font-serif text-[52px] leading-none">{category.name}</h1>
         <p className="mt-3 max-w-[460px] text-[15px] leading-relaxed text-muted">{category.description}</p>
 
-        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Starter builds</p>
+        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-faint">Starter builds</p>
         <div className="mt-3 flex min-h-0 flex-1 flex-col gap-3" data-arrows>
           {starters.map(({ t, report, fails, warns, count }) => (
             <button
@@ -189,14 +189,14 @@ export function CategoryView({ id }: { id: string }) {
                 loadTemplate(t.id);
                 router.push("/builder");
               }}
-              className="group flex flex-col rounded-[12px] border border-line bg-card p-5 text-left transition-colors hover:border-ink"
+              className="group flex flex-col rounded-[12px] border border-line bg-card p-5 text-left lift hover:border-line-strong"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="font-serif text-[26px] leading-tight">{t.name}</p>
                   <p className="mt-1 text-[13px] leading-snug text-muted">{t.description}</p>
                 </div>
-                <span className="grid h-9 w-9 shrink-0 place-items-center lift rounded-[10px] border border-line transition-colors group-hover:border-line-strong hover:bg-raised group-hover:bg-copper-hover group-hover:text-white">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-line transition-colors group-hover:border-copper group-hover:bg-copper-hover group-hover:text-white">
                   <ArrowRight size={16} strokeWidth={1.5} />
                 </span>
               </div>

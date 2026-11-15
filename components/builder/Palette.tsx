@@ -95,7 +95,7 @@ export function Palette() {
           );
         })}
       </div>
-      <p className="px-4 pb-2 pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+      <p className="px-4 pb-2 pt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
         {query ? `${items.length} results` : `${TABS.find((t) => t.id === tab)!.label} · ${items.length}`}
       </p>
       <div ref={listRef} className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-hidden px-3" role="tabpanel">

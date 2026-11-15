@@ -24,7 +24,7 @@ export function DevicesGrid() {
     <div className="mx-auto flex h-full max-w-[1200px] flex-col px-12 pb-8 pt-10">
       <div className="flex items-end justify-between">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Start from a device</p>
+          <p className="eyebrow">Start from a device</p>
           <h1 className="mt-2 font-serif text-[48px] leading-none">What are you building?</h1>
         </div>
         <div className="flex items-center gap-3">
@@ -52,7 +52,7 @@ export function DevicesGrid() {
               onClick={() => open(c.id)}
               className={`group relative flex min-h-0 flex-col justify-between rounded-[12px] border p-5 text-left transition-[border-color,background-color] duration-300 ${
                 muted ? "border-dashed border-line-strong bg-transparent text-muted hover:border-muted" : "border-line bg-card hover:border-ink"
-              }} ${i === 0 ? "border-copper/60 bg-[linear-gradient(160deg,rgb(15_157_107/0.26),rgb(10_107_73/0.08))] hover:border-copper" : ""}`}
+              }} ${i === 0 ? "border-copper/60 bg-[linear-gradient(160deg,rgb(15_157_107/0.14),rgb(10_107_73/0.04))] hover:border-copper" : ""}`}
             >
               <div className="flex items-start justify-between">
                 <span

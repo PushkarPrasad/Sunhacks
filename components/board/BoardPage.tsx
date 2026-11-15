@@ -116,7 +116,7 @@ export function BoardPage() {
 
       <aside className="flex min-h-0 flex-col gap-5 border-l border-line px-6 py-6">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Carrier board</p>
+          <p className="eyebrow">Carrier board</p>
           <h1 className="mt-1 font-serif text-[34px] leading-none">{build.name}</h1>
           <p className="mt-2 font-mono text-[12px] text-muted">
             {board ? `${board.w} × ${board.h} mm · 2 layers · ${circuit.data?.traces ?? 0} traces · 4 × M3` : "Routing…"}
@@ -137,7 +137,7 @@ export function BoardPage() {
                 type="button"
                 disabled={!circuit.data || busy !== null}
                 onClick={() => download(e.kind)}
-                className="flex items-start gap-2.5 rounded-[10px] border border-line bg-card p-3 text-left transition-colors hover:border-ink disabled:opacity-50"
+                className="flex items-start gap-2.5 rounded-[10px] border border-line bg-card p-3 text-left lift hover:border-line-strong disabled:opacity-50"
               >
                 <e.icon size={17} strokeWidth={1.5} className="mt-0.5 shrink-0 text-copper" />
                 <span>

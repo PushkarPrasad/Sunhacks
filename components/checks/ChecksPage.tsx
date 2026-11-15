@@ -45,7 +45,7 @@ export function ChecksPage() {
     <div className="mx-auto flex h-full max-w-[1320px] flex-col px-10 pb-6 pt-8">
       <div className="flex items-end justify-between gap-6">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{build.name}</p>
+          <p className="eyebrow">{build.name}</p>
           <h1 className="mt-2 font-serif text-[48px] leading-none">{t("nav.Checks")}</h1>
           <p className="mt-3 text-[15px] text-muted">
             {build.instances.length === 0
@@ -75,7 +75,7 @@ export function ChecksPage() {
                   setPage(0);
                 }}
                 aria-pressed={active}
-                className={`flex min-h-0 flex-col justify-between rounded-[12px] border bg-card p-5 text-left transition-colors ${active ? "border-ink" : "border-line hover:border-line-strong"}`}
+                className={`flex min-h-0 flex-col justify-between rounded-[12px] border bg-card p-5 text-left transition-colors ${active ? "border-copper" : "border-line hover:border-line-strong"}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-[13px] text-muted">

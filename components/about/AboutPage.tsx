@@ -41,7 +41,7 @@ export function AboutPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12 + k * 0.08, type: "spring", stiffness: 200, damping: 26 }}
-            className="rounded-[18px] border border-line bg-card/70 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-copper/50"
+            className="rounded-[18px] border border-line bg-card/70 p-6 lift hover:border-line-strong"
           >
             {m.photo ? (
               // eslint-disable-next-line @next/next/no-img-element
