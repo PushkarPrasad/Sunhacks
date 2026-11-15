@@ -203,7 +203,7 @@ function Controller() {
 
 let chipMat: THREE.Material | null = null;
 function labelChipMat() {
-  chipMat ??= new THREE.MeshStandardMaterial({ map: labelTexture(["MCU32", "F405 RGT6"], { bg: "#18181c", fg: "#9b9aa6", w: 256, h: 256, size: 40 }), roughness: 0.45 });
+  chipMat ??= new THREE.MeshStandardMaterial({ map: labelTexture(["MCU", "32-BIT"], { bg: "#18181c", fg: "#9b9aa6", w: 256, h: 256, size: 40 }), roughness: 0.45 });
   return chipMat;
 }
 

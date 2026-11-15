@@ -112,7 +112,7 @@ function Stack() {
 function Boards({ which }: { which: "power" | "computer" | "sensors" | "radio" }) {
   const board = useMemo(() => roundBoard(), []);
   const wroom = useMemo(() => block(18 * S, 25.5 * S, 3.1 * S, 0.4 * S), []);
-  const moduleMat = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["WROOM-32", "2.4 GHz"], { bg: "#b9bcc4", fg: "#2a2b33", w: 256, h: 256, size: 34 }), metalness: 0.9, roughness: 0.32 }), []);
+  const moduleMat = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["WIFI MCU", "2.4 GHz"], { bg: "#b9bcc4", fg: "#2a2b33", w: 256, h: 256, size: 34 }), metalness: 0.9, roughness: 0.32 }), []);
   const breakout = useMemo(() => plate(13 * S, 10 * S, 1.2 * S, { r: 0.6 * S, bevel: 0.2 * S }), []);
   const chip = useMemo(() => block(3 * S, 3 * S, 1 * S, 0.2 * S), []);
   const radio = useMemo(() => plate(17 * S, 16 * S, 1 * S, { r: 0.5 * S, bevel: 0.15 * S }), []);

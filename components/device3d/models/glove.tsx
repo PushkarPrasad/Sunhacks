@@ -72,14 +72,14 @@ function Board() {
   // Arduino 101: 68.6 x 53.3 mm, Curie module, USB-B jack, barrel jack, two header rows.
   const pcb = useMemo(() => plate(68.6 * S, 53.3 * S, 1.6 * S, { r: 1 * S, bevel: 0.3 * S, holes: [[-30 * S, -22 * S, 1.6 * S], [30 * S, 22 * S, 1.6 * S], [30 * S, -22 * S, 1.6 * S]] }), []);
   const curie = useMemo(() => block(11 * S, 8 * S, 2 * S, 0.4 * S), []);
-  const curieMat = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["CURIE"], { bg: "#b9bcc4", fg: "#2a2b33", w: 256, h: 128, size: 54 }), metalness: 0.9, roughness: 0.35 }), []);
+  const curieMat = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["IMU+BLE"], { bg: "#b9bcc4", fg: "#2a2b33", w: 256, h: 128, size: 54 }), metalness: 0.9, roughness: 0.35 }), []);
   const usb = useMemo(() => block(12 * S, 16 * S, 11 * S, 0.8 * S), []);
   const jack = useMemo(() => block(9 * S, 13 * S, 11 * S, 1 * S), []);
   const header = useMemo(() => block(2.5 * S, 20 * S, 8.5 * S, 0.3 * S), []);
   const button = useMemo(() => block(6 * S, 6 * S, 3 * S, 0.6 * S), []);
   return (
     <Group position={BOARD} rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
-      <mesh geometry={pcb} material={MAT.pcb(101, "blue", "ARDUINO 101 COMPATIBLE")} />
+      <mesh geometry={pcb} material={MAT.pcb(101, "blue", "MOTION CTRL")} />
       <mesh geometry={curie} material={curieMat} position={[4 * S, 2 * S, 1.8 * S]} />
       <mesh geometry={usb} material={MAT.steel()} position={[-31 * S, 12 * S, 6.3 * S]} />
       <mesh geometry={jack} material={MAT.plasticMatte("#111114")} position={[-31 * S, -14 * S, 6.3 * S]} />

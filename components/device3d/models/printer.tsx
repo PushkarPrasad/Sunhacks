@@ -37,7 +37,7 @@ function Stepper({ label = true }: { label?: boolean }) {
   const cap = useMemo(() => block(0.423, 0.423, 0.07, 0.05), []);
   const shaft = useMemo(() => roundCyl(0.025, 0.24, 0.004, 12), []);
   const boss = useMemo(() => roundCyl(0.11, 0.02, 0.005, 32), []);
-  const lab = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["STEPPER 17HS4401", "1.8°  1.5 A"], { bg: "#e8e6f2", fg: "#1b1a26", w: 256, h: 96, size: 22 }), roughness: 0.5 }), []);
+  const lab = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["STEPPER  1.8°", "42 mm  1.5 A"], { bg: "#e8e6f2", fg: "#1b1a26", w: 256, h: 96, size: 22 }), roughness: 0.5 }), []);
   return (
     <Group>
       <mesh geometry={body} material={MAT.blackSteel()} rotation={[Math.PI / 2, 0, 0]} />

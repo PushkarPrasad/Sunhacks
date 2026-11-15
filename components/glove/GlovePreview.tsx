@@ -26,7 +26,7 @@ function Board() {
     <Group ref={g}>
       {/* Arduino 101 footprint 68.6 x 53.3 mm, scaled */}
       <RoundedBox args={[1.37, 0.06, 1.07]} radius={0.02} smoothness={3}>
-        <primitive object={MAT.pcb(101, "blue", "CURIE")} attach="material" />
+        <primitive object={MAT.pcb(101, "blue", "GLOVE")} attach="material" />
       </RoundedBox>
       <RoundedBox args={[0.34, 0.05, 0.34]} radius={0.01} position={[0.1, 0.05, 0]}>
         <meshStandardMaterial color="#1a1a1e" roughness={0.5} />

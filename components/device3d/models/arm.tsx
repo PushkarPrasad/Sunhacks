@@ -48,7 +48,7 @@ function Servo({ s = 1, horn = true }: { s?: number; horn?: boolean }) {
   const top = useMemo(() => roundCyl(0.06, 0.06, 0.01, 24), []);
   const hornGeo = useMemo(() => plate(0.24, 0.24, 0.025, { r: 0.12, bevel: 0.005, holes: [[0.08, 0, 0.012], [-0.08, 0, 0.012], [0, 0.08, 0.012], [0, -0.08, 0.012]] }), []);
   const label = useMemo(
-    () => new THREE.MeshStandardMaterial({ map: labelTexture(["DS3218  20 kg", "METAL GEAR  270°"], { bg: "#14151b", fg: "#c8c6d2", w: 512, h: 128, size: 38 }), roughness: 0.5 }),
+    () => new THREE.MeshStandardMaterial({ map: labelTexture(["SERVO  20 kg·cm", "METAL GEAR  270°"], { bg: "#14151b", fg: "#c8c6d2", w: 512, h: 128, size: 38 }), roughness: 0.5 }),
     [],
   );
   return (
