@@ -23,6 +23,49 @@ for (const size of SIZES) {
       expect(errors).toEqual([]);
     });
 
+    test("home how it works", async ({ page }) => {
+      await page.goto("/");
+      await page.getByRole("tab", { name: "How it works" }).click();
+      await expect(page.getByRole("heading", { name: /Explore\. Build\./ })).toBeVisible();
+      await page.waitForTimeout(900);
+      await expectNoOverflow(page);
+      await page.screenshot({ path: shot("01b-home-how") });
+    });
+
+    test("drones category", async ({ page }) => {
+      const errors = collectErrors(page);
+      await page.goto("/devices/drones");
+      await expect(page.getByText("Brushed Micro Drone")).toBeVisible();
+      await page.waitForTimeout(3500);
+      await expectNoOverflow(page);
+      await page.screenshot({ path: shot("03b-drones") });
+      expect(errors).toEqual([]);
+    });
+
+    test("glove and about", async ({ page }) => {
+      const errors = collectErrors(page);
+      await page.goto("/glove");
+      await expect(page.getByRole("button", { name: /Find glove/ })).toBeVisible();
+      await page.waitForTimeout(2500);
+      await expectNoOverflow(page);
+      await page.screenshot({ path: shot("15-glove") });
+      await page.goto("/about");
+      await expect(page.getByText("Pushkar Prasad")).toBeVisible();
+      await page.waitForTimeout(900);
+      await expectNoOverflow(page);
+      await page.screenshot({ path: shot("16-about") });
+      expect(errors).toEqual([]);
+    });
+
+    test("hoop upload", async ({ page }) => {
+      await loadTemplate(page, "gesture-ring");
+      await page.getByRole("button", { name: "Import build" }).click();
+      await expect(page.getByRole("dialog", { name: "Upload files" })).toBeVisible();
+      await page.locator("input[type=file]").setInputFiles({ name: "my-build.json", mimeType: "application/json", buffer: Buffer.from("{}") });
+      await page.waitForTimeout(600);
+      await page.screenshot({ path: shot("17-hoop-upload") });
+    });
+
     test("devices", async ({ page }) => {
       const errors = collectErrors(page);
       await page.goto("/devices");

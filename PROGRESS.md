@@ -16,4 +16,4 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 - [x] 2. Realistic drone model (Home hero + Drones category)
 - [x] 3. Hoop Upload gag in the Builder
 - [x] 4. About page + docs/RUNDOWN.md
-- [ ] 5. Glove tab connection
+- [x] 5. Glove tab connection

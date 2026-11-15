@@ -4,6 +4,7 @@ import { collectErrors, loadTemplate } from "./helpers";
 test("start from scratch: add parts, wire pin to pin, see checks update", async ({ page }) => {
   const errors = collectErrors(page);
   await page.goto("/");
+  for (let k = 0; k < 4; k++) await page.getByRole("button", { name: "Next slide" }).click();
   await page.getByRole("button", { name: /Start From Scratch/ }).click();
   await page.waitForURL("**/builder");
   await expect(page.getByText("An empty board.")).toBeVisible();
@@ -58,6 +59,12 @@ test("Gesture Ring exports Gerber and BOM", async ({ page }) => {
 test("keyboard: arrows move between pages, E toggles the exploded view", async ({ page }) => {
   await page.goto("/");
   await page.locator("body").click({ position: { x: 5, y: 300 } });
+  // Arrows step through the five Home slides first, then move to the next page.
+  for (let k = 0; k < 4; k++) {
+    await page.keyboard.press("ArrowRight");
+    await page.waitForTimeout(350);
+  }
+  await expect(page.getByRole("heading", { name: "Where do you want to begin?" })).toBeVisible();
   await page.keyboard.press("ArrowRight");
   await page.waitForURL("**/devices");
   await page.goto("/devices/phones");

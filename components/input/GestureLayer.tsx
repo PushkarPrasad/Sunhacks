@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { emitInput } from "@/lib/input/bus";
+import { emitFused } from "@/lib/input/fuse";
 import { GestureRecognizer, type GestureEvent, type Hand } from "@/lib/input/gestures";
 
 // Webcam hand tracking with MediaPipe Tasks Vision. Loaded only when the user turns gestures on.
@@ -57,20 +58,20 @@ export function GestureLayer() {
           if (target && !target.closest("[data-gesture-ui]")) {
             target.focus({ preventScroll: true });
             target.click();
-          } else emitInput("select", "gesture");
+          } else emitFused("select", "gesture");
           break;
         }
         case "swipe":
           flash(e.dir === "right" ? "Next page" : "Previous page");
-          emitInput(e.dir === "right" ? "nextPage" : "prevPage", "gesture");
+          emitFused(e.dir === "right" ? "nextPage" : "prevPage", "gesture");
           break;
         case "explode":
           flash("Explode");
-          emitInput("explode", "gesture");
+          emitFused("explode", "gesture");
           break;
         case "collapse":
           flash("Collapse");
-          emitInput("collapse", "gesture");
+          emitFused("collapse", "gesture");
           break;
         case "zoom":
           emitInput(e.factor < 1 ? "zoomIn" : "zoomOut", "gesture", e.factor);
