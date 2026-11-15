@@ -493,9 +493,10 @@ interface SceneProps {
   onAnchor?: (a: { id: string; x: number; y: number } | null) => void;
   autoRotate?: boolean;
   enableZoom?: boolean;
+  effects?: boolean;
 }
 
-function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor, autoRotate, enableZoom = true }: SceneProps) {
+function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor, autoRotate, enableZoom = true, effects = true }: SceneProps) {
   const m = useMaterials();
   const groups = useRef<Record<string, THREE.Group | null>>({});
   const amount = useRef(explode);
@@ -609,7 +610,7 @@ function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor,
 
   return (
     <>
-      <Studio floor={-0.85} shadowScale={6} aoRadius={0.35} />
+      <Studio floor={-0.85} shadowScale={6} aoRadius={0.35} effects={effects} />
       <Group ref={root} position={[0, -0.25, 0]}>
         <Parts m={m} spin={spin} groups={groups} handlers={handlers} />
       </Group>
@@ -639,9 +640,11 @@ export interface DroneModelProps {
   autoRotate?: boolean;
   enableZoom?: boolean;
   camera?: [number, number, number];
+  /** Post-processing; off where the canvas floats over the page (the pass makes the background opaque). */
+  effects?: boolean;
 }
 
-export default function DroneModel({ explode, shell = "solid", hovered = null, selected = null, onHover = () => {}, onSelect = () => {}, onAnchor, autoRotate, enableZoom, camera = [3.4, 2.6, 4.2] }: DroneModelProps) {
+export default function DroneModel({ explode, shell = "solid", hovered = null, selected = null, onHover = () => {}, onSelect = () => {}, onAnchor, autoRotate, enableZoom, camera = [3.4, 2.6, 4.2], effects = true }: DroneModelProps) {
   const [ready, setReady] = useState(false);
   return (
     <div className={`h-full w-full transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}>
@@ -653,7 +656,7 @@ export default function DroneModel({ explode, shell = "solid", hovered = null, s
         onCreated={() => setReady(true)}
         onPointerMissed={() => onSelect(null)}
       >
-        <Scene explode={explode} shell={shell} hovered={hovered} selected={selected} onHover={onHover} onSelect={onSelect} onAnchor={onAnchor} autoRotate={autoRotate} enableZoom={enableZoom} />
+        <Scene explode={explode} shell={shell} hovered={hovered} selected={selected} onHover={onHover} onSelect={onSelect} onAnchor={onAnchor} autoRotate={autoRotate} enableZoom={enableZoom} effects={effects} />
       </Canvas>
     </div>
   );

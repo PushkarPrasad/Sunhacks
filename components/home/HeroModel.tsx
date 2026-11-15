@@ -7,8 +7,8 @@ import DroneModel from "@/components/device3d/DroneModel";
 export default function HeroModel() {
   const [explode, setExplode] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setExplode((e) => (e > 0.5 ? 0 : 0.85)), 3800);
+    const id = setInterval(() => setExplode((e) => (e > 0.3 ? 0 : 0.6)), 3800);
     return () => clearInterval(id);
   }, []);
-  return <DroneModel explode={explode} autoRotate enableZoom={false} camera={[3.8, 2.4, 4.4]} />;
+  return <DroneModel explode={explode} autoRotate enableZoom={false} camera={[3.8, 2.4, 4.4]} effects={false} />;
 }
