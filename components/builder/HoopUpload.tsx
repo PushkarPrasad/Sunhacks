@@ -321,7 +321,7 @@ function draw(g: CanvasRenderingContext2D, b: Ball, hasFile: boolean, sinceSwish
   g.stroke();
   // net (sways after a swish)
   const sway = sinceSwish < 700 ? Math.sin(sinceSwish / 40) * (1 - sinceSwish / 700) * 6 : 0;
-  g.strokeStyle = "rgba(236,234,245,0.55)";
+  g.strokeStyle = "rgba(238,244,240,0.55)";
   g.lineWidth = 1.2;
   for (let k = 0; k <= 5; k++) {
     const x0 = RIM.front + ((RIM.back - RIM.front) * k) / 5;
@@ -349,7 +349,7 @@ function draw(g: CanvasRenderingContext2D, b: Ball, hasFile: boolean, sinceSwish
   g.stroke();
   // ball: a basketball wearing a file icon
   if (!hasFile && !b.flying) {
-    g.fillStyle = "rgba(163,161,184,0.45)";
+    g.fillStyle = "rgba(155,179,167,0.45)";
     g.font = "13px sans-serif";
     g.fillText("Drop a file to get a ball", REST.x - 50, REST.y - 30);
     return;

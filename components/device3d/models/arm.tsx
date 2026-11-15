@@ -12,7 +12,7 @@ import { Part, type ProductDef } from "../product/ProductModel";
 
 type V3 = [number, number, number];
 const PRINT = "#e9e6df";
-const ACCENT = "#4f43a6";
+const ACCENT = "#0a6b49";
 
 /** Stadium-shaped link plate (two round ends) with horn holes and a lightening slot, thickness t along Z. */
 function linkPlate(length: number, r: number, t: number): THREE.BufferGeometry {
@@ -119,7 +119,7 @@ function Driver() {
       <Group rotation={[-Math.PI / 2, 0, 0]}>
         <mesh geometry={board} material={MAT.pcb(61, "blue", "16CH PWM")} />
         <Instances geo={pins} mat={MAT.gold()} at={pinAt} />
-        <mesh geometry={term} material={MAT.plasticGloss("#2f6fd0")} position={[0.22, 0.07, 0.05]} />
+        <mesh geometry={term} material={MAT.plasticGloss("#1d7a58")} position={[0.22, 0.07, 0.05]} />
       </Group>
     </Group>
   );

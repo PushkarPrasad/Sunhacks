@@ -559,7 +559,7 @@ function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor,
         const mat = (o as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined;
         if (!mat || !("emissive" in mat) || p.id === "fc" && mat.emissiveIntensity === 2) return;
         const target = hot ? 0.35 : xray ? 0.12 : 0;
-        mat.emissive.set(hot ? "#0f9d6b" : "#5ee2a8");
+        mat.emissive.set(hot ? "#0f9d6b" : "#4a8f76");
         mat.emissiveIntensity += (target - mat.emissiveIntensity) * 0.2;
       });
     }

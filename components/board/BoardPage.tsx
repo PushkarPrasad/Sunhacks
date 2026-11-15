@@ -106,7 +106,7 @@ export function BoardPage() {
         {circuit.data ? (
           <QuadView build={build} data={circuit.data} />
         ) : (
-          <div className="grid h-full place-items-center bg-pcb text-[13px] text-paper/70" role="status">
+          <div className="grid h-full place-items-center bg-pcb text-[13px] text-muted" role="status">
             <span className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 animate-ping rounded-full bg-copper" /> {circuit.error ?? "Placing modules and routing the carrier board…"}
             </span>

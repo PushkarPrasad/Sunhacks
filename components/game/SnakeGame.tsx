@@ -143,9 +143,9 @@ export function SnakeGame({ template, onClose }: { template: Template; onClose: 
   }, [press, onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 grid animate-fade place-items-center bg-ink/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Snake on the simulated ST7789 screen">
-      <div className="relative flex items-center gap-10 rounded-[40px] bg-[#22252A] px-12 py-10 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)]">
-        <button type="button" onClick={onClose} aria-label="Close game" className="absolute right-5 top-5 grid h-8 w-8 place-items-center rounded-[10px] text-paper/60 hover:bg-paper/10 hover:text-paper">
+    <div className="fixed inset-0 z-50 grid animate-fade place-items-center bg-paper/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Snake on the simulated ST7789 screen">
+      <div className="relative flex items-center gap-10 rounded-[40px] bg-[#141c19] px-12 py-10 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)]">
+        <button type="button" onClick={onClose} aria-label="Close game" className="absolute right-5 top-5 grid h-8 w-8 place-items-center rounded-[10px] text-ink/60 hover:bg-ink/10 hover:text-ink">
           <X size={16} strokeWidth={1.5} />
         </button>
         <div className="relative grid h-[120px] w-[120px] grid-cols-3 grid-rows-3 gap-1">
@@ -163,13 +163,13 @@ export function SnakeGame({ template, onClose }: { template: Template; onClose: 
           <div className="rounded-[10px] border-[10px] border-[#0B0C0E] bg-black">
             <canvas ref={canvas} width={PX} height={PX} className="block h-[300px] w-[300px] [image-rendering:pixelated]" />
           </div>
-          <p className="mt-3 font-mono text-[11px] text-paper/60">
+          <p className="mt-3 font-mono text-[11px] text-ink/60">
             ST7789 240×240 · score {hud.score} · best {hud.best}
           </p>
         </div>
         <div className="flex flex-col items-center gap-2">
           <PadButton press={press} pressed={pressed} buttons={buttons} b="a" label="A" className="h-16 w-16 text-[18px]" />
-          <p className="max-w-[120px] text-center font-mono text-[10px] leading-snug text-paper/50">Arrows / WASD · Enter = A · swipe or ring to steer</p>
+          <p className="max-w-[120px] text-center font-mono text-[10px] leading-snug text-ink/50">Arrows / WASD · Enter = A · swipe or ring to steer</p>
         </div>
       </div>
     </div>
@@ -183,7 +183,7 @@ function PadButton(props: { b: Dir | "a"; label: string; className: string; pres
       type="button"
       aria-label={`${label} (${buttons[b]})`}
       onClick={() => press(b)}
-      className={`grid place-items-center rounded-full border border-paper/20 text-[11px] text-paper/80 transition-colors ${pressed === b ? "bg-copper text-paper" : "bg-paper/10 hover:bg-paper/20"} ${className}`}
+      className={`grid place-items-center rounded-full border border-ink/20 text-[11px] text-ink/80 transition-colors ${pressed === b ? "bg-copper text-white" : "bg-ink/10 hover:bg-paper/20"} ${className}`}
     >
       {label}
     </button>

@@ -173,7 +173,7 @@ function Internals({ which }: { which: "pcb" | "audio" }) {
       <Group position={[0, 3.6 * S, 0]}>
         <mesh geometry={pcb} material={MAT.pcb(401, "black", "SYNTH MAIN v3")} rotation={[-Math.PI / 2, 0, 0]} />
         <Instances geo={chip} mat={MAT.chip()} at={[-40, 0, 40].map((x) => ({ p: [x * S, 1.6 * S, -10 * S] as V3, r: [-Math.PI / 2, 0, 0] as V3 }))} />
-        <Instances geo={cap} mat={MAT.aluminum("#2f6fd0")} at={[-60, -50, 55, 65].map((x) => ({ p: [x * S, 4.8 * S, 20 * S] as V3 }))} />
+        <Instances geo={cap} mat={MAT.aluminum("#1d7a58")} at={[-60, -50, 55, 65].map((x) => ({ p: [x * S, 4.8 * S, 20 * S] as V3 }))} />
       </Group>
     );
   return (

@@ -29,7 +29,7 @@ function Chassis() {
       <mesh geometry={p} material={MAT.aluminum("#2f3038")} position={[0, CH_Y, 0]} rotation={[-Math.PI / 2, 0, 0]} />
       <mesh geometry={bumper} material={MAT.plasticMatte("#141418")} position={[1.75, CH_Y + 0.05, 0]} />
       {[-1, 1].map((sx) => (
-        <mesh key={sx} geometry={tower} material={MAT.aluminum("#4f43a6")} position={[sx * AXLE_X * 0.92, CH_Y + 0.35, 0]} rotation={[0, Math.PI / 2, 0]} />
+        <mesh key={sx} geometry={tower} material={MAT.aluminum("#0a6b49")} position={[sx * AXLE_X * 0.92, CH_Y + 0.35, 0]} rotation={[0, Math.PI / 2, 0]} />
       ))}
       {/* lower wishbones */}
       <Instances
@@ -94,11 +94,11 @@ function Shock() {
   const cap = useMemo(() => roundCyl(0.1, 0.03, 0.01, 24), []);
   return (
     <Group>
-      <mesh geometry={body} material={MAT.aluminum("#4f43a6")} position={[0, 0.12, 0]} />
+      <mesh geometry={body} material={MAT.aluminum("#0a6b49")} position={[0, 0.12, 0]} />
       <mesh geometry={shaft} material={MAT.steel()} position={[0, -0.2, 0]} />
       <mesh geometry={spring} material={MAT.steel()} />
-      <mesh geometry={cap} material={MAT.aluminum("#4f43a6")} position={[0, 0.27, 0]} />
-      <mesh geometry={cap} material={MAT.aluminum("#4f43a6")} position={[0, -0.27, 0]} />
+      <mesh geometry={cap} material={MAT.aluminum("#0a6b49")} position={[0, 0.27, 0]} />
+      <mesh geometry={cap} material={MAT.aluminum("#0a6b49")} position={[0, -0.27, 0]} />
     </Group>
   );
 }
@@ -151,7 +151,7 @@ function Electronics() {
     <Group>
       <Group position={[-0.25, CH_Y + 0.2, -0.32]}>
         <mesh geometry={esc} material={MAT.plasticMatte("#1d1d22")} />
-        <Instances geo={fin} mat={MAT.aluminum("#4f43a6")} at={Array.from({ length: 7 }, (_, i) => ({ p: [0, 0.16, -0.15 + i * 0.05] as V3 }))} />
+        <Instances geo={fin} mat={MAT.aluminum("#0a6b49")} at={Array.from({ length: 7 }, (_, i) => ({ p: [0, 0.16, -0.15 + i * 0.05] as V3 }))} />
         <mesh geometry={fan} material={MAT.plasticMatte("#141418")} position={[0, 0.24, 0]} />
         <mesh position={[0.2, 0.05, 0.181]} material={MAT.led("#f0706a")}>
           <boxGeometry args={[0.03, 0.02, 0.01]} />
@@ -167,7 +167,7 @@ function Electronics() {
         <mesh material={packLabel} position={[0, 0.126, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[1.1, 0.28]} />
         </mesh>
-        <Instances geo={strap} mat={MAT.rubber("#4f43a6")} at={[-0.4, 0.4].map((x) => ({ p: [x, 0.04, 0] as V3 }))} />
+        <Instances geo={strap} mat={MAT.rubber("#16382c")} at={[-0.4, 0.4].map((x) => ({ p: [x, 0.04, 0] as V3 }))} />
       </Group>
     </Group>
   );

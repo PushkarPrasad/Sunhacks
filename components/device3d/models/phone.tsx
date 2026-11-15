@@ -39,14 +39,14 @@ function screenTexture(): THREE.Texture {
   c.height = h;
   const g = c.getContext("2d")!;
   const bg = g.createLinearGradient(0, 0, w, h);
-  bg.addColorStop(0, "#1c1446");
-  bg.addColorStop(0.45, "#3a2a9c");
-  bg.addColorStop(1, "#0d3a8a");
+  bg.addColorStop(0, "#06100c");
+  bg.addColorStop(0.45, "#0a6b49");
+  bg.addColorStop(1, "#0f3a2c");
   g.fillStyle = bg;
   g.fillRect(0, 0, w, h);
   const glow = g.createRadialGradient(w * 0.75, h * 0.25, 10, w * 0.75, h * 0.25, w * 0.8);
-  glow.addColorStop(0, "rgba(160,140,255,0.55)");
-  glow.addColorStop(1, "rgba(160,140,255,0)");
+  glow.addColorStop(0, "rgba(94,226,168,0.55)");
+  glow.addColorStop(1, "rgba(94,226,168,0)");
   g.fillStyle = glow;
   g.fillRect(0, 0, w, h);
   g.fillStyle = "#ffffff";
@@ -180,7 +180,7 @@ function Lens({ r }: { r: number }) {
   );
   const barrel = useMemo(() => roundCyl(r * 0.8, r * 0.5, r * 0.05, 40), [r]);
   const element = useMemo(() => lathe([[0, r * 0.05], [r * 0.6, 0.0], [r * 0.6, -r * 0.03], [0, -r * 0.01]], 40), [r]);
-  const coat = useMemo(() => new THREE.MeshPhysicalMaterial({ color: "#1b1340", metalness: 0.2, roughness: 0.04, clearcoat: 1, iridescence: 1, iridescenceIOR: 1.7, iridescenceThicknessRange: [200, 600] }), []);
+  const coat = useMemo(() => new THREE.MeshPhysicalMaterial({ color: "#10261d", metalness: 0.2, roughness: 0.04, clearcoat: 1, iridescence: 1, iridescenceIOR: 1.7, iridescenceThicknessRange: [200, 600] }), []);
   return (
     <Group rotation={[-Math.PI / 2, 0, 0]}>
       <mesh geometry={ring} material={MAT.aluminum("#9aa0ab")} />

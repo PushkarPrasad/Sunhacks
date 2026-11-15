@@ -85,7 +85,7 @@ function Caps({ top }: { top: boolean }) {
   const bolt = useMemo(() => roundCyl(1.5 * S, 8 * S, 0.3 * S, 12), []);
   return (
     <Group position={[0, top ? Hh - 8 * S : 0, 0]}>
-      <mesh geometry={cap} material={MAT.plasticMatte(top ? "#4f43a6" : "#26272d")} />
+      <mesh geometry={cap} material={MAT.plasticMatte(top ? "#0a6b49" : "#26272d")} />
       {top && (
         <>
           <mesh geometry={bolt} material={MAT.steel()} position={[0, 11 * S, 0]} />

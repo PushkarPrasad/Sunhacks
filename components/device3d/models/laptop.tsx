@@ -40,9 +40,9 @@ function desktopTexture(): THREE.Texture {
   c.height = h;
   const g = c.getContext("2d")!;
   const bg = g.createLinearGradient(0, 0, w, h);
-  bg.addColorStop(0, "#160f3a");
-  bg.addColorStop(0.5, "#33238e");
-  bg.addColorStop(1, "#0c3a86");
+  bg.addColorStop(0, "#06100c");
+  bg.addColorStop(0.5, "#0a6b49");
+  bg.addColorStop(1, "#0f3a2c");
   g.fillStyle = bg;
   g.fillRect(0, 0, w, h);
   const glow = g.createRadialGradient(w * 0.2, h * 0.8, 10, w * 0.2, h * 0.8, w * 0.6);
@@ -50,13 +50,13 @@ function desktopTexture(): THREE.Texture {
   glow.addColorStop(1, "rgba(15,157,107,0)");
   g.fillStyle = glow;
   g.fillRect(0, 0, w, h);
-  g.fillStyle = "rgba(10,10,16,0.55)";
+  g.fillStyle = "rgba(6,16,12,0.55)";
   g.fillRect(0, 0, w, 30);
   g.fillStyle = "#ffffff";
   g.font = "500 18px system-ui, sans-serif";
   g.fillText("Sun 15 Nov  10:24", w - 190, 21);
   // a window with a schematic-ish app
-  g.fillStyle = "rgba(18,18,28,0.92)";
+  g.fillStyle = "rgba(11,25,20,0.92)";
   g.beginPath();
   g.roundRect(170, 110, 980, 650, 18);
   g.fill();
@@ -82,7 +82,7 @@ function desktopTexture(): THREE.Texture {
   }
   g.stroke();
   // second window
-  g.fillStyle = "rgba(236,234,245,0.9)";
+  g.fillStyle = "rgba(238,244,240,0.9)";
   g.beginPath();
   g.roundRect(1000, 380, 460, 420, 18);
   g.fill();

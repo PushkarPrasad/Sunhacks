@@ -55,13 +55,13 @@ export function QuadView({ build, data }: { build: Build; data: CircuitResult })
     <div className={`grid h-full gap-px bg-line ${focus ? "grid-cols-1" : "grid-cols-2 grid-rows-2"}`}>
       {panes.map((p) => (
         <section key={p} className={`relative min-h-0 overflow-hidden ${p === "pcb" ? "bg-pcb" : "bg-paper"}`} aria-label={TITLES[p]}>
-          <header className={`absolute inset-x-0 top-0 z-10 flex h-9 items-center justify-between px-3 text-[12px] ${p === "pcb" ? "text-paper/80" : "text-muted"}`}>
+          <header className={`absolute inset-x-0 top-0 z-10 flex h-9 items-center justify-between px-3 text-[12px] ${p === "pcb" ? "text-ink/80" : "text-muted"}`}>
             <span className="font-mono uppercase tracking-[0.14em] text-[10px]">{TITLES[p]}</span>
             <button
               type="button"
               aria-label={focus ? `Back to four views` : `Expand ${TITLES[p]}`}
               onClick={() => setFocus(focus ? null : p)}
-              className={`grid h-7 w-7 place-items-center rounded-[10px] ${p === "pcb" ? "hover:bg-paper/10" : "hover:bg-line/60"}`}
+              className={`grid h-7 w-7 place-items-center rounded-[10px] ${p === "pcb" ? "hover:bg-raised" : "hover:bg-line/60"}`}
             >
               {focus ? <Minimize2 size={14} strokeWidth={1.5} /> : <Maximize2 size={14} strokeWidth={1.5} />}
             </button>

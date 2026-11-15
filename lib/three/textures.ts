@@ -76,7 +76,7 @@ export function pcbTexture(seed: number, mask = "#101418", label = ""): THREE.Ca
     g.fill();
   }
   if (label) {
-    g.fillStyle = "rgba(236,234,245,0.85)";
+    g.fillStyle = "rgba(238,244,240,0.85)";
     g.font = "bold 26px monospace";
     g.fillText(label, 24, 490);
   }

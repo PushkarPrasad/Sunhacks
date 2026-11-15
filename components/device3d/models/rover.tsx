@@ -149,7 +149,7 @@ function Chassis() {
       ))}
       <mesh geometry={deck} material={MAT.aluminum("#2f3038")} position={[0, BODY_Y + 0.215, 0]} rotation={[-Math.PI / 2, 0, 0]} />
       {/* differential bar on top: keeps the body level between the two rockers */}
-      <mesh geometry={diff} material={MAT.aluminum("#4a3f86")} position={[-1.15, BODY_Y + 0.45, 0]} />
+      <mesh geometry={diff} material={MAT.aluminum("#0a6b49")} position={[-1.15, BODY_Y + 0.45, 0]} />
       {[-1, 1].map((s) => (
         <mesh key={s} geometry={linkGeo} material={MAT.steel()} position={[-1.15, BODY_Y + 0.2, s * 1.05]} />
       ))}

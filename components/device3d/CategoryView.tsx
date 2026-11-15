@@ -158,7 +158,7 @@ export function CategoryView({ id }: { id: string }) {
                     setActive(b.id);
                     setFocusIndex(i);
                   }}
-                  className={`rounded-[10px] border px-2.5 py-1 text-[12px] transition-colors ${active === b.id ? "border-copper bg-copper text-paper" : "border-line bg-card/80 text-muted hover:text-ink"}`}
+                  className={`rounded-[10px] border px-2.5 py-1 text-[12px] transition-colors ${active === b.id ? "border-copper bg-copper text-white" : "border-line bg-card/80 text-muted hover:text-ink"}`}
                 >
                   {b.name}
                 </button>

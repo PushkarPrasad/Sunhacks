@@ -63,7 +63,7 @@ function Cuff() {
   return (
     <Group position={[0.15, 0.8, 1.95]} scale={[0.82, 0.56, 1]}>
       <mesh geometry={band} material={MAT.knit("#1b1b22")} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={strap} material={MAT.rubber("#4f43a6")} position={[0, 0.99, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[1, 1, 1.6]} />
+      <mesh geometry={strap} material={MAT.rubber("#16382c")} position={[0, 0.99, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[1, 1, 1.6]} />
     </Group>
   );
 }

@@ -167,7 +167,7 @@ function Wind() {
       <Group position={[-1.05, y + 0.1, 0]} rotation={[0, 0.6, 0]}>
         <mesh geometry={hub} material={MAT.plasticMatte("#141418")} />
         <mesh geometry={vaneRod} material={MAT.aluminum("#9da2ac")} position={[0, 0.12, 0]} rotation={[0, 0, Math.PI / 2]} />
-        <mesh geometry={vaneTail} material={MAT.plasticMatte("#4f43a6")} position={[0.1, 0.12, -0.006]} />
+        <mesh geometry={vaneTail} material={MAT.plasticMatte("#0a6b49")} position={[0.1, 0.12, -0.006]} />
         <mesh geometry={counter} material={MAT.steel()} position={[-0.55, 0.12, 0]} rotation={[0, 0, Math.PI / 2]} />
       </Group>
     </Group>

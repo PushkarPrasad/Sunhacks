@@ -110,7 +110,7 @@ function XAxis() {
       <Group position={[-FX + 0.45, 0, -0.25]} rotation={[0, 0, Math.PI / 2]}>
         <Stepper label={false} />
       </Group>
-      <mesh geometry={carriage} material={MAT.aluminum("#4f43a6")} position={[0.3, -0.05, 0.14]} />
+      <mesh geometry={carriage} material={MAT.aluminum("#0a6b49")} position={[0.3, -0.05, 0.14]} />
     </Group>
   );
 }
