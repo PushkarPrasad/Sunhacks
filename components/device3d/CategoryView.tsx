@@ -117,7 +117,7 @@ export function CategoryView({ id }: { id: string }) {
                     setActive(null);
                     setFocusIndex(-1);
                   }}
-                  className={`h-8 rounded-[9px] px-3 capitalize ${variant === v ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
+                  className={`h-8 rounded-[9px] px-3 capitalize ${variant === v ? "bg-copper text-paper" : "text-muted hover:text-ink"}`}
                 >
                   {v}
                 </button>
@@ -158,7 +158,7 @@ export function CategoryView({ id }: { id: string }) {
                     setActive(b.id);
                     setFocusIndex(i);
                   }}
-                  className={`rounded-[10px] border px-2.5 py-1 text-[12px] transition-colors ${active === b.id ? "border-copper bg-copper text-white" : "border-line bg-card/80 text-muted hover:text-ink"}`}
+                  className={`rounded-[10px] border px-2.5 py-1 text-[12px] transition-colors ${active === b.id ? "border-copper bg-copper text-paper" : "border-line bg-card/80 text-muted hover:text-ink"}`}
                 >
                   {b.name}
                 </button>
@@ -196,7 +196,7 @@ export function CategoryView({ id }: { id: string }) {
                   <p className="font-serif text-[26px] leading-tight">{t.name}</p>
                   <p className="mt-1 text-[13px] leading-snug text-muted">{t.description}</p>
                 </div>
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-line transition-colors group-hover:border-copper group-hover:bg-copper-hover group-hover:text-white">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-line transition-colors group-hover:border-copper group-hover:bg-copper-hover group-hover:text-paper">
                   <ArrowRight size={16} strokeWidth={1.5} />
                 </span>
               </div>
@@ -224,7 +224,7 @@ function VariantToggle({ variant, onChange }: { variant: "phone" | "laptop"; onC
   return (
     <div className="glass absolute right-6 top-6 flex rounded-[12px] border border-line p-0.5 text-[12px]" role="radiogroup" aria-label="Device">
       {(["phone", "laptop"] as const).map((v) => (
-        <button key={v} type="button" role="radio" aria-checked={variant === v} onClick={() => onChange(v)} className={`rounded-[9px] px-3.5 py-1.5 capitalize transition ${variant === v ? "bg-copper text-white" : "text-muted hover:text-ink"}`}>
+        <button key={v} type="button" role="radio" aria-checked={variant === v} onClick={() => onChange(v)} className={`rounded-[9px] px-3.5 py-1.5 capitalize transition ${variant === v ? "bg-copper text-paper" : "text-muted hover:text-ink"}`}>
           {v}
         </button>
       ))}

@@ -7,8 +7,13 @@ import { StatusDot } from "@/components/ui/StatusDot";
 
 export function ChecksStrip({ report }: { report: ChecksReport }) {
   const t = useT();
+  const fails = report.results.filter((r) => r.status === "fail").length;
+  const warns = report.results.filter((r) => r.status === "warn").length;
   return (
     <div className="absolute inset-x-0 bottom-0 z-30 flex h-12 items-center justify-between gap-1 border-t border-line bg-paper/90 px-3 backdrop-blur" onPointerDown={(e) => e.stopPropagation()}>
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {fails ? `${fails} checks failing` : warns ? `${warns} checks to review` : "All checks passing"}
+      </span>
       {report.results.map((r) => (
         <Link
           key={r.id}

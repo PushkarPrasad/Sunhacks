@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, ArrowRight, Cpu, Hand, Layers, PencilRuler, ScanSearch, Spline, Workflow, type LucideIcon } from "lucide-react";
@@ -76,7 +77,7 @@ export function Home() {
         <button type="button" aria-label="Previous slide" disabled={i === 0} onClick={() => go(i - 1)} className="grid h-9 w-9 place-items-center rounded-[10px] border border-line text-muted transition hover:-translate-y-px hover:border-copper hover:text-ink disabled:opacity-30">
           <ArrowLeft size={16} strokeWidth={1.5} />
         </button>
-        <div className="flex items-center gap-2" role="tablist" aria-label="Slides">
+        <div className="flex items-center" role="tablist" aria-label="Slides">
           {SLIDES.map((s, k) => (
             <button
               key={s}
@@ -85,8 +86,10 @@ export function Home() {
               aria-selected={k === i}
               aria-label={s}
               onClick={() => go(k)}
-              className={`h-1.5 rounded-full transition-all duration-500 ${k === i ? "w-7 bg-copper" : "w-1.5 bg-line-strong hover:bg-muted"}`}
-            />
+              className="group grid h-6 min-w-4 place-items-center px-1"
+            >
+              <span aria-hidden="true" className={`block h-1.5 rounded-full transition-[width,background-color] duration-500 ${k === i ? "w-7 bg-copper" : "w-1.5 bg-line-strong group-hover:bg-muted"}`} />
+            </button>
           ))}
         </div>
         <button type="button" aria-label="Next slide" disabled={i === SLIDES.length - 1} onClick={() => go(i + 1)} className="grid h-9 w-9 place-items-center rounded-[10px] border border-line text-muted transition hover:-translate-y-px hover:border-copper hover:text-ink disabled:opacity-30">
@@ -108,7 +111,6 @@ function Rise({ children, d = 0, className = "" }: { children: React.ReactNode; 
 }
 
 function HeroSlide({ onNext }: { onNext: () => void }) {
-  const router = useRouter();
   return (
     <div className={`${wrap} grid grid-cols-[1fr_1.15fr] items-center gap-8`}>
       <div className="relative z-10">
@@ -127,9 +129,9 @@ function HeroSlide({ onNext }: { onNext: () => void }) {
           <p className="mt-2 max-w-[460px] text-[15px] text-muted">69 real modules, checked as you wire, a PCB in one click.</p>
         </Rise>
         <Rise d={3} className="mt-9 flex items-center gap-5">
-          <button type="button" onClick={() => router.push("/devices")} className="flex h-12 items-center gap-2 rounded-[10px] bg-copper px-6 text-[14px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5 hover:bg-copper-hover active:translate-y-0">
+          <Link data-magnetic href="/devices" className="flex h-12 items-center gap-2 rounded-[10px] bg-copper px-6 text-[14px] text-paper shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5 hover:bg-copper-hover active:translate-y-0">
             Open a device <ArrowRight size={16} strokeWidth={1.75} />
-          </button>
+          </Link>
           <button type="button" onClick={onNext} className="text-[14px] text-muted underline decoration-line-strong underline-offset-[6px] transition hover:text-ink hover:decoration-copper">
             See how it works
           </button>
@@ -358,7 +360,7 @@ function StartSlide() {
               onClick={c.go}
               className={`group flex h-[260px] w-full flex-col justify-between rounded-[20px] border p-8 text-left transition duration-300 hover:-translate-y-0.5 ${c.primary ? "border-copper/60 bg-[linear-gradient(135deg,rgb(15_157_107/0.16),rgb(10_107_73/0.04))] hover:shadow-[var(--shadow-glow)]" : "border-line bg-card/70 hover:border-line-strong"}`}
             >
-              <span className={`grid h-12 w-12 place-items-center rounded-[10px] ${c.primary ? "bg-copper shadow-[var(--shadow-btn)] text-white" : "border border-line-strong"}`}>
+              <span className={`grid h-12 w-12 place-items-center rounded-[10px] ${c.primary ? "bg-copper shadow-[var(--shadow-btn)] text-paper" : "border border-line-strong"}`}>
                 <c.icon size={22} strokeWidth={1.5} />
               </span>
               <span>

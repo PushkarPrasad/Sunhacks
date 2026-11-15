@@ -1,7 +1,7 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ScanLine } from "lucide-react";
 import { categoriesById } from "@/data/categories";
 
@@ -11,7 +11,6 @@ type State = { kind: "idle" } | { kind: "busy" } | { kind: "result"; text: strin
 export function ScanDevice() {
   const input = useRef<HTMLInputElement>(null);
   const [state, setState] = useState<State>({ kind: "idle" });
-  const router = useRouter();
 
   const onFile = async (file: File) => {
     setState({ kind: "busy" });
@@ -35,9 +34,9 @@ export function ScanDevice() {
         <p className="max-w-[340px] animate-fade text-right text-[13px] text-muted" role="status">
           {state.text}
           {state.categoryId && (
-            <button type="button" className="ml-2 text-ink underline decoration-copper underline-offset-4" onClick={() => router.push(`/devices/${state.categoryId}`)}>
+            <Link href={`/devices/${state.categoryId}`} className="ml-2 text-ink underline decoration-copper underline-offset-4">
               Open
-            </button>
+            </Link>
           )}
         </p>
       )}

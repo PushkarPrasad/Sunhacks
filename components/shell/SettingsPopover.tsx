@@ -17,6 +17,7 @@ const LANGS: { id: Lang; label: string }[] = [
 export function SettingsPopover() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
   const ui = useUi();
   const t = useT();
   const ring = useRing();
@@ -30,6 +31,7 @@ export function SettingsPopover() {
       if (e.key === "Escape") {
         e.stopPropagation();
         setOpen(false);
+        trigger.current?.focus();
       }
     };
     window.addEventListener("mousedown", onDown);
@@ -43,27 +45,31 @@ export function SettingsPopover() {
   return (
     <div ref={ref} className="relative">
       <button
+        ref={trigger}
         type="button"
         aria-label={t("settings.title")}
+        aria-haspopup="dialog"
         aria-expanded={open}
+        aria-controls={open ? "settings-popover" : undefined}
         onClick={() => setOpen((o) => !o)}
         className="grid h-9 w-9 place-items-center rounded-[10px] text-muted transition-colors hover:bg-line/60 hover:text-ink"
       >
         <Settings2 size={18} strokeWidth={1.5} />
       </button>
       {open && (
-        <div role="dialog" aria-label={t("settings.title")} className="absolute right-0 top-11 w-[300px] animate-fade rounded-[12px] border border-line bg-card p-3 shadow-[var(--shadow-float)]">
+        <div id="settings-popover" role="dialog" aria-label={t("settings.title")} className="absolute right-0 top-11 w-[300px] animate-fade rounded-[12px] border border-line bg-card p-3 shadow-[var(--shadow-float)]">
           <p className="px-2 pb-2 pt-1 font-serif text-xl">{t("settings.title")}</p>
           <p className="px-2 pb-1 text-xs uppercase tracking-wider text-muted">{t("settings.language")}</p>
-          <div className="mb-2 grid grid-cols-3 gap-1 px-2" role="radiogroup">
+          <div className="mb-2 grid grid-cols-3 gap-1 px-2" role="radiogroup" aria-label={t("settings.language")}>
             {LANGS.map((l) => (
               <button
                 key={l.id}
                 type="button"
                 role="radio"
+                lang={l.id}
                 aria-checked={ui.lang === l.id}
                 onClick={() => ui.set({ lang: l.id })}
-                className={`rounded-md border px-2 py-1.5 text-[13px] ${ui.lang === l.id ? "border-copper bg-copper text-white" : "border-line hover:border-line-strong"}`}
+                className={`rounded-md border px-2 py-1.5 text-[13px] ${ui.lang === l.id ? "border-copper bg-copper text-paper" : "border-line hover:border-line-strong"}`}
               >
                 {l.label}
               </button>

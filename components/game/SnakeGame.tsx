@@ -183,7 +183,7 @@ function PadButton(props: { b: Dir | "a"; label: string; className: string; pres
       type="button"
       aria-label={`${label} (${buttons[b]})`}
       onClick={() => press(b)}
-      className={`grid place-items-center rounded-full border border-ink/20 text-[11px] text-ink/80 transition-colors ${pressed === b ? "bg-copper text-white" : "bg-ink/10 hover:bg-paper/20"} ${className}`}
+      className={`grid place-items-center rounded-full border border-ink/20 text-[11px] text-ink/80 transition-colors ${pressed === b ? "bg-copper text-paper" : "bg-ink/10 hover:bg-paper/20"} ${className}`}
     >
       {label}
     </button>

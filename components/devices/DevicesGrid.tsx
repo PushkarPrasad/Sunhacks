@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowUpRight, PencilRuler } from "lucide-react";
 import { visibleCategories as categories } from "@/data/categories";
@@ -18,7 +20,9 @@ export function DevicesGrid() {
     router.push("/builder");
   };
 
-  const open = (id: string) => router.push(`/devices/${id}`);
+  // Focus the first device card on arrival so arrow keys work at once (autoFocus does not apply to links).
+  const first = useRef<HTMLAnchorElement>(null);
+  useEffect(() => first.current?.focus({ preventScroll: true }), []);
 
   return (
     <div className="mx-auto flex h-full max-w-[1200px] flex-col px-12 pb-8 pt-10">
@@ -29,10 +33,10 @@ export function DevicesGrid() {
         </div>
         <div className="flex items-center gap-3">
           <ScanDevice />
-          <button
+          <button data-magnetic
             type="button"
             onClick={startBlank}
-            className="flex h-10 items-center gap-2 rounded-[10px] bg-copper px-4 text-[13px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-px hover:bg-copper-hover"
+            className="flex h-10 items-center gap-2 rounded-[10px] bg-copper px-4 text-[13px] text-paper shadow-[var(--shadow-glow)] transition hover:-translate-y-px hover:bg-copper-hover"
           >
             <PencilRuler size={15} strokeWidth={1.5} /> Start blank
           </button>
@@ -43,14 +47,12 @@ export function DevicesGrid() {
           const muted = c.kind === "more";
           const count = c.kind === "device" ? templatesForCategory(c.id).length : 0;
           return (
-            <button
-              key={c.id}
-              type="button"
-              role="listitem"
+            <div key={c.id} role="listitem" className="flex min-h-0">
+            <Link
+              ref={i === 0 ? first : undefined}
+              href={`/devices/${c.id}`}
               data-roving
-              autoFocus={i === 0}
-              onClick={() => open(c.id)}
-              className={`group relative flex min-h-0 flex-col justify-between rounded-[12px] border p-5 text-left transition-[border-color,background-color] duration-300 ${
+              className={`group relative flex min-h-0 flex-1 flex-col justify-between rounded-[12px] border p-5 text-left transition-[border-color,background-color] duration-300 ${
                 muted ? "border-dashed border-line-strong bg-transparent text-muted hover:border-muted" : "border-line bg-card hover:border-ink"
               }} ${i === 0 ? "border-copper/60 bg-[linear-gradient(160deg,rgb(15_157_107/0.14),rgb(10_107_73/0.04))] hover:border-copper" : ""}`}
             >
@@ -69,7 +71,8 @@ export function DevicesGrid() {
                 <p className={`mt-1 line-clamp-2 text-[13px] leading-snug text-muted`}>{c.description}</p>
                 {count > 0 && <p className="mt-2 font-mono text-[11px] text-muted">{count} starter builds</p>}
               </div>
-            </button>
+            </Link>
+            </div>
           );
         })}
       </div>

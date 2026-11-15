@@ -47,7 +47,7 @@ export function ChecksPage() {
         <div>
           <p className="eyebrow">{build.name}</p>
           <h1 className="mt-2 font-serif text-[48px] leading-none">{t("nav.Checks")}</h1>
-          <p className="mt-3 text-[15px] text-muted">
+          <p className="mt-3 text-[15px] text-muted" aria-live="polite">
             {build.instances.length === 0
               ? "Add modules in the builder and the checks run as you wire."
               : fails + warns === 0
