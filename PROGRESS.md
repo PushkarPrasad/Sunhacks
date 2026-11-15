@@ -34,3 +34,4 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 | --- | --- | --- | --- | --- | --- | --- |
 | Drone (approved reference) | 4 | 4 | 4 | 5 | 4 | Studio HDRI only |
 | Balancing cube | 4 | 4 | 4 | 4 | 4 | Compared with photos of reaction-wheel cubes: plates, brass-weighted wheels and corner blocks match; aluminium roughness fixed after pass 1 (was mirror-like) |
+| Rocker-bogie rover | 4 | 4 | 4 | 4 | 4 | Compared with hobby rocker-bogie builds: 2020 extrusion frame and arms with T-slots, 120 mm wheels with curved spokes and grousers, stereo mast; differential bar toned down after pass 1 |
