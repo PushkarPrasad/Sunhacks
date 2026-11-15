@@ -32,7 +32,7 @@ export function DevicesGrid() {
           <button
             type="button"
             onClick={startBlank}
-            className="flex h-10 items-center gap-2 rounded-full bg-copper px-4 text-[13px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-px hover:bg-copper-hover"
+            className="flex h-10 items-center gap-2 rounded-[10px] bg-copper px-4 text-[13px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-px hover:bg-copper-hover"
           >
             <PencilRuler size={15} strokeWidth={1.5} /> Start blank
           </button>
@@ -52,11 +52,11 @@ export function DevicesGrid() {
               onClick={() => open(c.id)}
               className={`group relative flex min-h-0 flex-col justify-between rounded-[12px] border p-5 text-left transition-[border-color,background-color] duration-300 ${
                 muted ? "border-dashed border-line-strong bg-transparent text-muted hover:border-muted" : "border-line bg-card hover:border-ink"
-              }} ${i === 0 ? "border-copper/60 bg-[linear-gradient(160deg,rgb(124_92_255/0.26),rgb(61_123_255/0.08))] hover:border-copper" : ""}`}
+              }} ${i === 0 ? "border-copper/60 bg-[linear-gradient(160deg,rgb(15_157_107/0.26),rgb(10_107_73/0.08))] hover:border-copper" : ""}`}
             >
               <div className="flex items-start justify-between">
                 <span
-                  className={`grid h-10 w-10 place-items-center rounded-full border ${
+                  className={`grid h-10 w-10 place-items-center rounded-[10px] border ${
                     muted ? "border-line-strong" : "border-line group-hover:border-ink"
                   }`}
                 >

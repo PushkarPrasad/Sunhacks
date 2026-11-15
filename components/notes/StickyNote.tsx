@@ -6,12 +6,14 @@ import { noteText } from "@/lib/i18n/notes";
 import { useT } from "@/lib/hooks/useT";
 import { useUi } from "@/stores/ui";
 
-const SEV: Record<Finding["severity"], string> = { fail: "var(--color-bad)", warn: "var(--color-warn)", ok: "var(--color-ok)" };
+/** Left rule colour per severity: failures danger, warnings amber, passing notes emerald. */
+const RULE: Record<Finding["severity"], string> = { fail: "var(--color-bad)", warn: "var(--color-warn)", ok: "var(--color-copper)" };
+const LABEL: Record<Finding["severity"], string> = { fail: "Problem", warn: "Warning", ok: "Note" };
 
+/** Kept for callers that still import it; notes no longer tilt. */
 export function rotationFor(id: string): number {
-  let h = 0;
-  for (const c of id) h = (h * 31 + c.charCodeAt(0)) | 0;
-  return ((Math.abs(h) % 25) - 12) / 10; // -1.2 .. 1.2 degrees
+  void id;
+  return 0;
 }
 
 interface Props {
@@ -28,29 +30,27 @@ export function StickyNote({ finding, onApply, onDismiss, width = 232, text, cla
   const lang = useUi((s) => s.lang);
   const t = useT();
   const { title, body } = text ?? noteText(finding.code, finding.params, lang);
-  const rot = rotationFor(finding.id);
   return (
     <article
-      className={`paper-note relative animate-pop rounded-[3px] px-3.5 pb-3 pt-3.5 text-note-ink ${className}`}
-      style={{ width, transform: `rotate(${rot}deg)`, ["--note-rot" as string]: `${rot}deg`, ...style }}
+      className={`paper-note relative animate-pop rounded-[10px] px-4 pb-3 pt-3 text-ink ${className}`}
+      style={{ width, borderLeftColor: RULE[finding.severity], ...style }}
       aria-label={`${finding.severity === "fail" ? "Problem" : "Warning"}: ${title}`}
       lang={lang}
     >
-      <span className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full shadow-[0_1px_2px_rgb(0_0_0/0.3)]" style={{ background: SEV[finding.severity] }} aria-hidden="true" />
-      {/* Mascot slot: replace /public/mascot.svg with the team's drawing. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/mascot.svg" alt="" aria-hidden="true" className="absolute -right-2 -top-3 h-7 w-7 rotate-6 opacity-90" />
-      <p className="pr-4 text-[13px] font-semibold leading-snug">{title}</p>
-      <p className="mt-1 text-[12px] leading-snug text-note-ink/80">{body}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: RULE[finding.severity] }}>
+        {LABEL[finding.severity]}
+      </p>
+      <p className="mt-1 text-[13px] font-medium leading-snug text-ink">{title}</p>
+      <p className="mt-1 text-[12px] leading-snug text-muted">{body}</p>
       {(onApply || onDismiss) && (
-        <div className="mt-2.5 flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-2">
           {onApply && finding.fix && (
-            <button type="button" onClick={onApply} className="flex h-7 items-center gap-1 rounded-full bg-copper px-3 text-[12px] text-white transition-colors hover:bg-copper-hover">
+            <button type="button" onClick={onApply} className="flex h-7 items-center gap-1 rounded-[10px] bg-copper px-3 text-[12px] text-white shadow-[var(--shadow-btn)] transition-colors hover:bg-copper-hover">
               <Check size={13} strokeWidth={2} /> {t("note.apply")}
             </button>
           )}
           {onDismiss && (
-            <button type="button" onClick={onDismiss} className="flex h-7 items-center gap-1 rounded-full px-2 text-[12px] text-note-ink/70 transition-colors hover:bg-note-ink/10 hover:text-note-ink">
+            <button type="button" onClick={onDismiss} className="flex h-7 items-center gap-1 rounded-[10px] border border-line px-2.5 text-[12px] text-muted transition-colors hover:border-line-strong hover:text-ink">
               <X size={13} strokeWidth={2} /> {t("note.dismiss")}
             </button>
           )}

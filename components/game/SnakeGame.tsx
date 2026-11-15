@@ -54,7 +54,7 @@ export function SnakeGame({ template, onClose }: { template: Template; onClose: 
     ctx.arc(s.food[0] * CELL + CELL / 2, s.food[1] * CELL + CELL / 2, CELL / 2.6, 0, Math.PI * 2);
     ctx.fill();
     s.snake.forEach(([x, y], i) => {
-      ctx.fillStyle = i === 0 ? "#F1A469" : "#C9773C";
+      ctx.fillStyle = i === 0 ? "#5EE2A8" : "#0F9D6B";
       ctx.fillRect(x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2);
     });
     if (!s.running || s.over) {
@@ -145,7 +145,7 @@ export function SnakeGame({ template, onClose }: { template: Template; onClose: 
   return (
     <div className="fixed inset-0 z-50 grid animate-fade place-items-center bg-ink/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Snake on the simulated ST7789 screen">
       <div className="relative flex items-center gap-10 rounded-[40px] bg-[#22252A] px-12 py-10 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)]">
-        <button type="button" onClick={onClose} aria-label="Close game" className="absolute right-5 top-5 grid h-8 w-8 place-items-center rounded-full text-paper/60 hover:bg-paper/10 hover:text-paper">
+        <button type="button" onClick={onClose} aria-label="Close game" className="absolute right-5 top-5 grid h-8 w-8 place-items-center rounded-[10px] text-paper/60 hover:bg-paper/10 hover:text-paper">
           <X size={16} strokeWidth={1.5} />
         </button>
         <div className="relative grid h-[120px] w-[120px] grid-cols-3 grid-rows-3 gap-1">

@@ -17,9 +17,9 @@ const TONES: Record<ArchitectureBlock["tone"], { color: string; metalness?: numb
   glass: { color: "#A9B9C6", roughness: 0.08, opacity: 0.55 },
   battery: { color: "#D8CDB6", roughness: 0.7 },
   metal: { color: "#A8A39A", roughness: 0.35, metalness: 0.55 },
-  accent: { color: "#B5652E", roughness: 0.4, metalness: 0.4 },
+  accent: { color: "#0F9D6B", roughness: 0.4, metalness: 0.4 },
 };
-const COPPER = new THREE.Color("#B5652E");
+const COPPER = new THREE.Color("#0F9D6B");
 
 interface Props {
   blocks: ArchitectureBlock[];
@@ -48,7 +48,7 @@ function Block({ block, t, active, onActive }: { block: ArchitectureBlock; t: Re
   const material = (
     <meshStandardMaterial ref={mat} color={tone.color} roughness={tone.roughness ?? 0.6} metalness={tone.metalness ?? 0} transparent={!!tone.opacity} opacity={tone.opacity ?? 1} />
   );
-  const edges = <Edges threshold={20} color={active ? "#B5652E" : "#16181C"} lineWidth={1} transparent opacity={active ? 0.9 : 0.28} />;
+  const edges = <Edges threshold={20} color={active ? "#0F9D6B" : "#16181C"} lineWidth={1} transparent opacity={active ? 0.9 : 0.28} />;
   const handlers = {
     onPointerOver: (e: { stopPropagation: () => void }) => {
       e.stopPropagation();
@@ -216,8 +216,8 @@ function AnatomyOverlay({ blocks, anchors, active, onActive, show }: { blocks: A
           const on = active === p.id;
           return (
             <g key={p.id}>
-              <polyline points={`${ex},${p.ly} ${knee},${p.ly} ${p.x},${p.y}`} fill="none" stroke={on ? "#B5652E" : "#8E877B"} strokeWidth={on ? 1.4 : 1} />
-              <circle cx={p.x} cy={p.y} r={on ? 3.5 : 2.5} fill={on ? "#B5652E" : "#16181C"} />
+              <polyline points={`${ex},${p.ly} ${knee},${p.ly} ${p.x},${p.y}`} fill="none" stroke={on ? "#0F9D6B" : "#8E877B"} strokeWidth={on ? 1.4 : 1} />
+              <circle cx={p.x} cy={p.y} r={on ? 3.5 : 2.5} fill={on ? "#0F9D6B" : "#16181C"} />
             </g>
           );
         })}

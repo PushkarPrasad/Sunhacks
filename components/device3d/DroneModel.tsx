@@ -57,29 +57,29 @@ function useMaterials() {
     const coil = coilTexture();
     return {
       carbon: new THREE.MeshPhysicalMaterial({ map: carbon, roughness: 0.38, metalness: 0.1, clearcoat: 0.8, clearcoatRoughness: 0.25 }),
-      anodViolet: new THREE.MeshStandardMaterial({ color: "#5b45d9", metalness: 0.85, roughness: 0.32 }),
-      anodDark: new THREE.MeshStandardMaterial({ color: "#2a2a35", metalness: 0.8, roughness: 0.4 }),
+      anodViolet: new THREE.MeshStandardMaterial({ color: "#0a6b49", metalness: 0.85, roughness: 0.32 }),
+      anodDark: new THREE.MeshStandardMaterial({ color: "#262b29", metalness: 0.8, roughness: 0.4 }),
       alu: new THREE.MeshStandardMaterial({ color: "#b9bcc6", metalness: 0.95, roughness: 0.28 }),
       copper: new THREE.MeshStandardMaterial({ map: coil, color: "#ffffff", metalness: 0.9, roughness: 0.35 }),
       gold: new THREE.MeshStandardMaterial({ color: "#d9ad4f", metalness: 1, roughness: 0.22 }),
-      prop: new THREE.MeshPhysicalMaterial({ color: "#8f78ff", transmission: 0.55, thickness: 0.05, roughness: 0.25, ior: 1.5, transparent: true, opacity: 0.92 }),
+      prop: new THREE.MeshPhysicalMaterial({ color: "#6f8a7f", transmission: 0.55, thickness: 0.05, roughness: 0.25, ior: 1.5, transparent: true, opacity: 0.92 }),
       blackPlastic: new THREE.MeshStandardMaterial({ color: "#16161c", roughness: 0.65 }),
       rubber: new THREE.MeshStandardMaterial({ color: "#1e1e24", roughness: 0.95 }),
       chip: new THREE.MeshStandardMaterial({ color: "#121218", roughness: 0.35, metalness: 0.2 }),
       smd: new THREE.MeshStandardMaterial({ color: "#3a332a", roughness: 0.5 }),
-      glass: new THREE.MeshPhysicalMaterial({ color: "#dfe6ff", transmission: 1, thickness: 0.02, roughness: 0.03, ior: 1.52 }),
-      lensCoat: new THREE.MeshPhysicalMaterial({ color: "#2b1f6b", metalness: 0.3, roughness: 0.05, clearcoat: 1, iridescence: 1, iridescenceIOR: 1.6 }),
+      glass: new THREE.MeshPhysicalMaterial({ color: "#e4ece8", transmission: 1, thickness: 0.02, roughness: 0.03, ior: 1.52 }),
+      lensCoat: new THREE.MeshPhysicalMaterial({ color: "#10261d", metalness: 0.3, roughness: 0.05, clearcoat: 1, iridescence: 1, iridescenceIOR: 1.6 }),
       siliconeRed: new THREE.MeshStandardMaterial({ color: "#c23a3a", roughness: 0.7 }),
       siliconeBlack: new THREE.MeshStandardMaterial({ color: "#121216", roughness: 0.7 }),
       xt60: new THREE.MeshStandardMaterial({ color: "#e8c23a", roughness: 0.55 }),
       ceramic: new THREE.MeshStandardMaterial({ color: "#c9b48f", roughness: 0.6 }),
-      led: new THREE.MeshStandardMaterial({ color: "#3ddc97", emissive: "#3ddc97", emissiveIntensity: 2 }),
+      led: new THREE.MeshStandardMaterial({ color: "#5ee2a8", emissive: "#5ee2a8", emissiveIntensity: 2 }),
       escPcb: new THREE.MeshStandardMaterial({ map: pcbTexture(11, "#0d0f12", "4IN1 45A"), roughness: 0.55, metalness: 0.1 }),
       fcPcb: new THREE.MeshStandardMaterial({ map: pcbTexture(29, "#101318", "FC F7"), roughness: 0.55, metalness: 0.1 }),
-      vtxPcb: new THREE.MeshStandardMaterial({ map: pcbTexture(41, "#141024", "VTX"), roughness: 0.55 }),
+      vtxPcb: new THREE.MeshStandardMaterial({ map: pcbTexture(41, "#0f1a16", "VTX"), roughness: 0.55 }),
       battery: new THREE.MeshStandardMaterial({ color: "#1b1a26", roughness: 0.55 }),
       batteryLabel: new THREE.MeshStandardMaterial({ map: batteryLabel(["LI-PO 4S", "1500 mAh  14.8 V", "100C  22.2 Wh"]), roughness: 0.5 }),
-      shell: new THREE.MeshPhysicalMaterial({ color: "#d9d6ea", roughness: 0.32, transmission: 0, thickness: 0.06, ior: 1.45 }),
+      shell: new THREE.MeshPhysicalMaterial({ color: "#d6dcd8", roughness: 0.32, transmission: 0, thickness: 0.06, ior: 1.45 }),
     };
   }, []);
 }
@@ -559,7 +559,7 @@ function Scene({ explode, shell, hovered, selected, onHover, onSelect, onAnchor,
         const mat = (o as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined;
         if (!mat || !("emissive" in mat) || p.id === "fc" && mat.emissiveIntensity === 2) return;
         const target = hot ? 0.35 : xray ? 0.12 : 0;
-        mat.emissive.set(hot ? "#7c5cff" : "#a5b4fc");
+        mat.emissive.set(hot ? "#0f9d6b" : "#5ee2a8");
         mat.emissiveIntensity += (target - mat.emissiveIntensity) * 0.2;
       });
     }

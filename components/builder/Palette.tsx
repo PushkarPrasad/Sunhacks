@@ -54,7 +54,7 @@ export function Palette() {
   return (
     <aside className="flex h-full min-h-0 flex-col border-r border-line bg-paper" aria-label="Parts palette">
       <div className="px-4 pt-4">
-        <label className="flex h-9 items-center gap-2 rounded-full border border-line bg-card px-3 focus-within:border-ink">
+        <label className="flex h-9 items-center gap-2 rounded-[10px] border border-line bg-card px-3 focus-within:border-ink">
           <Search size={15} strokeWidth={1.5} className="text-muted" />
           <input
             value={query}

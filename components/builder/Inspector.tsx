@@ -93,7 +93,7 @@ function WireInspector({ wireId }: { wireId: string }) {
           </p>
         </div>
       ))}
-      <button type="button" onClick={() => removeWire(wireId)} className="mt-4 flex h-9 items-center justify-center gap-2 rounded-full border border-line-strong text-[13px] hover:border-bad hover:text-bad">
+      <button type="button" onClick={() => removeWire(wireId)} className="mt-4 flex h-9 items-center justify-center gap-2 rounded-[10px] border border-line-strong text-[13px] hover:border-bad hover:text-bad">
         <Trash2 size={15} strokeWidth={1.5} /> Delete wire
       </button>
     </div>
@@ -129,16 +129,16 @@ function PartInspector({ inst, part }: { inst: Instance; part: Part }) {
             </p>
           </div>
           <div className="flex shrink-0 gap-1">
-            <button type="button" aria-label="Rotate (R)" title="Rotate (R)" onClick={() => rotate(inst.id)} className="grid h-8 w-8 place-items-center rounded-full text-muted hover:bg-line/60 hover:text-ink">
+            <button type="button" aria-label="Rotate (R)" title="Rotate (R)" onClick={() => rotate(inst.id)} className="grid h-8 w-8 place-items-center rounded-[10px] text-muted hover:bg-line/60 hover:text-ink">
               <RotateCw size={15} strokeWidth={1.5} />
             </button>
-            <button type="button" aria-label="Delete (Del)" title="Delete (Del)" onClick={() => remove(inst.id)} className="grid h-8 w-8 place-items-center rounded-full text-muted hover:bg-bad/10 hover:text-bad">
+            <button type="button" aria-label="Delete (Del)" title="Delete (Del)" onClick={() => remove(inst.id)} className="grid h-8 w-8 place-items-center rounded-[10px] text-muted hover:bg-bad/10 hover:text-bad">
               <Trash2 size={15} strokeWidth={1.5} />
             </button>
           </div>
         </div>
         <p className="mt-2 text-[12px] leading-snug text-muted">{part.description}</p>
-        <div className="mt-4 flex gap-1 rounded-full border border-line p-0.5" role="tablist">
+        <div className="mt-4 flex gap-1 rounded-[12px] border border-line p-0.5" role="tablist">
           {(["specs", "pins", "pairs"] as Tab[]).map((t) => (
             <button
               key={t}
@@ -146,7 +146,7 @@ function PartInspector({ inst, part }: { inst: Instance; part: Part }) {
               role="tab"
               aria-selected={tab === t}
               onClick={() => setTab(t)}
-              className={`flex-1 rounded-full py-1.5 text-[12px] transition-colors ${tab === t ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
+              className={`flex-1 rounded-[9px] py-1.5 text-[12px] transition-colors ${tab === t ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
             >
               {t === "specs" ? "Specs" : t === "pins" ? `Pins · ${part.pins.length}` : "Pairs well with"}
             </button>
@@ -348,7 +348,7 @@ function Pairs({ part }: { part: Part }) {
                 const c = useView.getState().center();
                 addPart(p.id, Math.round(c.x / 8) * 8, Math.round(c.y / 8) * 8);
               }}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line-strong hover:border-ink hover:bg-copper-hover hover:text-white"
+              className="grid h-8 w-8 shrink-0 place-items-center lift rounded-[10px] border border-line hover:border-line-strong hover:bg-raised hover:bg-copper-hover hover:text-white"
             >
               <Plus size={15} strokeWidth={1.5} />
             </button>

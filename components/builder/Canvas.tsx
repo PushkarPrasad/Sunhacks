@@ -299,15 +299,15 @@ export function Canvas({ report }: { report: ChecksReport }) {
       {/* Zoom + notes controls */}
       <div className="absolute right-4 top-4 z-30 flex items-center gap-2" onPointerDown={(e) => e.stopPropagation()}>
         {notes.length > 0 && (
-          <div className="flex h-9 items-center gap-1 rounded-full border border-line bg-card/90 pl-3 pr-1 text-[12px] shadow-[var(--shadow-float)] backdrop-blur">
+          <div className="flex h-9 items-center gap-1 rounded-[10px] border border-line bg-card/90 pl-3 pr-1 text-[12px] shadow-[var(--shadow-float)] backdrop-blur">
             <NoteIcon size={14} strokeWidth={1.5} className="text-copper" />
             <span className="px-1 font-mono">
               {page * NOTES_PER_PAGE + 1}–{Math.min(notes.length, (page + 1) * NOTES_PER_PAGE)} of {notes.length}
             </span>
-            <button type="button" aria-label="Previous notes" disabled={page === 0} onClick={() => setNotePage(page - 1)} className="grid h-7 w-7 place-items-center rounded-full hover:bg-line/60 disabled:opacity-30">
+            <button type="button" aria-label="Previous notes" disabled={page === 0} onClick={() => setNotePage(page - 1)} className="grid h-7 w-7 place-items-center rounded-[10px] hover:bg-line/60 disabled:opacity-30">
               <ChevronLeft size={14} strokeWidth={1.5} />
             </button>
-            <button type="button" aria-label="Next notes" disabled={page >= pages - 1} onClick={() => setNotePage(page + 1)} className="grid h-7 w-7 place-items-center rounded-full hover:bg-line/60 disabled:opacity-30">
+            <button type="button" aria-label="Next notes" disabled={page >= pages - 1} onClick={() => setNotePage(page + 1)} className="grid h-7 w-7 place-items-center rounded-[10px] hover:bg-line/60 disabled:opacity-30">
               <ChevronRight size={14} strokeWidth={1.5} />
             </button>
           </div>

@@ -301,7 +301,7 @@ export const MAT = {
   ceramic: () => once("ceramic", () => new THREE.MeshStandardMaterial({ color: "#c8b892", roughness: 0.55 })),
   chip: () => once("chip", () => new THREE.MeshStandardMaterial({ color: "#151519", roughness: 0.4, metalness: 0.1 })),
   /** Emissive LED: emissive intensity > 1 so only these bloom. */
-  led: (color = "#3ddc97") => once(`led-${color}`, () => glow(new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 7, toneMapped: false }))),
+  led: (color = "#5ee2a8") => once(`led-${color}`, () => glow(new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 7, toneMapped: false }))),
   screen: (map: THREE.Texture, key: string) => once(`screen-${key}`, () => glow(new THREE.MeshStandardMaterial({ color: "#000000", emissive: "#ffffff", emissiveMap: map, emissiveIntensity: 1.1, roughness: 0.15, metalness: 0 }))),
 };
 

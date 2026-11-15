@@ -50,7 +50,7 @@ export function SettingsPopover() {
         aria-label={t("settings.title")}
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="grid h-9 w-9 place-items-center rounded-full text-muted transition-colors hover:bg-line/60 hover:text-ink"
+        className="grid h-9 w-9 place-items-center rounded-[10px] text-muted transition-colors hover:bg-line/60 hover:text-ink"
       >
         <Settings2 size={18} strokeWidth={1.5} />
       </button>
@@ -66,7 +66,7 @@ export function SettingsPopover() {
                 role="radio"
                 aria-checked={ui.lang === l.id}
                 onClick={() => ui.set({ lang: l.id })}
-                className={`rounded-md border px-2 py-1.5 text-[13px] ${ui.lang === l.id ? "border-ink bg-copper text-white" : "border-line hover:border-line-strong"}`}
+                className={`rounded-md border px-2 py-1.5 text-[13px] ${ui.lang === l.id ? "border-copper bg-copper text-white" : "border-line hover:border-line-strong"}`}
               >
                 {l.label}
               </button>

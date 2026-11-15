@@ -224,7 +224,7 @@ function Box({ lid }: { lid: boolean }) {
   const cover = useMemo(() => block(1.2, 1.5, 0.12, 0.06), []);
   const coverMat = useMemo(() => new THREE.MeshPhysicalMaterial({ color: "#c9ccd2", roughness: 0.35, transmission: 0.0, clearcoat: 0.5 }), []);
   const gland = useMemo(() => lathe([[0, 0], [0.08, 0], [0.08, 0.06], [0.06, 0.08], [0.06, 0.16], [0.04, 0.17], [0, 0.17]], 6), []);
-  const label = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["IP65", "WX NODE 03"], { bg: "#e8e6f2", fg: "#1b1a26", w: 256, h: 128, size: 40 }), roughness: 0.5 }), []);
+  const label = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["IP65", "WX NODE 03"], { bg: "#eef4f0", fg: "#1b1a26", w: 256, h: 128, size: 40 }), roughness: 0.5 }), []);
   const board = useMemo(() => plate(0.55, 0.28, 0.016, { r: 0.02, bevel: 0.003 }), []);
   const cell = useMemo(() => roundCyl(0.09, 0.65, 0.02, 24), []);
   if (lid)
@@ -241,7 +241,7 @@ function Box({ lid }: { lid: boolean }) {
       <mesh geometry={shell} material={MAT.plasticMatte("#b7bac2")} />
       <Instances geo={gland} mat={MAT.plasticMatte("#1b1b20")} at={[-0.3, 0, 0.3].map((x) => ({ p: [x, -0.75, 0] as V3, r: [Math.PI, 0, 0] as V3 }))} />
       <mesh geometry={board} material={MAT.pcb(301, "black", "ESP32")} position={[0, 0.25, 0.32]} />
-      <mesh geometry={cell} material={MAT.foil("#3d7bff")} position={[0, -0.25, 0.25]} rotation={[0, 0, Math.PI / 2]} />
+      <mesh geometry={cell} material={MAT.foil("#0a6b49")} position={[0, -0.25, 0.25]} rotation={[0, 0, Math.PI / 2]} />
     </Group>
   );
 }

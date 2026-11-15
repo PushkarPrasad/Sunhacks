@@ -55,7 +55,7 @@ export function ChecksPage() {
                 : `${fails ? `${fails} to fix` : ""}${fails && warns ? " and " : ""}${warns ? `${warns} to review` : ""} across six checks.`}
           </p>
         </div>
-        <Link href="/builder" className="flex h-10 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] hover:border-ink">
+        <Link href="/builder" className="flex h-10 items-center gap-2 lift rounded-[10px] border border-line px-4 text-[13px] hover:border-line-strong hover:bg-raised">
           <ArrowLeft size={15} strokeWidth={1.5} /> Back to builder
         </Link>
       </div>

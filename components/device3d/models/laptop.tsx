@@ -46,8 +46,8 @@ function desktopTexture(): THREE.Texture {
   g.fillStyle = bg;
   g.fillRect(0, 0, w, h);
   const glow = g.createRadialGradient(w * 0.2, h * 0.8, 10, w * 0.2, h * 0.8, w * 0.6);
-  glow.addColorStop(0, "rgba(124,92,255,0.5)");
-  glow.addColorStop(1, "rgba(124,92,255,0)");
+  glow.addColorStop(0, "rgba(15,157,107,0.5)");
+  glow.addColorStop(1, "rgba(15,157,107,0)");
   g.fillStyle = glow;
   g.fillRect(0, 0, w, h);
   g.fillStyle = "rgba(10,10,16,0.55)";
@@ -62,18 +62,18 @@ function desktopTexture(): THREE.Texture {
   g.fill();
   g.fillStyle = "rgba(255,255,255,0.08)";
   g.fillRect(170, 110, 980, 44);
-  ["#ff6b6b", "#f5b14c", "#3ddc97"].forEach((col, i) => {
+  ["#f0706a", "#e8b04b", "#5ee2a8"].forEach((col, i) => {
     g.fillStyle = col;
     g.beginPath();
     g.arc(200 + i * 26, 132, 8, 0, Math.PI * 2);
     g.fill();
   });
-  g.strokeStyle = "#7c5cff";
+  g.strokeStyle = "#0f9d6b";
   g.lineWidth = 3;
   for (let i = 0; i < 9; i++) {
     g.strokeRect(230 + (i % 3) * 300, 200 + Math.floor(i / 3) * 180, 180, 100);
   }
-  g.strokeStyle = "#a5b4fc";
+  g.strokeStyle = "#c8a96a";
   g.lineWidth = 2;
   g.beginPath();
   for (let i = 0; i < 8; i++) {
@@ -86,7 +86,7 @@ function desktopTexture(): THREE.Texture {
   g.beginPath();
   g.roundRect(1000, 380, 460, 420, 18);
   g.fill();
-  g.fillStyle = "#3ddc97";
+  g.fillStyle = "#5ee2a8";
   for (let i = 0; i < 6; i++) g.fillRect(1040, 440 + i * 56, 300 * (0.4 + ((i * 37) % 60) / 100), 22);
   // dock
   g.fillStyle = "rgba(255,255,255,0.18)";
@@ -94,7 +94,7 @@ function desktopTexture(): THREE.Texture {
   g.roundRect(w / 2 - 330, h - 90, 660, 72, 22);
   g.fill();
   for (let i = 0; i < 9; i++) {
-    g.fillStyle = ["#7c5cff", "#3d7bff", "#3ddc97", "#f5b14c", "#ff6b6b", "#e8e6f2", "#2bc0e4", "#a5b4fc", "#ffd166"][i];
+    g.fillStyle = ["#0f9d6b", "#0a6b49", "#5ee2a8", "#e8b04b", "#f0706a", "#eef4f0", "#2bc0e4", "#c8a96a", "#ffd166"][i];
     g.beginPath();
     g.roundRect(w / 2 - 310 + i * 70, h - 80, 52, 52, 14);
     g.fill();

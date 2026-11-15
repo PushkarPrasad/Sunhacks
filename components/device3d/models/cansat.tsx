@@ -122,7 +122,7 @@ function Boards({ which }: { which: "power" | "computer" | "sensors" | "radio" }
   const patch = useMemo(() => block(25 * S, 25 * S, 4 * S, 0.6 * S), []);
   const dot = useMemo(() => roundCyl(5 * S, 0.4 * S, 0.1 * S, 32), []);
   const pouch = useMemo(() => block(48 * S, 34 * S, 9 * S, 2.5 * S), []);
-  const cellLabel = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["LiPo 1S 2000 mAh"], { bg: "#1b1d2a", fg: "#e8e6f2", w: 512, h: 96, size: 48 }), roughness: 0.4 }), []);
+  const cellLabel = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["LiPo 1S 2000 mAh"], { bg: "#1b1d2a", fg: "#eef4f0", w: 512, h: 96, size: 48 }), roughness: 0.4 }), []);
   const flat = (geo: THREE.BufferGeometry, mat: THREE.Material, p: V3, rz = 0) => <mesh geometry={geo} material={mat} position={p} rotation={[-Math.PI / 2, 0, rz]} />;
   if (which === "power")
     return (
@@ -135,7 +135,7 @@ function Boards({ which }: { which: "power" | "computer" | "sensors" | "radio" }
           </mesh>
         </Group>
         {flat(breakout, MAT.pcb(202, "blue", "BOOST"), [8 * S, 1.6 * S, -8 * S])}
-        <mesh position={[-14 * S, 1.6 * S, 10 * S]} material={MAT.led("#ff6b6b")}>
+        <mesh position={[-14 * S, 1.6 * S, 10 * S]} material={MAT.led("#f0706a")}>
           <boxGeometry args={[2 * S, 1 * S, 1.2 * S]} />
         </mesh>
       </Group>
@@ -145,7 +145,7 @@ function Boards({ which }: { which: "power" | "computer" | "sensors" | "radio" }
       <Group position={[0, 36 * S, 0]}>
         <mesh geometry={board} material={MAT.pcb(203, "green", "FLIGHT")} />
         {flat(wroom, moduleMat, [0, 3 * S, 0])}
-        <mesh position={[10 * S, 1.8 * S, 12 * S]} material={MAT.led("#3ddc97")}>
+        <mesh position={[10 * S, 1.8 * S, 12 * S]} material={MAT.led("#5ee2a8")}>
           <boxGeometry args={[2 * S, 1 * S, 1.2 * S]} />
         </mesh>
       </Group>
@@ -180,7 +180,7 @@ function Parachute() {
   return (
     <Group>
       <mesh geometry={bundle} material={nylon} position={[0, 98 * S, 0]} scale={[1, 1, 0.8]} />
-      <mesh geometry={lines} material={MAT.silicone("#e8e6f2")} />
+      <mesh geometry={lines} material={MAT.silicone("#eef4f0")} />
     </Group>
   );
 }

@@ -105,7 +105,7 @@ function Shock() {
 
 function Drivetrain() {
   const can = useMemo(() => roundCyl(0.18, 0.5, 0.03, 48), []);
-  const label = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["BRUSHLESS", "3300 KV  SENSORED"], { bg: "#1b1d2a", fg: "#e8e6f2", w: 512, h: 128, size: 34 }), roughness: 0.4, metalness: 0.4 }), []);
+  const label = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["BRUSHLESS", "3300 KV  SENSORED"], { bg: "#1b1d2a", fg: "#eef4f0", w: 512, h: 128, size: 34 }), roughness: 0.4, metalness: 0.4 }), []);
   const gear = useMemo(() => {
     const teeth = 64;
     const s = new THREE.Shape();
@@ -145,7 +145,7 @@ function Electronics() {
   const rx = useMemo(() => block(0.36, 0.14, 0.26, 0.03), []);
   const antenna = useMemo(() => roundCyl(0.012, 0.9, 0.004, 8), []);
   const pack = useMemo(() => block(1.38, 0.25, 0.47, 0.05), []);
-  const packLabel = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["LiPo 2S 7.4 V", "5000 mAh  50C  HARD CASE"], { bg: "#1b1d2a", fg: "#e8e6f2", w: 512, h: 128, size: 34 }), roughness: 0.4 }), []);
+  const packLabel = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["LiPo 2S 7.4 V", "5000 mAh  50C  HARD CASE"], { bg: "#1b1d2a", fg: "#eef4f0", w: 512, h: 128, size: 34 }), roughness: 0.4 }), []);
   const strap = useMemo(() => block(0.08, 0.3, 0.55, 0.02), []);
   return (
     <Group>
@@ -153,7 +153,7 @@ function Electronics() {
         <mesh geometry={esc} material={MAT.plasticMatte("#1d1d22")} />
         <Instances geo={fin} mat={MAT.aluminum("#4f43a6")} at={Array.from({ length: 7 }, (_, i) => ({ p: [0, 0.16, -0.15 + i * 0.05] as V3 }))} />
         <mesh geometry={fan} material={MAT.plasticMatte("#141418")} position={[0, 0.24, 0]} />
-        <mesh position={[0.2, 0.05, 0.181]} material={MAT.led("#ff6b6b")}>
+        <mesh position={[0.2, 0.05, 0.181]} material={MAT.led("#f0706a")}>
           <boxGeometry args={[0.03, 0.02, 0.01]} />
         </mesh>
       </Group>
@@ -216,7 +216,7 @@ function Shell() {
     c.width = 1024;
     c.height = 256;
     const g = c.getContext("2d")!;
-    g.fillStyle = "#5b45d9";
+    g.fillStyle = "#0a6b49";
     g.fillRect(0, 0, 1024, 256);
     const px = (x: number) => ((x - X0) / (X1 - X0)) * 1024;
     const py = (y: number) => 256 - (y / Y1) * 256;
@@ -229,9 +229,9 @@ function Shell() {
     g.closePath();
     g.fill();
     // stripe
-    g.fillStyle = "#e8e6f2";
+    g.fillStyle = "#eef4f0";
     g.fillRect(px(-1.7), py(0.2), px(1.6) - px(-1.7), 10);
-    g.fillStyle = "#3d7bff";
+    g.fillStyle = "#0a6b49";
     g.fillRect(px(-1.7), py(0.2) + 14, px(1.6) - px(-1.7), 6);
     const t = new THREE.CanvasTexture(c);
     t.colorSpace = THREE.SRGBColorSpace;

@@ -52,7 +52,7 @@ export function TemplatesPage() {
               setCat(c.id);
               setPage(0);
             }}
-            className={`rounded-full border px-3 py-1 text-[12px] ${cat === c.id ? "border-ink bg-copper text-white" : "border-line hover:border-line-strong"}`}
+            className={`rounded-[10px] border px-3 py-1 text-[12px] ${cat === c.id ? "border-copper bg-copper text-white" : "border-line hover:border-line-strong"}`}
           >
             {c.name}
           </button>

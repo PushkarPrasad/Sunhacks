@@ -13,7 +13,7 @@ export function ChecksStrip({ report }: { report: ChecksReport }) {
         <Link
           key={r.id}
           href={`/checks#${r.id}`}
-          className="flex h-8 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3 text-[12px] transition-colors hover:bg-card"
+          className="flex h-8 shrink-0 items-center gap-2 whitespace-nowrap rounded-[10px] px-3 text-[12px] transition-colors hover:bg-card"
           title={`${t(`check.${r.id}`)}: ${r.headline} ${r.detail}`}
         >
           <StatusDot status={r.status} />

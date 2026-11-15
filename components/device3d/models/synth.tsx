@@ -122,7 +122,7 @@ function Controls() {
   const jack = useMemo(() => lathe([[2 * S, 0], [4.5 * S, 0], [4.5 * S, 2 * S], [3.8 * S, 2.6 * S], [2 * S, 2.6 * S]], 24), []);
   const fader = useMemo(() => block(9 * S, 5 * S, 7 * S, 1 * S), []);
   const slot = useMemo(() => block(2 * S, 40 * S, 0.6 * S, 0.3 * S), []);
-  const oled = useMemo(() => labelTexture(["SAW  ▸ LPF 1.2k", "RES 42  ENV  A 10 D 300", "♪ 128 BPM"], { bg: "#05060a", fg: "#a5b4fc", w: 512, h: 160, size: 34 }), []);
+  const oled = useMemo(() => labelTexture(["SAW  ▸ LPF 1.2k", "RES 42  ENV  A 10 D 300", "♪ 128 BPM"], { bg: "#05060a", fg: "#c8a96a", w: 512, h: 160, size: 34 }), []);
   const oledMat = useMemo(() => MAT.screen(oled, "synth-oled"), [oled]);
   const legend = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["CUTOFF   RES   ENV   LFO   DRIVE   GLIDE"], { bg: "#2a2b33", fg: "#c9c7d3", w: 1024, h: 48, size: 28 }), roughness: 0.4, metalness: 0.6 }), []);
   const knobs: { p: V3 }[] = [];
@@ -139,8 +139,8 @@ function Controls() {
   return (
     <Group rotation={[0.06, 0, 0]} position={[0, -0.2 * S, 0]}>
       <Instances geo={knob} mat={MAT.aluminum("#c3c6cd")} at={knobs} />
-      <Instances geo={pointer} mat={MAT.plasticMatte("#7c5cff")} at={pointers} />
-      <mesh geometry={big} material={MAT.aluminum("#7c5cff")} position={[W / 2 - 52 * S, H + 1 * S, -D / 2 + 34 * S]} />
+      <Instances geo={pointer} mat={MAT.plasticMatte("#3a413e")} at={pointers} />
+      <mesh geometry={big} material={MAT.aluminum("#0a6b49")} position={[W / 2 - 52 * S, H + 1 * S, -D / 2 + 34 * S]} />
       <mesh material={oledMat} position={[W / 2 - 92 * S, H + 1.2 * S, -D / 2 + 22 * S]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[44 * S, 14 * S]} />
       </mesh>
@@ -154,7 +154,7 @@ function Controls() {
         </Group>
       ))}
       <Instances geo={jack} mat={MAT.steel()} at={[0, 1, 2, 3].map((i) => ({ p: [-W / 2 + 40 * S + i * 14 * S, H + 1 * S, -D / 2 + 8 * S] as V3 }))} />
-      <mesh position={[W / 2 - 70 * S, H + 1.5 * S, -D / 2 + 50 * S]} material={MAT.led("#3ddc97")}>
+      <mesh position={[W / 2 - 70 * S, H + 1.5 * S, -D / 2 + 50 * S]} material={MAT.led("#5ee2a8")}>
         <sphereGeometry args={[1.5 * S, 12, 12]} />
       </mesh>
     </Group>

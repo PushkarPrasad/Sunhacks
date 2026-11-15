@@ -1,21 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { flowIndex } from "@/lib/flow";
 
-let lastIndex = 0;
-
-/** Slow, subtle slide + fade between pages; direction follows the page flow. */
+/**
+ * Page transition: fade plus an 8px rise, 240ms ease-out (see `--animate-page-in` in globals.css).
+ * Under prefers-reduced-motion or the Reduce motion setting the global rules cut it to 1ms.
+ */
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const index = flowIndex(pathname);
-  const dx = index >= lastIndex ? "14px" : "-14px";
-  useEffect(() => {
-    lastIndex = index;
-  }, [index]);
   return (
-    <div key={pathname} className="h-full animate-page-in" style={{ ["--page-dx" as string]: dx }}>
+    <div key={pathname} className="h-full animate-page-in">
       {children}
     </div>
   );

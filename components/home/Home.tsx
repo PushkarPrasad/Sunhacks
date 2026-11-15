@@ -73,7 +73,7 @@ export function Home() {
 
       {/* Slide controls */}
       <div className="absolute inset-x-0 bottom-6 z-10 flex items-center justify-center gap-4">
-        <button type="button" aria-label="Previous slide" disabled={i === 0} onClick={() => go(i - 1)} className="grid h-9 w-9 place-items-center rounded-full border border-line text-muted transition hover:-translate-y-px hover:border-copper hover:text-ink disabled:opacity-30">
+        <button type="button" aria-label="Previous slide" disabled={i === 0} onClick={() => go(i - 1)} className="grid h-9 w-9 place-items-center rounded-[10px] border border-line text-muted transition hover:-translate-y-px hover:border-copper hover:text-ink disabled:opacity-30">
           <ArrowLeft size={16} strokeWidth={1.5} />
         </button>
         <div className="flex items-center gap-2" role="tablist" aria-label="Slides">
@@ -89,7 +89,7 @@ export function Home() {
             />
           ))}
         </div>
-        <button type="button" aria-label="Next slide" disabled={i === SLIDES.length - 1} onClick={() => go(i + 1)} className="grid h-9 w-9 place-items-center rounded-full border border-line text-muted transition hover:-translate-y-px hover:border-copper hover:text-ink disabled:opacity-30">
+        <button type="button" aria-label="Next slide" disabled={i === SLIDES.length - 1} onClick={() => go(i + 1)} className="grid h-9 w-9 place-items-center rounded-[10px] border border-line text-muted transition hover:-translate-y-px hover:border-copper hover:text-ink disabled:opacity-30">
           <ArrowRight size={16} strokeWidth={1.5} />
         </button>
       </div>
@@ -113,7 +113,7 @@ function HeroSlide({ onNext }: { onNext: () => void }) {
     <div className={`${wrap} grid grid-cols-[1fr_1.15fr] items-center gap-8`}>
       <div className="relative z-10">
         <Rise>
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-peri">Hardware, opened up</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-champagne">Hardware, opened up</p>
         </Rise>
         <Rise d={1}>
           <h1 className="mt-5 font-serif text-[104px] leading-[0.9] tracking-[-0.02em]">
@@ -127,7 +127,7 @@ function HeroSlide({ onNext }: { onNext: () => void }) {
           <p className="mt-2 max-w-[460px] text-[15px] text-muted">69 real modules, checked as you wire, a PCB in one click.</p>
         </Rise>
         <Rise d={3} className="mt-9 flex items-center gap-5">
-          <button type="button" onClick={() => router.push("/devices")} className="flex h-12 items-center gap-2 rounded-full bg-copper px-6 text-[14px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5 hover:bg-copper-hover active:translate-y-0">
+          <button type="button" onClick={() => router.push("/devices")} className="flex h-12 items-center gap-2 rounded-[10px] bg-copper px-6 text-[14px] text-white shadow-[var(--shadow-glow)] transition hover:-translate-y-0.5 hover:bg-copper-hover active:translate-y-0">
             Open a device <ArrowRight size={16} strokeWidth={1.75} />
           </button>
           <button type="button" onClick={onNext} className="text-[14px] text-muted underline decoration-line-strong underline-offset-[6px] transition hover:text-ink hover:decoration-copper">
@@ -136,7 +136,7 @@ function HeroSlide({ onNext }: { onNext: () => void }) {
         </Rise>
       </div>
       <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.1, ease: [0.2, 0.7, 0.2, 1] }} className="relative h-[78%]">
-        <div className="absolute inset-[12%] rounded-full bg-[radial-gradient(circle,rgb(124_92_255/0.35),rgb(61_123_255/0.12)_45%,transparent_70%)] blur-2xl" aria-hidden="true" />
+        <div className="absolute inset-[12%] rounded-full bg-[radial-gradient(circle,rgb(15_157_107/0.35),rgb(10_107_73/0.12)_45%,transparent_70%)] blur-2xl" aria-hidden="true" />
         <HeroModel />
       </motion.div>
     </div>
@@ -148,7 +148,7 @@ function ProblemSlide() {
   return (
     <div className={`${wrap} flex flex-col justify-center`}>
       <Rise>
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-peri">The problem</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-champagne">The problem</p>
       </Rise>
       <Rise d={1}>
         <h2 className="mt-5 max-w-[920px] font-serif text-[72px] leading-[0.98] tracking-[-0.015em]">
@@ -183,7 +183,7 @@ function HowSlide() {
   return (
     <div className={`${wrap} flex flex-col justify-center`}>
       <Rise>
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-peri">How it works</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-champagne">How it works</p>
         <h2 className="mt-4 font-serif text-[60px] leading-none">Explore. Build. Check. Board.</h2>
       </Rise>
       <div className="mt-12 grid grid-cols-4 gap-5">
@@ -217,8 +217,8 @@ function StepArt({ kind }: { kind: "explode" | "wire" | "check" | "board" }) {
           <motion.path
             key={l}
             d="M40 90 L100 66 L160 90 L100 114 Z"
-            fill={["#1A1A2A", "#2A2148", "#141A33", "#1F1F33"][l]}
-            stroke={l === 2 ? "#7C5CFF" : "#3B3B55"}
+            fill={["#11231C", "#0E2A20", "#0D1F18", "#142A21"][l]}
+            stroke={l === 2 ? "#0F9D6B" : "#2C5243"}
             strokeWidth="1.2"
             animate={{ y: [0, (l - 1.5) * -18, 0] }}
             transition={{ ...loop, delay: l * 0.05 }}
@@ -229,15 +229,15 @@ function StepArt({ kind }: { kind: "explode" | "wire" | "check" | "board" }) {
   if (kind === "wire")
     return (
       <svg viewBox="0 0 200 150" className="h-full w-full" aria-hidden="true">
-        <rect x="24" y="40" width="48" height="70" rx="6" fill="#1A1A2A" stroke="#3B3B55" />
-        <rect x="128" y="34" width="48" height="34" rx="6" fill="#1A1A2A" stroke="#3B3B55" />
-        <rect x="128" y="84" width="48" height="34" rx="6" fill="#1A1A2A" stroke="#3B3B55" />
+        <rect x="24" y="40" width="48" height="70" rx="6" fill="#11231C" stroke="#2C5243" />
+        <rect x="128" y="34" width="48" height="34" rx="6" fill="#11231C" stroke="#2C5243" />
+        <rect x="128" y="84" width="48" height="34" rx="6" fill="#11231C" stroke="#2C5243" />
         {[
           "M72 56 C100 56 100 50 128 50",
           "M72 72 C100 72 100 100 128 100",
           "M72 92 C102 92 98 110 128 110",
         ].map((d, k) => (
-          <motion.path key={d} d={d} fill="none" stroke={k === 2 ? "#3D7BFF" : "#7C5CFF"} strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }} transition={{ ...loop, delay: k * 0.35 }} />
+          <motion.path key={d} d={d} fill="none" stroke={k === 2 ? "#0A6B49" : "#0F9D6B"} strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }} transition={{ ...loop, delay: k * 0.35 }} />
         ))}
       </svg>
     );
@@ -249,9 +249,9 @@ function StepArt({ kind }: { kind: "explode" | "wire" | "check" | "board" }) {
             const fail = r === 1 && c === 0;
             return (
               <g key={`${r}${c}`}>
-                <rect x={30 + c * 74} y={22 + r * 38} width="66" height="30" rx="6" fill="#1A1A2A" stroke="#2A2A3D" />
-                <motion.circle cx={44 + c * 74} cy={37 + r * 38} r="4" fill={fail ? "#FF6B6B" : "#3DDC97"} animate={{ opacity: fail ? [1, 0.25, 1] : [0.4, 1, 0.4] }} transition={{ ...loop, delay: (r + c) * 0.2 }} />
-                <rect x={54 + c * 74} y={33 + r * 38} width="30" height="7" rx="3" fill="#3B3B55" />
+                <rect x={30 + c * 74} y={22 + r * 38} width="66" height="30" rx="6" fill="#11231C" stroke="#1F3A2F" />
+                <motion.circle cx={44 + c * 74} cy={37 + r * 38} r="4" fill={fail ? "#F0706A" : "#5EE2A8"} animate={{ opacity: fail ? [1, 0.25, 1] : [0.4, 1, 0.4] }} transition={{ ...loop, delay: (r + c) * 0.2 }} />
+                <rect x={54 + c * 74} y={33 + r * 38} width="30" height="7" rx="3" fill="#2C5243" />
               </g>
             );
           }),
@@ -260,14 +260,14 @@ function StepArt({ kind }: { kind: "explode" | "wire" | "check" | "board" }) {
     );
   return (
     <svg viewBox="0 0 200 150" className="h-full w-full" aria-hidden="true">
-      <rect x="36" y="22" width="128" height="106" rx="6" fill="#0E0E16" stroke="#3B3B55" />
+      <rect x="36" y="22" width="128" height="106" rx="6" fill="#08140F" stroke="#2C5243" />
       {[[46, 32], [154, 32], [46, 118], [154, 118]].map(([x, y]) => (
-        <circle key={`${x}${y}`} cx={x} cy={y} r="4" fill="#2A2A3D" />
+        <circle key={`${x}${y}`} cx={x} cy={y} r="4" fill="#1F3A2F" />
       ))}
-      <rect x="62" y="44" width="32" height="44" rx="2" fill="#1A1A2A" stroke="#A5B4FC" strokeOpacity=".4" />
-      <motion.path d="M94 56 H126 V96 H142 M94 76 H112 V110 H70 V88" fill="none" stroke="#C9773C" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }} transition={loop} />
+      <rect x="62" y="44" width="32" height="44" rx="2" fill="#11231C" stroke="#C8A96A" strokeOpacity=".4" />
+      <motion.path d="M94 56 H126 V96 H142 M94 76 H112 V110 H70 V88" fill="none" stroke="#C8A96A" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: [0, 1, 1] }} transition={loop} />
       {[126, 142, 112, 70].map((x, k) => (
-        <circle key={k} cx={x} cy={[56, 96, 110, 88][k]} r="3" fill="#C9773C" />
+        <circle key={k} cx={x} cy={[56, 96, 110, 88][k]} r="3" fill="#C8A96A" />
       ))}
     </svg>
   );
@@ -297,7 +297,7 @@ function HandsSlide() {
     <div className={`${wrap} grid grid-cols-[1fr_1fr] items-center gap-12`}>
       <div>
         <Rise>
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-peri">Hands-on</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-champagne">Hands-on</p>
           <h2 className="mt-4 font-serif text-[64px] leading-[0.98]">Drive it with your hands.</h2>
           <p className="mt-5 max-w-[440px] text-[16px] text-muted">A webcam tracks your hand pose. A glove with a motion sensor and an optional switch lets you grab a model and turn it like a globe.</p>
         </Rise>
@@ -318,7 +318,7 @@ function HandsSlide() {
         </ul>
       </div>
       <Rise d={2} className="relative h-[440px] overflow-hidden rounded-[20px] border border-line bg-card/50">
-        <div className="absolute inset-10 rounded-full bg-[radial-gradient(circle,rgb(61_123_255/0.22),transparent_65%)] blur-2xl" aria-hidden="true" />
+        <div className="absolute inset-10 rounded-full bg-[radial-gradient(circle,rgb(10_107_73/0.22),transparent_65%)] blur-2xl" aria-hidden="true" />
         <div className="absolute inset-0" aria-label={`3D hand showing the ${POSES[k].name.toLowerCase()} gesture`} role="img">
           <HandRig gesture={POSES[k].g} startedAt={tick} />
         </div>
@@ -356,9 +356,9 @@ function StartSlide() {
             <button
               type="button"
               onClick={c.go}
-              className={`group flex h-[260px] w-full flex-col justify-between rounded-[20px] border p-8 text-left transition duration-300 hover:-translate-y-1 ${c.primary ? "border-copper/60 bg-[linear-gradient(135deg,rgb(124_92_255/0.28),rgb(61_123_255/0.12))] hover:shadow-[var(--shadow-glow)]" : "border-line bg-card/70 hover:border-copper/60"}`}
+              className={`group flex h-[260px] w-full flex-col justify-between rounded-[20px] border p-8 text-left transition duration-300 hover:-translate-y-1 ${c.primary ? "border-copper/60 bg-[linear-gradient(135deg,rgb(15_157_107/0.28),rgb(10_107_73/0.12))] hover:shadow-[var(--shadow-glow)]" : "border-line bg-card/70 hover:border-copper/60"}`}
             >
-              <span className={`grid h-12 w-12 place-items-center rounded-full ${c.primary ? "bg-copper text-white" : "border border-line-strong"}`}>
+              <span className={`grid h-12 w-12 place-items-center rounded-[10px] ${c.primary ? "bg-copper shadow-[var(--shadow-btn)] text-white" : "border border-line-strong"}`}>
                 <c.icon size={22} strokeWidth={1.5} />
               </span>
               <span>

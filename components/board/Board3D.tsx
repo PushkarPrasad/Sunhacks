@@ -161,13 +161,13 @@ function Scene({ cj, build, selected, onSelect }: { cj: El[]; build: Build; sele
             {!mod.passive && (
               <mesh position={[0, (2.5 * S) / 2, 0]}>
                 <boxGeometry args={[Math.max(mod.fpW, 2.54) * S, 2.5 * S, Math.max(mod.fpH, 2.54) * S]} />
-                <meshStandardMaterial color={selected === mod.label && !mod.body ? "#B5652E" : "#16181C"} roughness={0.6} transparent opacity={mod.body ? 0.95 : 1} />
+                <meshStandardMaterial color={selected === mod.label && !mod.body ? "#0F9D6B" : "#16181C"} roughness={0.6} transparent opacity={mod.body ? 0.95 : 1} />
               </mesh>
             )}
             {mod.body && (
               <mesh position={[0, (mod.passive ? 0 : HEADER) + (mod.body.d * S) / 2, 0]}>
                 <boxGeometry args={[mod.body.w * S, mod.body.d * S, mod.body.h * S]} />
-                <meshStandardMaterial color={selected === mod.label ? "#E9B98F" : "#FBF9F5"} roughness={0.85} />
+                <meshStandardMaterial color={selected === mod.label ? "#BFEBD6" : "#FBF9F5"} roughness={0.85} />
                 <Edges color="#16181C" lineWidth={1} transparent opacity={0.35} />
               </mesh>
             )}

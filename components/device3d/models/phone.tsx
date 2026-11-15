@@ -69,12 +69,12 @@ function screenTexture(): THREE.Texture {
   g.font = "400 32px system-ui, sans-serif";
   g.fillStyle = "rgba(255,255,255,0.8)";
   g.fillText("6 of 6 passing · 3.2 h battery", 92, 626);
-  g.fillStyle = "#3ddc97";
+  g.fillStyle = "#5ee2a8";
   g.beginPath();
   g.roundRect(92, 660, (w - 184) * 0.82, 18, 9);
   g.fill();
   // app grid
-  const colors = ["#f5b14c", "#3ddc97", "#ff6b6b", "#7c5cff", "#3d7bff", "#e8e6f2", "#a5b4fc", "#2bc0e4", "#ffd166", "#ef476f", "#06d6a0", "#8338ec", "#3a86ff", "#fb5607", "#ffbe0b", "#8ecae6"];
+  const colors = ["#e8b04b", "#5ee2a8", "#f0706a", "#0f9d6b", "#0a6b49", "#eef4f0", "#c8a96a", "#2bc0e4", "#ffd166", "#ef476f", "#06d6a0", "#0a6b49", "#14b47c", "#fb5607", "#ffbe0b", "#8ecae6"];
   for (let i = 0; i < 16; i++) {
     const x = 70 + (i % 4) * 158;
     const y = 800 + Math.floor(i / 4) * 160;
@@ -93,7 +93,7 @@ function screenTexture(): THREE.Texture {
   g.roundRect(40, h - 220, w - 80, 170, 56);
   g.fill();
   for (let i = 0; i < 4; i++) {
-    g.fillStyle = ["#3ddc97", "#3d7bff", "#f5b14c", "#e8e6f2"][i];
+    g.fillStyle = ["#5ee2a8", "#0a6b49", "#e8b04b", "#eef4f0"][i];
     g.beginPath();
     g.roundRect(78 + i * 158, h - 192, 112, 112, 30);
     g.fill();

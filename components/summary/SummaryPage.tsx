@@ -57,7 +57,7 @@ export function SummaryPage() {
       } catch {
         url = `${window.location.origin}/share#${encodeBuild(build)}`;
       }
-      const qr = await QRCode.toDataURL(url, { margin: 1, width: 360, errorCorrectionLevel: "M", color: { dark: "#0A0A10", light: "#ECEAF5" } });
+      const qr = await QRCode.toDataURL(url, { margin: 1, width: 360, errorCorrectionLevel: "M", color: { dark: "#06100C", light: "#EEF4F0" } });
       if (alive) setShare({ url, qr });
     })();
     return () => {
@@ -78,7 +78,7 @@ export function SummaryPage() {
       <div className="grid h-full place-items-center text-center">
         <div>
           <p className="font-serif text-[40px]">Nothing to summarise yet.</p>
-          <Link href="/devices" className="mt-6 inline-flex h-10 items-center rounded-full bg-copper px-5 text-[13px] text-white hover:bg-copper-hover">
+          <Link href="/devices" className="mt-6 inline-flex h-10 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-5 text-[13px] text-white hover:bg-copper-hover">
             Start a build
           </Link>
         </div>
@@ -192,7 +192,7 @@ export function SummaryPage() {
               setCopied(true);
               setTimeout(() => setCopied(false), 1600);
             }}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-copper text-[13px] text-white hover:bg-copper-hover disabled:opacity-50"
+            className="flex h-10 w-full items-center justify-center gap-2 rounded-[10px] bg-copper shadow-[var(--shadow-btn)] text-[13px] text-white hover:bg-copper-hover disabled:opacity-50"
           >
             {copied ? <Check size={15} strokeWidth={2} /> : <Copy size={15} strokeWidth={1.5} />}
             {copied ? "Copied" : "Copy share link"}
@@ -200,10 +200,10 @@ export function SummaryPage() {
           <p className="mt-2 w-full truncate font-mono text-[10px] text-muted">{share?.url ?? "…"}</p>
         </div>
         <div className="mt-4 flex gap-2">
-          <Link href="/board" className="flex h-10 flex-1 items-center justify-center rounded-full border border-line-strong text-[13px] hover:border-ink">
+          <Link href="/board" className="flex h-10 flex-1 items-center justify-center lift rounded-[10px] border border-line text-[13px] hover:border-line-strong hover:bg-raised">
             Board and exports
           </Link>
-          <Link href="/builder" className="flex h-10 flex-1 items-center justify-center rounded-full border border-line-strong text-[13px] hover:border-ink">
+          <Link href="/builder" className="flex h-10 flex-1 items-center justify-center lift rounded-[10px] border border-line text-[13px] hover:border-line-strong hover:bg-raised">
             Keep editing
           </Link>
         </div>

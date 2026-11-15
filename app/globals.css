@@ -1,26 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  /* Dark V2 palette (see DESIGN.md). Token names are kept from V1 so components do not change:
-     paper = page ground, card = raised surface, ink = primary text, copper = primary accent (violet). */
-  --color-paper: #0a0a10;
-  --color-card: #12121c;
-  --color-raised: #1a1a2a;
-  --color-ink: #eceaf5;
-  --color-muted: #a3a1b8;
-  --color-line: #2a2a3d;
-  --color-line-strong: #3b3b55;
-  --color-copper: #7c5cff;
-  --color-copper-hover: #9479ff;
-  --color-copper-soft: rgb(124 92 255 / 0.16);
-  --color-blue: #3d7bff;
-  --color-peri: #a5b4fc;
-  --color-ok: #3ddc97;
-  --color-warn: #f5b14c;
-  --color-bad: #ff6b6b;
-  --color-pcb: #0e0e16;
-  --color-note: #f4e3a1;
-  --color-note-ink: #1b1a26;
+  /* Emerald V4 palette (see DESIGN.md). Token names are kept from V1 so components do not change:
+     paper = page ground, card = surface, ink = primary text, copper = primary accent (emerald). */
+  --color-paper: #06100c;
+  --color-card: #0b1914;
+  --color-raised: #11231c;
+  --color-ink: #eef4f0;
+  --color-muted: #9bb3a7;
+  --color-faint: #6b8579;
+  --color-line: #1f3a2f;
+  --color-line-strong: #2c5243;
+  --color-copper: #0f9d6b;
+  --color-copper-hover: #14b47c;
+  --color-copper-soft: rgb(15 157 107 / 0.14);
+  --color-emerald-deep: #0a6b49;
+  --color-mint: #5ee2a8;
+  --color-champagne: #c8a96a;
+  /* Retired V2 accents, mapped onto the emerald system so stray markup stays on-palette. */
+  --color-blue: #0a6b49;
+  --color-peri: #c8a96a;
+  --color-ok: #5ee2a8;
+  --color-warn: #e8b04b;
+  --color-bad: #f0706a;
+  --color-pcb: #08140f;
+  --color-note: #0b1914;
+  --color-note-ink: #eef4f0;
 
   --font-serif: var(--font-instrument-serif), "Fraunces", Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -28,17 +33,19 @@
 
   --radius-card: 12px;
   --shadow-float: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -12px rgb(0 0 0 / 0.6);
-  --shadow-note: 0 1px 1px rgb(0 0 0 / 0.3), 0 14px 24px -14px rgb(0 0 0 / 0.7);
-  --shadow-glow: 0 0 0 1px rgb(124 92 255 / 0.35), 0 8px 28px -8px rgb(124 92 255 / 0.55);
+  --shadow-note: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 14px 28px -16px rgb(0 0 0 / 0.7);
+  /* The one primary action: inner highlight plus a soft emerald shadow. No glow ring. */
+  --shadow-glow: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 10px 24px -14px rgb(15 157 107 / 0.55);
+  --shadow-btn: inset 0 1px 0 rgb(255 255 255 / 0.12);
 
-  --animate-page-in: page-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-page-in: page-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-pop: pop 260ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
   --animate-fade: fade 300ms ease both;
 
   @keyframes page-in {
     from {
       opacity: 0;
-      transform: translateX(var(--page-dx, 12px));
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
@@ -48,11 +55,11 @@
   @keyframes pop {
     from {
       opacity: 0;
-      transform: scale(0.92) rotate(var(--note-rot, 0deg));
+      transform: translateY(4px);
     }
     to {
       opacity: 1;
-      transform: scale(1) rotate(var(--note-rot, 0deg));
+      transform: none;
     }
   }
   @keyframes fade {
@@ -67,13 +74,14 @@
 
 /* High-contrast mode: darker secondary text, stronger lines, deeper accent. */
 :root[data-contrast="high"] {
-  --color-muted: #cfcde0;
-  --color-line: #4a4a66;
-  --color-line-strong: #6a6a8a;
-  --color-copper: #a38dff;
-  --color-ok: #5ff0b0;
-  --color-warn: #ffc76e;
-  --color-bad: #ff8a8a;
+  --color-muted: #c4d6cc;
+  --color-faint: #9bb3a7;
+  --color-line: #3a6352;
+  --color-line-strong: #4f7d69;
+  --color-copper: #14b47c;
+  --color-ok: #7ff0bd;
+  --color-warn: #f2c46e;
+  --color-bad: #ff8f8a;
 }
 
 html,
@@ -85,8 +93,7 @@ body {
 
 body {
   background:
-    radial-gradient(60rem 40rem at 85% -10%, rgb(124 92 255 / 0.16), transparent 60%),
-    radial-gradient(50rem 36rem at -10% 110%, rgb(61 123 255 / 0.12), transparent 60%),
+    radial-gradient(64rem 44rem at 80% -12%, rgb(15 157 107 / 0.13), transparent 62%),
     var(--color-paper);
   color-scheme: dark;
   color: var(--color-ink);
@@ -135,12 +142,41 @@ body {
 }
 
 .dot-grid {
-  background-image: radial-gradient(circle, rgb(236 234 245 / 0.07) 1px, transparent 1.2px);
+  background-image: radial-gradient(circle, rgb(238 244 240 / 0.06) 1px, transparent 1.2px);
 }
 
 .paper-note {
-  background: var(--color-note);
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-left: 2px solid var(--color-copper);
   box-shadow: var(--shadow-note);
+}
+
+@layer components {
+  /* Eyebrow: Geist Mono small caps, wide tracking, champagne. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-champagne);
+  }
+
+  /* Hover: 2px lift and the hairline brightens. Opt-in with .lift; utilities still win. */
+  .lift {
+    transition:
+      transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 200ms ease,
+      background-color 200ms ease,
+      color 200ms ease;
+  }
+  .lift:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: var(--color-line-strong);
+  }
+  .lift:active {
+    transform: translateY(0);
+  }
 }
 
 /* Fine grain over the whole page; keeps the dark grounds from looking flat. */
@@ -150,12 +186,12 @@ body::after {
   position: fixed;
   inset: 0;
   z-index: 100;
-  opacity: 0.05;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
 .glass {
-  background: rgb(18 18 28 / 0.66);
+  background: rgb(11 25 20 / 0.72);
   backdrop-filter: blur(14px) saturate(1.2);
   -webkit-backdrop-filter: blur(14px) saturate(1.2);
 }
