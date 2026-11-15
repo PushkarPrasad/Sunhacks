@@ -173,5 +173,5 @@ Device models, textures and illustrations are procedural or drawn in code; the o
 
 | Asset | File | License | Source | Used for |
 | --- | --- | --- | --- | --- |
-| WebXR generic hand (right) | `public/models/hand/right.glb` | MIT (© 2019 Amazon) | https://github.com/immersive-web/webxr-input-profiles (`@webxr-input-profiles/assets@1.0.20`, `dist/profiles/generic-hand/right.glb`) | 3D hand on the Home "Drive it with your hands" slide, posed by our own forward kinematics |
+| WebXR generic hand (right) | `public/models/hand/right.glb` | MIT (© 2019 Amazon) | https://github.com/immersive-web/webxr-input-profiles (`@webxr-input-profiles/assets@1.0.20`, `dist/profiles/generic-hand/right.glb`) | 3D hand on the Home "Drive it with your hands" slide (posed by our own forward kinematics) and the knit glove in the Wearables model |
 | Studio Small 09 HDRI (1k) | `public/hdri/studio_small_09_1k.hdr` | CC0 | https://polyhaven.com/a/studio_small_09 | Reflections and image-based lighting in every 3D view (loaded locally) |

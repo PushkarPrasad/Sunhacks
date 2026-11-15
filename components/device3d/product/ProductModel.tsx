@@ -5,7 +5,7 @@
 // <Part id>. This file owns everything else so every model behaves like the drone: spring explode along assembly
 // axes, Solid / Transparent / X-ray shell modes, hover tint, click to inspect, glove globe-grab, studio lighting.
 
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, Suspense, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -234,7 +234,9 @@ function Scene({ def, explode, shell, hovered, selected, onHover, onSelect, onAn
       <Group ref={root} position={def.offset ?? [0, 0, 0]}>
         <PartCtx.Provider value={ctx}>
           <AmountCtx.Provider value={amount}>
-            <Body />
+            <Suspense fallback={null}>
+              <Body />
+            </Suspense>
           </AmountCtx.Provider>
         </PartCtx.Provider>
       </Group>

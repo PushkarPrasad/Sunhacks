@@ -241,6 +241,21 @@ function foilMaps(): { normalMap: THREE.Texture } {
   return { normalMap: finish(normalFromHeight(h, N, N, 0.6), [2, 2], false) };
 }
 
+/** Jersey knit (rows of V-shaped loops) as a normal map, for the glove fabric. */
+function knitNormal(): THREE.Texture {
+  const N = 128;
+  const h = new Float32Array(N * N);
+  for (let y = 0; y < N; y++)
+    for (let x = 0; x < N; x++) {
+      const cx = x % 8;
+      const cy = y % 10;
+      const left = Math.abs(cx - 2 - cy * 0.2) < 1.6 ? 1 : 0;
+      const right = Math.abs(cx - 6 + cy * 0.2) < 1.6 ? 1 : 0;
+      h[y * N + x] = Math.max(left, right) * Math.sin((cy / 10) * Math.PI);
+    }
+  return finish(normalFromHeight(h, N, N, 1.2), [26, 26], false);
+}
+
 // ---------- materials ----------
 
 /** Marks a material as self-lit so hover tints leave it alone. */
@@ -281,6 +296,8 @@ export const MAT = {
   coverGlass: () => once("coverglass", () => new THREE.MeshPhysicalMaterial({ color: "#05060a", roughness: 0.04, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, ior: 1.52, reflectivity: 0.6 })),
   foil: (color = "#b8bcc4") =>
     once(`foil-${color}`, () => new THREE.MeshPhysicalMaterial({ color, metalness: 0.85, roughness: 0.32, normalMap: foilMaps().normalMap, normalScale: new THREE.Vector2(0.35, 0.35), clearcoat: 0.4 })),
+  /** Knit glove fabric with fibre sheen. */
+  knit: (color = "#23232b") => once(`knit-${color}`, () => new THREE.MeshPhysicalMaterial({ color, roughness: 0.85, normalMap: tex("knit", knitNormal), normalScale: new THREE.Vector2(0.55, 0.55), sheen: 1, sheenRoughness: 0.5, sheenColor: new THREE.Color("#6f6a86") })),
   ceramic: () => once("ceramic", () => new THREE.MeshStandardMaterial({ color: "#c8b892", roughness: 0.55 })),
   chip: () => once("chip", () => new THREE.MeshStandardMaterial({ color: "#151519", roughness: 0.4, metalness: 0.1 })),
   /** Emissive LED: emissive intensity > 1 so only these bloom. */

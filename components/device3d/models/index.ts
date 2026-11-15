@@ -5,6 +5,7 @@ import { ROVER } from "./rover";
 import { ARM } from "./arm";
 import { PHONE } from "./phone";
 import { LAPTOP } from "./laptop";
+import { GLOVE } from "./glove";
 
 export const MODELS: Record<string, ProductDef> = {
   "balancing-robots": CUBE,
@@ -12,4 +13,5 @@ export const MODELS: Record<string, ProductDef> = {
   "robot-arms": ARM,
   "phones-laptops:phone": PHONE,
   "phones-laptops:laptop": LAPTOP,
+  wearables: GLOVE,
 };
