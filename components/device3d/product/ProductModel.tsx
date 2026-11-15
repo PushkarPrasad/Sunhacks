@@ -106,7 +106,10 @@ function Scene({ def, explode, shell, hovered, selected, onHover, onSelect, onAn
     const id = setTimeout(() => setTick((t) => t + 1), 50);
     return () => clearTimeout(id);
   }, []);
+  const frame = useRef(0);
   useFrame(() => {
+    // Parts can stream in (glTF), so look for new meshes now and then rather than every frame.
+    if (frame.current++ % 30 !== 0) return;
     for (const [pid, g] of Object.entries(groups.current)) {
       g?.traverse((o) => {
         const mesh = o as THREE.Mesh;
