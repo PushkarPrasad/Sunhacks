@@ -50,14 +50,14 @@ Stopped here as instructed. Deferred items are listed in STATUS.md.
 - [x] Verification (05:55): lint clean, typecheck clean, 87 unit tests, production build, 67 Playwright tests (every page at 1440x900 and 1280x800 incl. every model category and Calibrate, glove/camera bench, hoop throw, calibration wizard). Fixed on the way: arrow keys could skip the Home slides (input-bus priority), e2e specs updated for V3 names, starter-build budgets
 
 ## V4 (Reliability, Precision, Emerald)
-Next up: merge the emerald redesign branch, recolour the input/glove files it skipped, then P1-2 motion and P2 polish/STATUS.
+Next up: merge the guidelines-audit branch, final build + full test run, finalize STATUS.md, push to v4.
 - [x] P0-1 Glove reliability: firmware v4 (Appendix A, verbatim); singleton Bluetooth layer (survives client navigation), auto-reconnect 0.5/1/2/4 s then 5 s for 2 min with re-subscribe, 4 s stall watchdog, queued writes, nav status pill, link log on the Glove tab. Test: e2e/glove-link.spec.ts (fake Web Bluetooth).
 - [x] P0-2 Grab and rotate: glove-only clutch (held switch, or knock toggle with no switch on 3D views), quaternion delta math (qDelta = qGlove·qGlove0⁻¹, target = qDelta·qModel0), 2° dead zone, slerp 0.25/frame, AXIS_MAP + per-axis flips, shake resets, Grabbed chip + emerald ring. Tests: tests/grab.test.ts (11), e2e grab 90° per axis within 5°.
 - [x] P0-3 Continuous palm-openness explode: world-landmark joint-angle curl, per-user range, One Euro (1.0, 0.02), snaps with hysteresis, confidence/palm-facing gates, 300 ms still engage, hold on loss; drives the explode slider with a meter. Tests: tests/openness.test.ts (10, synthetic hands with noise).
 - [x] P0-4 Snap-to-target pointer: MCP knuckle source, reach box, One Euro, 48 px magnet / 72 px hysteresis with lock bias, morphing emerald ring, click intent 150 ms before pinch, 2-frame pinch with release hysteresis. Tests: tests/snap.test.ts (≥95% hits on a grid of 44x28 buttons with ±30 px noise).
 - [x] P0-5 Camera only from Calibration: startHandControl is the single entry point; Settings toggle, glove auto-start and the PiP preview are gone; nav pill 'Hand control on' with Off. Test: tests/camera-guard.test.ts greps getUserMedia.
-- [x] P0-6 Calibration wizard: 6-step stepper (glove still/tilt/twist with live axes + flip toggles, grab cube, Start hand control, openness range, reach corners, click test with hit rate), saved in localStorage with Reset. Tests: e2e/hand.spec.ts (openness drives slider ±10%; 5/5 targets, 100% hit rate with ±30 px noise). Test page update: subagent in progress.
-- [~] P1-1 Emerald redesign (subagent in a separate worktree)
-- [ ] P1-2 Motion pass
-- [ ] P2 Polish, audit, STATUS
-Skills/connectors used: Taste Skill rules (read as text in V2), Playwright; no MCP connectors needed.
+- [x] P0-6 Calibration wizard: 6-step stepper (glove still/tilt/twist with live axes + flip toggles, grab cube, Start hand control, openness range, reach corners, click test with hit rate), saved in localStorage with Reset. Tests: e2e/hand.spec.ts (openness drives slider ±10%; 5/5 targets, 100% hit rate with ±30 px noise). Test page updated (openness meter, snap grid, grab state, heartbeat/stall, reconnect log); e2e/glove-camera.spec.ts.
+- [x] P1-1 Emerald redesign (merged from a subagent worktree; input/glove files recoloured after)
+- [x] P1-2 Motion pass (240 ms rise, hover lift, count-ups, springy pointer ring; reduced motion respected)
+- [~] P2 Polish: RUNDOWN + DECISIONS + STATUS draft done; guidelines audit in a subagent worktree
+Skills/connectors used: Playwright (@playwright/test); Opus subagents for the redesign, the test page and the audit. The listed design skills are not installed here (Taste rules were read as text in V2). No MCP connectors were needed.
