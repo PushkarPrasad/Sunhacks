@@ -13,6 +13,7 @@
 - Balancing Robots: hyper-real reaction-wheel cube standing on an edge, with shell modes and exploded plates.
 - Rovers and Robot Arms: hyper-real rocker-bogie rover and six-axis servo arm.
 - Phones & Laptops: rebuilt hyper-real phone and laptop with exploded internals.
+- Hyper-real models for every remaining category: motion glove, CanSat, weather station, RC buggy, 3D printer and desktop synth.
 - Glove tab rebuilt: live roll/pitch/yaw bars, 3D board preview, last 8 events, Blink LED, Reconnect.
 
 ## V2

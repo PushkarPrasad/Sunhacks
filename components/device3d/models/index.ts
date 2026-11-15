@@ -10,6 +10,7 @@ import { CANSAT } from "./cansat";
 import { WEATHER } from "./weather";
 import { RC_CAR } from "./rccar";
 import { PRINTER } from "./printer";
+import { SYNTH } from "./synth";
 
 export const MODELS: Record<string, ProductDef> = {
   "balancing-robots": CUBE,
@@ -22,4 +23,5 @@ export const MODELS: Record<string, ProductDef> = {
   "smart-home": WEATHER,
   "rc-vehicles": RC_CAR,
   "printers-cnc": PRINTER,
+  audio: SYNTH,
 };
