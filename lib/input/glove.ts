@@ -1,23 +1,25 @@
 "use client";
 
-// Glove connection: Web Bluetooth first (filtered by service UUID, so a renamed firmware still matches),
-// Web Serial (USB, 115200 baud) as a fallback. Messages drive the input bus and the globe-grab model rotation.
+// Glove connection: Web Bluetooth (filtered by service UUID, not name, because macOS caches old names) with
+// Web Serial (USB, 115200 baud) as a fallback. Messages go to the shared input store (stores/input.ts), which
+// owns grab, rotation and gesture fusion. Connecting also starts the webcam tracker in the same click.
 
 import { create } from "zustand";
-import { useModelPose } from "@/stores/modelPose";
-import { emitFused } from "./fuse";
-import { angleDelta, GLOVE_COMMAND_CHAR, GLOVE_EVENT_CHAR, GLOVE_SERVICE, LineBuffer, parseGloveLine, type GloveMsg } from "./gloveProtocol";
+import { fireAction, pushOrientation, recenter, setGrab, useInput } from "@/stores/input";
+import { startCamera } from "./camera";
+import { GLOVE_COMMAND_CHAR, GLOVE_EVENT_CHAR, GLOVE_SERVICE, GLOVE_STALE_MS, LineBuffer, parseGloveLine, type GloveMsg } from "./gloveProtocol";
 
 export type GloveStatus = "idle" | "searching" | "connected" | "disconnected" | "error";
-type Orientation = { roll: number; pitch: number; yaw?: number };
 
 interface GloveState {
   status: GloveStatus;
   transport: "bluetooth" | "usb" | null;
   sensor: string | null;
+  deviceName: string | null;
   lastGesture: { name: string; at: number } | null;
-  orientation: Orientation | null;
-  grabbing: boolean;
+  lastMessageAt: number;
+  messages: number;
+  hasSwitch: boolean;
   error: string | null;
 }
 
@@ -25,9 +27,11 @@ export const useGlove = create<GloveState>(() => ({
   status: "idle",
   transport: null,
   sensor: null,
+  deviceName: null,
   lastGesture: null,
-  orientation: null,
-  grabbing: false,
+  lastMessageAt: 0,
+  messages: 0,
+  hasSwitch: false,
   error: null,
 }));
 
@@ -36,6 +40,7 @@ interface Characteristic extends EventTarget {
   value: DataView | null;
   startNotifications(): Promise<Characteristic>;
   writeValue(data: BufferSource): Promise<void>;
+  writeValueWithoutResponse?(data: BufferSource): Promise<void>;
 }
 interface BtDevice extends EventTarget {
   name?: string;
@@ -51,57 +56,38 @@ interface SerialPortLike {
 let device: BtDevice | null = null;
 let command: Characteristic | null = null;
 let port: SerialPortLike | null = null;
-let grabStart: { o: Orientation; rx: number; ry: number; rz: number } | null = null;
-const DEG = Math.PI / 180;
+let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+let writeChain: Promise<void> = Promise.resolve();
+let staleTimer: ReturnType<typeof setInterval> | null = null;
 
 export const bluetoothSupported = () => typeof navigator !== "undefined" && "bluetooth" in navigator;
 export const serialSupported = () => typeof navigator !== "undefined" && "serial" in navigator;
+
+const LABEL = { SELECT: "Knock (select)", SWIPE_L: "Flick left", SWIPE_R: "Flick right", SHAKE: "Shake (recenter)" } as const;
 
 function gesture(name: string) {
   useGlove.setState({ lastGesture: { name, at: Date.now() } });
 }
 
 export function handleGloveMessage(m: GloveMsg) {
+  useGlove.setState((s) => ({ lastMessageAt: Date.now(), messages: s.messages + 1 }));
   switch (m.kind) {
     case "ready":
       useGlove.setState({ sensor: m.sensor });
       break;
-    case "button": {
-      useGlove.setState({ grabbing: m.down });
-      gesture(m.down ? "Grab" : "Release");
-      const o = useGlove.getState().orientation;
-      const p = useModelPose.getState();
-      grabStart = m.down && o ? { o, rx: p.rx, ry: p.ry, rz: p.rz } : null;
+    case "button":
+      useGlove.setState({ hasSwitch: true });
+      gesture(m.down ? "Switch down" : "Switch up");
+      setGrab("glove", m.down);
       break;
-    }
-    case "orient": {
-      useGlove.setState({ orientation: { roll: m.roll, pitch: m.pitch, yaw: m.yaw } });
-      const st = useGlove.getState();
-      if (st.grabbing && !grabStart) {
-        const p = useModelPose.getState();
-        grabStart = { o: { roll: m.roll, pitch: m.pitch, yaw: m.yaw }, rx: p.rx, ry: p.ry, rz: p.rz };
-      }
-      if (st.grabbing && grabStart) {
-        // Turn the model like a globe: yaw (or roll without a yaw sensor) spins it, pitch tilts it.
-        const dPitch = angleDelta(grabStart.o.pitch, m.pitch);
-        const dRoll = angleDelta(grabStart.o.roll, m.roll);
-        const dYaw = m.yaw !== undefined && grabStart.o.yaw !== undefined ? angleDelta(grabStart.o.yaw, m.yaw) : dRoll;
-        useModelPose.getState().set({
-          rx: grabStart.rx + dPitch * DEG,
-          ry: grabStart.ry + dYaw * DEG,
-          rz: m.yaw !== undefined ? grabStart.rz - dRoll * DEG * 0.5 : grabStart.rz,
-        });
-      }
+    case "orient":
+      pushOrientation({ roll: m.roll, pitch: m.pitch, yaw: m.yaw });
       break;
-    }
-    case "gesture": {
-      const map = { SELECT: "select", SWIPE_L: "prevPage", SWIPE_R: "nextPage", SHAKE: "back", ZOOM_IN: "zoomIn", ZOOM_OUT: "zoomOut" } as const;
-      const label = { SELECT: "Tap", SWIPE_L: "Flick left", SWIPE_R: "Flick right", SHAKE: "Shake", ZOOM_IN: "Zoom in", ZOOM_OUT: "Zoom out" }[m.name];
-      gesture(label);
-      emitFused(map[m.name], "glove");
+    case "gesture":
+      gesture(LABEL[m.name]);
+      if (m.name === "SHAKE") recenter("glove");
+      else fireAction(m.name === "SELECT" ? "select" : m.name === "SWIPE_R" ? "nextPage" : "prevPage", "glove", LABEL[m.name]);
       break;
-    }
-    // G:THROW is ignored on purpose: Hoop Upload is mouse and trackpad only.
     default:
       break;
   }
@@ -111,25 +97,51 @@ function onLines(lines: string[]) {
   for (const l of lines) handleGloveMessage(parseGloveLine(l));
 }
 
+function watchStale() {
+  if (staleTimer) clearInterval(staleTimer);
+  staleTimer = setInterval(() => {
+    const s = useGlove.getState();
+    if (s.status === "connected" && s.lastMessageAt && Date.now() - s.lastMessageAt > GLOVE_STALE_MS) {
+      useGlove.setState({ error: "No data from the glove for a few seconds. Check its power, then reconnect." });
+    }
+  }, 1000);
+}
+
 function disconnected() {
   command = null;
-  useGlove.setState({ status: "disconnected", grabbing: false });
-  grabStart = null;
+  if (staleTimer) clearInterval(staleTimer);
+  staleTimer = null;
+  if (useGlove.getState().status !== "idle") useGlove.setState({ status: "disconnected" });
+  setGrab("glove", false);
+}
+
+/**
+ * Glove + camera together. Call straight from a click handler: the Bluetooth chooser and the camera
+ * permission prompt both need a user gesture, so both requests start before anything is awaited.
+ */
+export function connectGloveAndCamera(transport: "bluetooth" | "usb" = "bluetooth"): Promise<void> {
+  const glove = transport === "usb" ? connectUsb() : connectBluetooth();
+  if (useInput.getState().camera === "off" || useInput.getState().camera === "error") void startCamera();
+  return glove;
 }
 
 export async function connectBluetooth(): Promise<void> {
   const bt = (navigator as unknown as { bluetooth?: { requestDevice(o: unknown): Promise<BtDevice> } }).bluetooth;
   if (!bt) {
-    useGlove.setState({ status: "error", error: "This browser has no Web Bluetooth. Try Chrome, or connect over USB." });
+    useGlove.setState({ status: "error", error: "This browser has no Web Bluetooth. Use Chrome, or connect over USB." });
     return;
   }
   try {
     useGlove.setState({ status: "searching", error: null });
-    device = await bt.requestDevice({ filters: [{ services: [GLOVE_SERVICE] }], optionalServices: [GLOVE_SERVICE] });
+    const picked = await bt.requestDevice({ filters: [{ services: [GLOVE_SERVICE] }], optionalServices: [GLOVE_SERVICE] });
+    if (device && device !== picked) device.removeEventListener("gattserverdisconnected", disconnected);
+    device = picked;
     device.addEventListener("gattserverdisconnected", disconnected);
+    useGlove.setState({ deviceName: device.name ?? null });
     await attachBluetooth();
   } catch (e) {
-    useGlove.setState({ status: device ? "disconnected" : "idle", error: (e as Error).name === "NotFoundError" ? null : (e as Error).message });
+    const err = e as Error;
+    useGlove.setState({ status: device ? "disconnected" : "idle", error: err.name === "NotFoundError" ? null : err.message });
   }
 }
 
@@ -144,11 +156,12 @@ async function attachBluetooth() {
   events.addEventListener("characteristicvaluechanged", () => {
     if (!events.value) return;
     const text = dec.decode(events.value);
-    // Each notification is one message; also accept newline-joined batches.
+    // Each notification is one message (20-byte characteristic); also accept newline-joined batches.
     onLines(text.includes("\n") ? lb.push(text) : [text]);
   });
   await events.startNotifications();
-  useGlove.setState({ status: "connected", transport: "bluetooth", error: null });
+  useGlove.setState({ status: "connected", transport: "bluetooth", error: null, lastMessageAt: Date.now() });
+  watchStale();
 }
 
 export async function connectUsb(): Promise<void> {
@@ -161,10 +174,17 @@ export async function connectUsb(): Promise<void> {
     useGlove.setState({ status: "searching", error: null });
     port = await serial.requestPort();
     await port.open({ baudRate: 115200 });
-    useGlove.setState({ status: "connected", transport: "usb", error: null });
+    useGlove.setState({ status: "connected", transport: "usb", error: null, deviceName: "USB serial", lastMessageAt: Date.now() });
+    watchStale();
     void readSerial(port);
   } catch (e) {
-    useGlove.setState({ status: "idle", error: (e as Error).name === "NotFoundError" ? null : (e as Error).message });
+    const err = e as Error;
+    const busy = err.name === "InvalidStateError" || err.name === "NetworkError" || /open|busy|access/i.test(err.message);
+    useGlove.setState({
+      status: "error",
+      error: err.name === "NotFoundError" ? null : busy ? "Could not open the port. Close the Arduino Serial Monitor first, then try again." : err.message,
+    });
+    if (err.name === "NotFoundError") useGlove.setState({ status: "idle" });
   }
 }
 
@@ -172,7 +192,7 @@ async function readSerial(p: SerialPortLike) {
   const lb = new LineBuffer();
   const dec = new TextDecoder();
   try {
-    const reader = p.readable!.getReader();
+    reader = p.readable!.getReader();
     for (;;) {
       const { value, done } = await reader.read();
       if (done) break;
@@ -181,10 +201,12 @@ async function readSerial(p: SerialPortLike) {
   } catch {
     // unplugged
   }
+  reader = null;
   port = null;
   disconnected();
 }
 
+/** One click: reattach the same Bluetooth device, reopen USB, or fall back to the chooser. */
 export async function reconnect(): Promise<void> {
   const t = useGlove.getState().transport;
   if (t === "bluetooth" && device?.gatt) {
@@ -192,9 +214,8 @@ export async function reconnect(): Promise<void> {
       useGlove.setState({ status: "searching", error: null });
       await attachBluetooth();
       return;
-    } catch (e) {
-      useGlove.setState({ status: "disconnected", error: (e as Error).message });
-      return;
+    } catch {
+      return connectBluetooth();
     }
   }
   if (t === "usb") return connectUsb();
@@ -204,6 +225,7 @@ export async function reconnect(): Promise<void> {
 export async function disconnectGlove(): Promise<void> {
   try {
     device?.gatt?.disconnect();
+    await reader?.cancel();
     await port?.close();
   } catch {
     // already gone
@@ -211,17 +233,34 @@ export async function disconnectGlove(): Promise<void> {
   disconnected();
 }
 
-/** One-byte command: 'B' blinks the glove LED, 'S' toggles raw streaming. */
-export async function sendGlove(byte: "B" | "S"): Promise<void> {
+/** One-byte command. 'B' blinks the glove LED 3 times. Writes are queued through one promise chain. */
+export function sendGlove(byte: "B"): Promise<void> {
   const data = new TextEncoder().encode(byte);
-  try {
-    if (command) await command.writeValue(data);
-    else if (port?.writable) {
-      const w = port.writable.getWriter();
-      await w.write(data);
-      w.releaseLock();
-    }
-  } catch {
-    // best effort
-  }
+  writeChain = writeChain
+    .then(async () => {
+      if (command) {
+        if (command.writeValueWithoutResponse) await command.writeValueWithoutResponse(data);
+        else await command.writeValue(data);
+      } else if (port?.writable) {
+        const w = port.writable.getWriter();
+        try {
+          await w.write(data);
+        } finally {
+          w.releaseLock();
+        }
+      }
+    })
+    .catch(() => {
+      // best effort; the next write still runs
+    });
+  return writeChain;
+}
+
+if (typeof window !== "undefined") {
+  // Test hook: Playwright feeds simulated protocol lines (no Bluetooth in headless Chrome).
+  (window as unknown as { __magicSmokeGlove?: unknown }).__magicSmokeGlove = {
+    line: (l: string) => handleGloveMessage(parseGloveLine(l)),
+    connected: () => useGlove.setState({ status: "connected", transport: "bluetooth", lastMessageAt: Date.now() }),
+    dropped: () => disconnected(),
+  };
 }

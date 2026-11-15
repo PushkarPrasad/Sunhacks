@@ -64,15 +64,24 @@ describe("recogniser", () => {
     expect(ev2).toEqual(["left"]);
   });
 
-  test("spread held still explodes; fist held collapses; each fires once", () => {
+  test("spread held still explodes once; fist held grabs; a short fist tap collapses", () => {
     const r = rec();
     const types: string[] = [];
     for (let t = 0; t <= 600; t += 30) for (const e of r.update([hand("spread")], t)) types.push(e.type);
     expect(types.filter((x) => x === "explode")).toHaveLength(1);
     const r2 = rec();
     const t2: string[] = [];
-    for (let t = 0; t <= 600; t += 30) for (const e of r2.update([hand("fist")], t)) t2.push(e.type);
-    expect(t2.filter((x) => x === "collapse")).toHaveLength(1);
+    for (let t = 0; t <= 900; t += 30) for (const e of r2.update([hand("fist")], t)) t2.push(e.type);
+    for (let t = 930; t <= 1200; t += 30) for (const e of r2.update([hand("open")], t)) t2.push(e.type);
+    expect(t2.filter((x) => x === "grabStart")).toHaveLength(1);
+    expect(t2.filter((x) => x === "grabEnd")).toHaveLength(1);
+    expect(t2).not.toContain("collapse");
+    const r3 = rec();
+    const t3: string[] = [];
+    for (let t = 0; t <= 210; t += 30) for (const e of r3.update([hand("fist")], t)) t3.push(e.type);
+    for (let t = 240; t <= 600; t += 30) for (const e of r3.update([hand("open")], t)) t3.push(e.type);
+    expect(t3.filter((x) => x === "collapse")).toHaveLength(1);
+    expect(t3).not.toContain("grabStart");
   });
 
   test("two-hand pinch zooms with distance", () => {

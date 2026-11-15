@@ -41,6 +41,10 @@ export function fingerSpread(lm: Pt[]): number {
   return s / (tips.length - 1) / handSize(lm);
 }
 
+export const FIST_GRAB_MS = 450;
+export const FIST_TAP_MIN_MS = 60;
+export const FIST_GAP_MS = 150;
+
 export const PINCH_ON = 0.33;
 export const PINCH_OFF = 0.48;
 
@@ -63,6 +67,8 @@ export type GestureEvent =
   | { type: "swipe"; dir: "left" | "right" }
   | { type: "explode" }
   | { type: "collapse" }
+  | { type: "grabStart" }
+  | { type: "grabEnd" }
   | { type: "zoom"; factor: number }
   | { type: "rotate"; delta: number };
 
@@ -93,6 +99,11 @@ export class GestureRecognizer {
   private wristTrail: { t: number; x: number; y: number }[] = [];
   private cooldownUntil = 0;
   private two: { d: number; a: number } | null = null;
+  private fistSince = -1;
+  private fistLastSeen = -1;
+  private grabbing = false;
+  /** Pose of the first hand in the latest frame (for previews and the test page). */
+  pose: Pose = "none";
 
   constructor(private opts: Options) {}
 
@@ -106,6 +117,10 @@ export class GestureRecognizer {
     if (!hands.length) {
       if (this.cursor) out.push({ type: "lost" });
       if (this.pinching) out.push({ type: "pinchEnd" });
+      if (this.grabbing) out.push({ type: "grabEnd" });
+      this.grabbing = false;
+      this.fistSince = -1;
+      this.pose = "none";
       this.cursor = null;
       this.pinching = false;
       this.two = null;
@@ -138,6 +153,7 @@ export class GestureRecognizer {
 
     const lm = hands[0].landmarks;
     const pose = classify(lm, this.pinching);
+    this.pose = pose;
 
     // Cursor from the index fingertip, mirrored so it moves like a mirror image of the user.
     const region = this.opts.activeRegion ?? 0.7;
@@ -174,12 +190,32 @@ export class GestureRecognizer {
     const wrist = lm[WRIST];
     this.wristTrail.push({ t, x: 1 - wrist.x, y: wrist.y });
     this.wristTrail = this.wristTrail.filter((p) => t - p.t <= 450);
+
+    // Fist held = grab (rotate with the glove); a short fist tap = collapse. Brief misreads (< 150 ms) of a
+    // held fist are tolerated so a grab does not drop mid-twist.
+    if (pose === "fist") {
+      if (this.fistSince < 0) this.fistSince = t;
+      this.fistLastSeen = t;
+      if (!this.grabbing && t - this.fistSince >= FIST_GRAB_MS) {
+        this.grabbing = true;
+        out.push({ type: "grabStart" });
+      }
+    } else if (this.fistSince >= 0 && t - this.fistLastSeen > FIST_GAP_MS) {
+      const held = this.fistLastSeen - this.fistSince;
+      if (this.grabbing) out.push({ type: "grabEnd" });
+      else if (held >= FIST_TAP_MIN_MS && t >= this.cooldownUntil) {
+        this.cooldownUntil = t + 600;
+        out.push({ type: "collapse" });
+      }
+      this.grabbing = false;
+      this.fistSince = -1;
+    }
     if (t < this.cooldownUntil) return out;
 
-    if (!this.poseFired && t - this.poseSince > 350 && (pose === "spread" || pose === "fist") && this.still()) {
+    if (!this.poseFired && t - this.poseSince > 350 && pose === "spread" && this.still()) {
       this.poseFired = true;
       this.cooldownUntil = t + 1200;
-      out.push({ type: pose === "spread" ? "explode" : "collapse" });
+      out.push({ type: "explode" });
       return out;
     }
 

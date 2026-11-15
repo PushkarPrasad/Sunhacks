@@ -41,3 +41,11 @@ Judgment calls made while building, newest last.
 15. **V1 token names kept** (`paper`, `ink`, `copper`) with V2 values, so the palette swap touched one file.
 16. **Webcam preview removed**; hand tracking still turns on from Settings and shows only the ring cursor
     (the Calibration wizard, where the preview belongs, is deferred).
+17. **V3: no separate Calibration tab exists.** The sketch calibrates the gyro offset at power-on (keep still ~2 s), so the
+    Glove tab says so and offers Recenter instead of a calibration wizard.
+18. **V3: fist held 450 ms = grab, shorter fist tap = collapse.** Both rules from the fusion table need the fist; the hold
+    time separates them. A 150 ms gap is tolerated so a held fist does not drop mid-twist.
+19. **V3: the duplicate filter now ignores the source.** The spec says a second event of the same type from either
+    source within 300 ms is dropped, so a repeated glove flick inside 300 ms is dropped too.
+20. **V3: the camera engine moved out of React** (`lib/input/camera.ts`) so the glove click handler can call
+    getUserMedia before any await. The Settings toggle and the glove share it.

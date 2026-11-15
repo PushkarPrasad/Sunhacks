@@ -1,41 +1,35 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { X } from "lucide-react";
 import { emitInput } from "@/lib/input/bus";
-import { emitFused } from "@/lib/input/fuse";
-import { GestureRecognizer, type GestureEvent, type Hand } from "@/lib/input/gestures";
+import { cameraVideo, latestHands, onGesture, stopCamera } from "@/lib/input/camera";
+import { fireAction, logInputEvent, useInput } from "@/stores/input";
+import { useUi } from "@/stores/ui";
 
-// Webcam hand tracking with MediaPipe Tasks Vision. Loaded only when the user turns gestures on.
-const MP_VERSION = "1.2.3";
-const WASM = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm`;
-const MODEL = "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
+// Ring cursor, pinch-to-click and the picture-in-picture camera preview. The tracking engine itself lives in
+// lib/input/camera.ts and is started by the Settings toggle or by connecting the glove.
 const CLICKABLE = "button, a[href], [role=tab], [role=radio], [role=switch], [data-pin], summary, label";
-
-type Status = "starting" | "ready" | "no-hand" | "error";
+const BONES = [
+  [0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [5, 9], [9, 10], [10, 11], [11, 12],
+  [9, 13], [13, 14], [14, 15], [15, 16], [13, 17], [17, 18], [18, 19], [19, 20], [0, 17],
+];
+const PIP_W = 200;
+const PIP_H = 150;
 
 export function GestureLayer() {
-  const video = useRef<HTMLVideoElement>(null);
   const ring = useRef<HTMLDivElement>(null);
   const fill = useRef<HTMLDivElement>(null);
-  const [, setStatus] = useState<Status>("starting");
-  const [error, setError] = useState<string | null>(null);
-  const [, setLast] = useState<string | null>(null);
+  const camera = useInput((s) => s.camera);
+  const notice = useInput((s) => s.cameraNotice);
+  const pipOpen = useInput((s) => s.pipOpen);
+  const pose = useInput((s) => s.cameraPose);
+  const grabbing = useInput((s) => s.grabbing);
+  const active = camera === "on" || camera === "starting";
 
   useEffect(() => {
-    let stopped = false;
-    let raf = 0;
-    let stream: MediaStream | null = null;
-    let landmarker: { detectForVideo: (v: HTMLVideoElement, t: number) => { landmarks: Hand["landmarks"][] }; close: () => void } | null = null;
-    const rec = new GestureRecognizer({ width: window.innerWidth, height: window.innerHeight });
-    const onResize = () => rec.resize(window.innerWidth, window.innerHeight);
-    window.addEventListener("resize", onResize);
-
-    const flash = (text: string) => {
-      setLast(text);
-      window.setTimeout(() => setLast((l) => (l === text ? null : l)), 1100);
-    };
-
-    const handle = (e: GestureEvent) => {
+    if (!active) return;
+    return onGesture((e) => {
       const r = ring.current;
       switch (e.type) {
         case "cursor":
@@ -58,21 +52,10 @@ export function GestureLayer() {
           if (target && !target.closest("[data-gesture-ui]")) {
             target.focus({ preventScroll: true });
             target.click();
-          } else emitFused("select", "gesture");
+            logInputEvent("Pinch (click)", "camera");
+          } else fireAction("select", "camera", "Pinch (select)");
           break;
         }
-        case "swipe":
-          flash(e.dir === "right" ? "Next page" : "Previous page");
-          emitFused(e.dir === "right" ? "nextPage" : "prevPage", "gesture");
-          break;
-        case "explode":
-          flash("Explode");
-          emitFused("explode", "gesture");
-          break;
-        case "collapse":
-          flash("Collapse");
-          emitFused("collapse", "gesture");
-          break;
         case "zoom":
           emitInput(e.factor < 1 ? "zoomIn" : "zoomOut", "gesture", e.factor);
           break;
@@ -80,66 +63,90 @@ export function GestureLayer() {
           emitInput("rotate", "gesture", e.delta);
           break;
       }
-    };
+    });
+  }, [active]);
 
-    (async () => {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" } });
-        if (stopped) return;
-        const v = video.current!;
-        v.srcObject = stream;
-        await v.play();
-        const { FilesetResolver, HandLandmarker } = await import("@mediapipe/tasks-vision");
-        const fileset = await FilesetResolver.forVisionTasks(WASM);
-        landmarker = (await HandLandmarker.createFromOptions(fileset, {
-          baseOptions: { modelAssetPath: MODEL, delegate: "GPU" },
-          runningMode: "VIDEO",
-          numHands: 2,
-        })) as unknown as typeof landmarker;
-        if (stopped) return;
-        setStatus("no-hand");
-        let lastT = -1;
-        const loop = () => {
-          if (stopped || !landmarker) return;
-          const now = performance.now();
-          if (v.readyState >= 2 && v.currentTime !== lastT) {
-            lastT = v.currentTime;
-            const res = landmarker.detectForVideo(v, now);
-            const hands: Hand[] = (res.landmarks ?? []).map((landmarks) => ({ landmarks }));
-            setStatus(hands.length ? "ready" : "no-hand");
-            for (const e of rec.update(hands, now)) handle(e);
-          }
-          raf = requestAnimationFrame(loop);
-        };
-        loop();
-      } catch (e) {
-        setStatus("error");
-        setError(e instanceof Error && e.name === "NotAllowedError" ? "Camera permission was denied." : "Hand tracking could not start on this device.");
-      }
-    })();
-
-    return () => {
-      stopped = true;
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
-      stream?.getTracks().forEach((t) => t.stop());
-      landmarker?.close();
-    };
-  }, []);
+  const close = () => {
+    stopCamera();
+    useUi.getState().set({ gestures: false });
+  };
 
   return (
     <>
-      {/* Copper ring cursor: fills while a pinch is held. */}
-      <div ref={ring} aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-[60] h-8 w-8 rounded-full border-2 border-copper opacity-0 transition-opacity" style={{ willChange: "transform" }}>
-        <div ref={fill} className="absolute inset-1 origin-center rounded-full bg-copper/70" style={{ transform: "scale(0)" }} />
-      </div>
-      {/* Hidden camera feed for tracking only; no on-screen preview (V2). */}
-      <video ref={video} muted playsInline aria-hidden="true" className="pointer-events-none fixed h-px w-px opacity-0" />
-      {error && (
-        <p role="status" className="glass fixed bottom-16 left-1/2 z-50 -translate-x-1/2 rounded-full border border-line px-4 py-1.5 text-[12px] text-bad">
-          {error}
+      {active && (
+        <div ref={ring} aria-hidden="true" className="pointer-events-none fixed left-0 top-0 z-[60] h-8 w-8 rounded-full border-2 border-copper opacity-0 transition-opacity" style={{ willChange: "transform" }}>
+          <div ref={fill} className="absolute inset-1 origin-center rounded-full bg-copper/70" style={{ transform: "scale(0)" }} />
+        </div>
+      )}
+      {active && pipOpen && (
+        <div data-gesture-ui className="glass fixed bottom-16 right-4 z-[55] overflow-hidden rounded-[14px] border border-line shadow-[var(--shadow-float)]" style={{ width: PIP_W }}>
+          <Pip />
+          <div className="flex items-center justify-between px-2.5 py-1.5 font-mono text-[10px] text-muted">
+            <span>{camera === "starting" ? "Starting camera" : grabbing ? "Grabbing" : pose === "none" ? "No hand" : pose}</span>
+            <span className="flex gap-1">
+              <button type="button" onClick={() => useInput.setState({ pipOpen: false })} className="rounded px-1 hover:text-ink" aria-label="Hide camera preview">
+                Hide
+              </button>
+              <button type="button" onClick={close} className="grid h-4 w-4 place-items-center rounded hover:text-bad" aria-label="Turn the camera off">
+                <X size={12} strokeWidth={1.75} />
+              </button>
+            </span>
+          </div>
+        </div>
+      )}
+      {notice && (
+        <p role="status" className="glass fixed bottom-16 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-line px-4 py-1.5 text-[12px] text-warn">
+          {notice}
+          <button type="button" onClick={() => useInput.setState({ cameraNotice: null })} aria-label="Dismiss" className="text-muted hover:text-ink">
+            <X size={12} strokeWidth={1.75} />
+          </button>
         </p>
       )}
     </>
   );
+}
+
+/** Mirrored camera frame with the hand skeleton drawn on top. */
+function Pip() {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    let raf = 0;
+    const draw = () => {
+      const c = canvas.current;
+      const ctx = c?.getContext("2d");
+      const v = cameraVideo();
+      if (c && ctx) {
+        ctx.save();
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.translate(c.width, 0);
+        ctx.scale(-1, 1);
+        if (v && v.readyState >= 2) ctx.drawImage(v, 0, 0, c.width, c.height);
+        else {
+          ctx.fillStyle = "#12121C";
+          ctx.fillRect(0, 0, c.width, c.height);
+        }
+        for (const lm of latestHands().hands) {
+          ctx.strokeStyle = "rgba(165,180,252,0.9)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          for (const [a, b] of BONES) {
+            ctx.moveTo(lm[a].x * c.width, lm[a].y * c.height);
+            ctx.lineTo(lm[b].x * c.width, lm[b].y * c.height);
+          }
+          ctx.stroke();
+          ctx.fillStyle = "#7C5CFF";
+          for (const p of lm) {
+            ctx.beginPath();
+            ctx.arc(p.x * c.width, p.y * c.height, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        ctx.restore();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return <canvas ref={canvas} width={PIP_W * 2} height={PIP_H * 2} style={{ width: PIP_W, height: PIP_H }} className="block bg-raised" aria-label="Camera preview with hand landmarks" />;
 }

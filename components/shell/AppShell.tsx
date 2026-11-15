@@ -11,13 +11,12 @@ import { VoiceController } from "@/components/input/VoiceController";
 import { PageNav } from "./PageNav";
 import { TopBar } from "./TopBar";
 
-// MediaPipe is only downloaded when the user turns gestures on.
+// Ring cursor + camera preview; MediaPipe itself is only downloaded when the camera starts.
 const GestureLayer = dynamic(() => import("@/components/input/GestureLayer").then((m) => m.GestureLayer), { ssr: false });
 
 export function AppShell({ children }: { children: ReactNode }) {
   const highContrast = useUi((s) => s.highContrast);
   const motion = useUi((s) => s.motion);
-  const gestures = useUi((s) => s.gestures);
 
   useEffect(() => {
     useUi.persist.rehydrate();
@@ -44,7 +43,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <KeyboardMap />
       <HapticsWatcher />
       <VoiceController />
-      {gestures && <GestureLayer />}
+      <GestureLayer />
     </div>
   );
 }

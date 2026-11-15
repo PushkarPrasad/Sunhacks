@@ -1,23 +1,25 @@
-// When the webcam and the glove report the same action within 300 ms, fire it once.
-import { emitInput, type InputAction, type InputEvent } from "./bus";
+// One motion must not fire twice: a second event of the same action within 300 ms is dropped, whichever
+// source (webcam or glove) sent it.
+import { emitInput, type InputAction } from "./bus";
 
 export const FUSE_WINDOW_MS = 300;
-type Source = "gesture" | "glove";
-const last = new Map<InputAction, { source: Source; at: number }>();
+export type InputSource = "camera" | "glove";
+const last = new Map<InputAction, number>();
 
 /** Returns true if the action should fire (pure decision; exported for tests). */
-export function shouldFire(action: InputAction, source: Source, now: number): boolean {
+export function shouldFire(action: InputAction, _source: InputSource, now: number): boolean {
   const prev = last.get(action);
-  const fire = !(prev && prev.source !== source && now - prev.at < FUSE_WINDOW_MS);
-  if (fire) last.set(action, { source, at: now });
-  return fire;
+  if (prev !== undefined && now - prev < FUSE_WINDOW_MS) return false;
+  last.set(action, now);
+  return true;
 }
 
 export function resetFuse() {
   last.clear();
 }
 
-export function emitFused(action: InputAction, source: Source, value?: number, now = performance.now()): boolean {
+export function emitFused(action: InputAction, source: InputSource, value?: number, now = performance.now()): boolean {
   if (!shouldFire(action, source, now)) return false;
-  return emitInput(action, source === "glove" ? ("gesture" as InputEvent["source"]) : "gesture", value);
+  emitInput(action, "gesture", value);
+  return true;
 }
