@@ -39,7 +39,7 @@ export function TemplatesPage() {
 
   return (
     <div className="mx-auto flex h-full max-w-[1200px] flex-col px-12 pb-6 pt-8">
-      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Templates</p>
+      <p className="eyebrow">Templates</p>
       <h1 className="mt-2 font-serif text-[48px] leading-none">Start from a working build</h1>
       <div className="mt-5 flex flex-wrap gap-1.5" role="radiogroup" aria-label="Filter by device">
         {[{ id: null, name: "All" }, ...deviceCategories].map((c) => (
@@ -52,7 +52,7 @@ export function TemplatesPage() {
               setCat(c.id);
               setPage(0);
             }}
-            className={`rounded-full border px-3 py-1 text-[12px] ${cat === c.id ? "border-ink bg-copper text-white" : "border-line hover:border-line-strong"}`}
+            className={`rounded-[10px] border px-3 py-1 text-[12px] ${cat === c.id ? "border-copper bg-copper text-white" : "border-line hover:border-line-strong"}`}
           >
             {c.name}
           </button>
@@ -68,10 +68,10 @@ export function TemplatesPage() {
               loadTemplate(t.id);
               router.push("/builder");
             }}
-            className="group flex min-h-0 flex-col rounded-[12px] border border-line bg-card p-5 text-left transition-colors hover:border-ink"
+            className="group flex min-h-0 flex-col rounded-[12px] border border-line bg-card p-5 text-left lift hover:border-line-strong"
           >
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">{categoriesById[t.categoryId].name}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">{categoriesById[t.categoryId].name}</span>
               {t.featured && <span className="rounded-full bg-copper-soft px-2 py-0.5 text-[10px] text-copper">Featured</span>}
             </div>
             <p className="mt-3 font-serif text-[26px] leading-tight">{t.name}</p>

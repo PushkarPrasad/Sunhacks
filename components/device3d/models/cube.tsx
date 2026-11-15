@@ -193,7 +193,7 @@ function Controller() {
       {[0.12, 0.2].map((x) => (
         <mesh key={x} geometry={cap} material={MAT.aluminum("#c9ccd4")} position={[x, -0.3, 0.04]} rotation={[Math.PI / 2, 0, 0]} />
       ))}
-      <mesh position={[0.36, 0.36, 0.012]} material={MAT.led("#3ddc97")}>
+      <mesh position={[0.36, 0.36, 0.012]} material={MAT.led("#5ee2a8")}>
         <boxGeometry args={[0.025, 0.015, 0.01]} />
       </mesh>
       <Instances geo={standoff} mat={MAT.brass()} at={[[0.4, 0.4], [-0.4, 0.4], [0.4, -0.4], [-0.4, -0.4]].map(([x, y]) => ({ p: [x, y, -0.065] as V3, r: [Math.PI / 2, 0, 0] as V3 }))} />
@@ -220,7 +220,7 @@ function Imu() {
 
 function Battery() {
   const pack = useMemo(() => block(0.32, 0.72, 0.24, 0.035), []);
-  const label = useMemo(() => new THREE.MeshPhysicalMaterial({ map: labelTexture(["LiPo 3S1P", "11.1 V  850 mAh", "9.4 Wh  45C"], { bg: "#1b1d2a", fg: "#e8e6f2", w: 512, h: 256 }), roughness: 0.4, clearcoat: 0.5 }), []);
+  const label = useMemo(() => new THREE.MeshPhysicalMaterial({ map: labelTexture(["LiPo 3S1P", "11.1 V  850 mAh", "9.4 Wh  45C"], { bg: "#1b1d2a", fg: "#eef4f0", w: 512, h: 256 }), roughness: 0.4, clearcoat: 0.5 }), []);
   const jst = useMemo(() => block(0.1, 0.035, 0.05, 0.004), []);
   const balance = useMemo(() => wireBundle([[-H + 0.2, 0.36, -0.42], [-0.45, 0.48, -0.4], [-0.3, 0.3, -0.2], [-0.2, -0.3, -0.1], [-0.2, -H + 0.27, -0.1]], 4, 0.009, 0.02, [0, 0, 1]), []);
   const red = useMemo(() => sagCable([-H + 0.2, 0.36, -0.25], [0.1, -H + 0.25, -0.35], 0.25, 0.016), []);

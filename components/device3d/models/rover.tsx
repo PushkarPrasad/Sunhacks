@@ -88,7 +88,7 @@ function Wheel() {
       <Instances geo={grouser} mat={MAT.rubber("#1a1a1d")} at={grousers} />
       <Instances geo={spoke} mat={MAT.printed("#2b2c31")} at={spokes} />
       <mesh geometry={hub} material={MAT.printed("#2b2c31")} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={cap} material={MAT.aluminum("#7c5cff")} rotation={[Math.PI / 2, 0, 0]} position={[0, 0, WHEEL_W * 0.36]} />
+      <mesh geometry={cap} material={MAT.aluminum("#0a6b49")} rotation={[Math.PI / 2, 0, 0]} position={[0, 0, WHEEL_W * 0.36]} />
     </Group>
   );
 }
@@ -149,7 +149,7 @@ function Chassis() {
       ))}
       <mesh geometry={deck} material={MAT.aluminum("#2f3038")} position={[0, BODY_Y + 0.215, 0]} rotation={[-Math.PI / 2, 0, 0]} />
       {/* differential bar on top: keeps the body level between the two rockers */}
-      <mesh geometry={diff} material={MAT.aluminum("#4a3f86")} position={[-1.15, BODY_Y + 0.45, 0]} />
+      <mesh geometry={diff} material={MAT.aluminum("#0a6b49")} position={[-1.15, BODY_Y + 0.45, 0]} />
       {[-1, 1].map((s) => (
         <mesh key={s} geometry={linkGeo} material={MAT.steel()} position={[-1.15, BODY_Y + 0.2, s * 1.05]} />
       ))}
@@ -187,7 +187,7 @@ function Electronics() {
   const sink = useMemo(() => block(0.2, 0.16, 0.12, 0.01), []);
   const pack = useMemo(() => block(0.7, 0.36, 0.2, 0.03), []);
   const chip = useMemo(() => block(0.1, 0.1, 0.02, 0.004), []);
-  const label = useMemo(() => new THREE.MeshPhysicalMaterial({ map: labelTexture(["Li-ion 2S2P", "7.4 V  6000 mAh"], { bg: "#1b1d2a", fg: "#e8e6f2", w: 512, h: 128, size: 40 }), roughness: 0.45 }), []);
+  const label = useMemo(() => new THREE.MeshPhysicalMaterial({ map: labelTexture(["Li-ion 2S2P", "7.4 V  6000 mAh"], { bg: "#1b1d2a", fg: "#eef4f0", w: 512, h: 128, size: 40 }), roughness: 0.45 }), []);
   const y = BODY_Y + 0.26;
   return (
     <Group>
@@ -203,7 +203,7 @@ function Electronics() {
       <mesh material={label} position={[-0.4, y + 0.201, -0.2]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[0.6, 0.16]} />
       </mesh>
-      <mesh position={[0.82, y + 0.03, -0.42]} material={MAT.led("#3ddc97")}>
+      <mesh position={[0.82, y + 0.03, -0.42]} material={MAT.led("#5ee2a8")}>
         <sphereGeometry args={[0.018, 12, 12]} />
       </mesh>
     </Group>

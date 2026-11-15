@@ -60,9 +60,9 @@ export function Studio({ floor = -0.85, shadowScale = 6, envIntensity = 0.85, ke
         shadow-camera-bottom={-4}
         shadow-camera-far={20}
       />
-      {/* Cool rim from behind-left keeps silhouettes off the dark page; a hint of the brand violet. */}
-      <directionalLight position={[-5, 3, -4]} intensity={key * 0.35} color="#a9b4ff" />
-      <ContactShadows position={[0, floor, 0]} opacity={0.6} scale={shadowScale} blur={2.4} far={Math.max(2, shadowScale / 2)} resolution={1024} color="#000000" />
+      {/* Cool rim from behind-left keeps silhouettes off the dark page; a faint green cast to match the page. */}
+      <directionalLight position={[-5, 3, -4]} intensity={key * 0.35} color="#cfe6da" />
+      <ContactShadows position={[0, floor, 0]} opacity={0.6} scale={shadowScale} blur={2.4} far={Math.max(2, shadowScale / 2)} resolution={1024} color="#03130c" />
       {effects && (
         <EffectComposer multisampling={0}>
           <N8AO aoRadius={aoRadius} distanceFalloff={1} intensity={1.6} quality="medium" halfRes />

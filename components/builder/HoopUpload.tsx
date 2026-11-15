@@ -188,7 +188,7 @@ export function HoopUpload({ onClose }: { onClose: () => void }) {
             <motion.span key={count} initial={{ scale: 1.25 }} animate={{ scale: 1 }} className="rounded-full border border-ok/40 bg-ok/10 px-3 py-1 font-mono text-[12px] text-ok">
               Uploaded {count}
             </motion.span>
-            <button type="button" aria-label="Close" onClick={onClose} className="grid h-8 w-8 place-items-center rounded-full text-muted hover:bg-raised hover:text-ink">
+            <button type="button" aria-label="Close" onClick={onClose} className="grid h-8 w-8 place-items-center rounded-[10px] text-muted hover:bg-raised hover:text-ink">
               <X size={16} strokeWidth={1.5} />
             </button>
           </div>
@@ -264,7 +264,7 @@ export function HoopUpload({ onClose }: { onClose: () => void }) {
                   <motion.span
                     key={k}
                     className="absolute h-2 w-2 rounded-full"
-                    style={{ left: (RIM.front + RIM.back) / 2 / (W / 100) + "%", top: (RIM.y / H) * 100 + "%", background: ["#7C5CFF", "#3D7BFF", "#3DDC97", "#F5B14C"][k % 4] }}
+                    style={{ left: (RIM.front + RIM.back) / 2 / (W / 100) + "%", top: (RIM.y / H) * 100 + "%", background: ["#0F9D6B", "#0A6B49", "#5EE2A8", "#E8B04B"][k % 4] }}
                     initial={{ x: 0, y: 0, scale: 1 }}
                     animate={{ x: Math.cos((k / 14) * Math.PI * 2) * 90, y: Math.sin((k / 14) * Math.PI * 2) * 60 - 20, scale: 0.4 }}
                     transition={{ duration: 0.9, ease: "easeOut" }}
@@ -302,18 +302,18 @@ export function HoopUpload({ onClose }: { onClose: () => void }) {
 function draw(g: CanvasRenderingContext2D, b: Ball, hasFile: boolean, sinceSwish: number) {
   g.clearRect(0, 0, W, H);
   // court floor
-  g.strokeStyle = "#2A2A3D";
+  g.strokeStyle = "#1F3A2F";
   g.lineWidth = 1;
   g.beginPath();
   g.moveTo(0, FLOOR + 0.5);
   g.lineTo(W, FLOOR + 0.5);
   g.stroke();
   // pole + backboard
-  g.fillStyle = "#3B3B55";
+  g.fillStyle = "#2C5243";
   g.fillRect(BOARD.x + 30, BOARD.top + 30, 6, FLOOR - BOARD.top - 30);
   g.fillRect(BOARD.x + 6, BOARD.top + 46, 28, 5);
-  g.fillStyle = "rgba(165,180,252,0.12)";
-  g.strokeStyle = "#A5B4FC";
+  g.fillStyle = "rgba(200,169,106,0.12)";
+  g.strokeStyle = "#C8A96A";
   g.lineWidth = 2;
   g.beginPath();
   g.roundRect(BOARD.x, BOARD.top - 10, 8, BOARD.bottom - BOARD.top + 20, 2);
@@ -321,7 +321,7 @@ function draw(g: CanvasRenderingContext2D, b: Ball, hasFile: boolean, sinceSwish
   g.stroke();
   // net (sways after a swish)
   const sway = sinceSwish < 700 ? Math.sin(sinceSwish / 40) * (1 - sinceSwish / 700) * 6 : 0;
-  g.strokeStyle = "rgba(236,234,245,0.55)";
+  g.strokeStyle = "rgba(238,244,240,0.55)";
   g.lineWidth = 1.2;
   for (let k = 0; k <= 5; k++) {
     const x0 = RIM.front + ((RIM.back - RIM.front) * k) / 5;
@@ -340,7 +340,7 @@ function draw(g: CanvasRenderingContext2D, b: Ball, hasFile: boolean, sinceSwish
     g.stroke();
   }
   // rim
-  g.strokeStyle = "#7C5CFF";
+  g.strokeStyle = "#0F9D6B";
   g.lineWidth = 4;
   g.lineCap = "round";
   g.beginPath();
@@ -349,7 +349,7 @@ function draw(g: CanvasRenderingContext2D, b: Ball, hasFile: boolean, sinceSwish
   g.stroke();
   // ball: a basketball wearing a file icon
   if (!hasFile && !b.flying) {
-    g.fillStyle = "rgba(163,161,184,0.45)";
+    g.fillStyle = "rgba(155,179,167,0.45)";
     g.font = "13px sans-serif";
     g.fillText("Drop a file to get a ball", REST.x - 50, REST.y - 30);
     return;

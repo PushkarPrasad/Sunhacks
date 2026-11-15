@@ -101,7 +101,7 @@ export function BuilderPage() {
           />
           {template && <span className="shrink-0 rounded-full border border-line px-2.5 py-0.5 text-[11px] text-muted">from template</span>}
         </div>
-        <div className="flex shrink-0 items-center gap-0.5 rounded-full border border-line bg-card p-0.5" role="tablist" aria-label="Builder views">
+        <div className="flex shrink-0 items-center gap-0.5 rounded-[12px] border border-line bg-card p-0.5" role="tablist" aria-label="Builder views">
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -109,7 +109,7 @@ export function BuilderPage() {
               role="tab"
               aria-selected={tab === t.id}
               onClick={() => setUi({ builderTab: t.id })}
-              className={`rounded-full px-4 py-1.5 text-[13px] transition-colors ${tab === t.id ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
+              className={`rounded-[9px] px-4 py-1.5 text-[13px] transition-colors ${tab === t.id ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
             >
               {t.label}
             </button>
@@ -117,7 +117,7 @@ export function BuilderPage() {
         </div>
         <div className="flex flex-1 items-center justify-end gap-1">
           {template?.game && (
-            <button type="button" onClick={() => setPlaying(true)} className="mr-2 flex h-9 items-center gap-2 rounded-full bg-copper px-4 text-[13px] text-white hover:bg-copper-hover">
+            <button type="button" onClick={() => setPlaying(true)} className="mr-2 flex h-9 items-center gap-2 rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-4 text-[13px] text-white hover:bg-copper-hover">
               <Play size={14} strokeWidth={2} /> Run
             </button>
           )}
@@ -125,7 +125,7 @@ export function BuilderPage() {
             type="button"
             onClick={() => setImporting(true)}
             title="Upload a build file (Hoop Upload)"
-            className="flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-[13px] text-ink transition hover:-translate-y-px hover:border-copper hover:bg-raised"
+            className="flex h-9 items-center gap-1.5 rounded-[10px] border border-line px-3 text-[13px] text-ink transition hover:-translate-y-px hover:border-copper hover:bg-raised"
           >
             <Basketball /> Upload
           </button>
@@ -140,17 +140,17 @@ export function BuilderPage() {
               a.click();
               setTimeout(() => URL.revokeObjectURL(a.href), 4000);
             }}
-            className="mr-1 grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-raised hover:text-ink"
+            className="mr-1 grid h-9 w-9 place-items-center rounded-[10px] text-muted hover:bg-raised hover:text-ink"
           >
             <Download size={16} strokeWidth={1.5} />
           </button>
-          <button type="button" aria-label="Undo" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo} className="grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-line/60 hover:text-ink disabled:opacity-30">
+          <button type="button" aria-label="Undo" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo} className="grid h-9 w-9 place-items-center rounded-[10px] text-muted hover:bg-line/60 hover:text-ink disabled:opacity-30">
             <Undo2 size={17} strokeWidth={1.5} />
           </button>
-          <button type="button" aria-label="Redo" title="Redo (Ctrl+Shift+Z)" disabled={!canRedo} onClick={redo} className="grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-line/60 hover:text-ink disabled:opacity-30">
+          <button type="button" aria-label="Redo" title="Redo (Ctrl+Shift+Z)" disabled={!canRedo} onClick={redo} className="grid h-9 w-9 place-items-center rounded-[10px] text-muted hover:bg-line/60 hover:text-ink disabled:opacity-30">
             <Redo2 size={17} strokeWidth={1.5} />
           </button>
-          <Link href="/checks" className="group ml-2 flex h-9 items-center gap-1.5 rounded-full border border-line-strong px-4 text-[13px] hover:border-ink">
+          <Link href="/checks" className="group ml-2 flex h-9 items-center gap-1.5 lift rounded-[10px] border border-line px-4 text-[13px] hover:border-line-strong hover:bg-raised">
             Checks <ArrowRight size={14} strokeWidth={1.5} className="transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>

@@ -38,8 +38,8 @@ export function QuadView({ build, data }: { build: Build; data: CircuitResult })
 
   const pcbId = selected ? maps.pcb.get(selected) : undefined;
   const schId = selected ? maps.sch.get(selected) : undefined;
-  const pcbCss = pcbId ? `[data-pcb-component-id="${pcbId}"] { stroke: #F4E3A1 !important; fill: #F4E3A1 !important; }` : "";
-  const schCss = schId ? `[data-schematic-component-id="${schId}"] { stroke: #9479FF !important; } [data-schematic-component-id="${schId}"] rect { fill: #2A2148 !important; }` : "";
+  const pcbCss = pcbId ? `[data-pcb-component-id="${pcbId}"] { stroke: #14B47C !important; fill: rgb(15 157 107 / 0.35) !important; }` : "";
+  const schCss = schId ? `[data-schematic-component-id="${schId}"] { stroke: #14B47C !important; } [data-schematic-component-id="${schId}"] rect { fill: #0E2A20 !important; }` : "";
 
   const onPick = (path: EventTarget[], kind: "pcb" | "sch") => {
     const attr = kind === "pcb" ? "data-pcb-component-id" : "data-schematic-component-id";
@@ -55,13 +55,13 @@ export function QuadView({ build, data }: { build: Build; data: CircuitResult })
     <div className={`grid h-full gap-px bg-line ${focus ? "grid-cols-1" : "grid-cols-2 grid-rows-2"}`}>
       {panes.map((p) => (
         <section key={p} className={`relative min-h-0 overflow-hidden ${p === "pcb" ? "bg-pcb" : "bg-paper"}`} aria-label={TITLES[p]}>
-          <header className={`absolute inset-x-0 top-0 z-10 flex h-9 items-center justify-between px-3 text-[12px] ${p === "pcb" ? "text-paper/80" : "text-muted"}`}>
+          <header className={`absolute inset-x-0 top-0 z-10 flex h-9 items-center justify-between px-3 text-[12px] ${p === "pcb" ? "text-ink/80" : "text-muted"}`}>
             <span className="font-mono uppercase tracking-[0.14em] text-[10px]">{TITLES[p]}</span>
             <button
               type="button"
               aria-label={focus ? `Back to four views` : `Expand ${TITLES[p]}`}
               onClick={() => setFocus(focus ? null : p)}
-              className={`grid h-7 w-7 place-items-center rounded-full ${p === "pcb" ? "hover:bg-paper/10" : "hover:bg-line/60"}`}
+              className={`grid h-7 w-7 place-items-center rounded-[10px] ${p === "pcb" ? "hover:bg-raised" : "hover:bg-line/60"}`}
             >
               {focus ? <Minimize2 size={14} strokeWidth={1.5} /> : <Maximize2 size={14} strokeWidth={1.5} />}
             </button>

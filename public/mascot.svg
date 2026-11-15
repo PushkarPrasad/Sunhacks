@@ -1,9 +1,9 @@
 <!-- Placeholder mascot. Replace this file with the team's drawing (same name, any size; it is shown at ~96 px). -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
-  <rect x="22" y="30" width="76" height="62" rx="12" fill="#FBF9F5" stroke="#16181C" stroke-width="2.5"/>
-  <path d="M40 30V20M60 30V16M80 30V20" stroke="#16181C" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="40" cy="18" r="4" fill="#B5652E"/><circle cx="60" cy="14" r="4" fill="#B5652E"/><circle cx="80" cy="18" r="4" fill="#B5652E"/>
-  <circle cx="47" cy="56" r="5" fill="#16181C"/><circle cx="73" cy="56" r="5" fill="#16181C"/>
-  <path d="M50 72c6 5 14 5 20 0" stroke="#16181C" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M22 66H12M98 66h10M36 92v10M84 92v10" stroke="#B5652E" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="22" y="30" width="76" height="62" rx="12" fill="#0B1914" stroke="#EEF4F0" stroke-width="2.5"/>
+  <path d="M40 30V20M60 30V16M80 30V20" stroke="#EEF4F0" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="40" cy="18" r="4" fill="#0F9D6B"/><circle cx="60" cy="14" r="4" fill="#0F9D6B"/><circle cx="80" cy="18" r="4" fill="#0F9D6B"/>
+  <circle cx="47" cy="56" r="5" fill="#EEF4F0"/><circle cx="73" cy="56" r="5" fill="#EEF4F0"/>
+  <path d="M50 72c6 5 14 5 20 0" stroke="#EEF4F0" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M22 66H12M98 66h10M36 92v10M84 92v10" stroke="#0F9D6B" stroke-width="2.5" stroke-linecap="round"/>
 </svg>

@@ -17,7 +17,7 @@ export function CircuitView({ view, compact = false }: { view: "schematic" | "pc
     return <Empty dark={dark} text="Add modules on the Build tab first." />;
   }
   return (
-    <div className={`relative h-full w-full overflow-hidden ${dark ? "bg-pcb text-paper" : view === "3d" ? "bg-paper" : "bg-paper"}`}>
+    <div className={`relative h-full w-full overflow-hidden ${dark ? "bg-pcb text-ink" : "bg-paper"}`}>
       {data && view === "schematic" && (
         <ZoomPan>
           <SvgHost className="h-full w-full p-6" svg={data.schematicSvg} />
@@ -36,7 +36,7 @@ export function CircuitView({ view, compact = false }: { view: "schematic" | "pc
       )}
       {error && <p className="absolute left-1/2 top-4 -translate-x-1/2 rounded-full bg-bad px-4 py-1.5 text-[12px] text-paper">{error}</p>}
       {data && !compact && (
-        <div className={`absolute bottom-4 left-4 flex gap-4 rounded-full px-4 py-1.5 font-mono text-[11px] ${dark ? "bg-paper/10 text-paper/80" : "border border-line bg-card/90 text-muted"}`}>
+        <div className={`absolute bottom-4 left-4 flex gap-4 rounded-full px-4 py-1.5 font-mono text-[11px] ${dark ? "border border-line bg-card/90 text-muted" : "border border-line bg-card/90 text-muted"}`}>
           <span>
             {data.board.w} × {data.board.h} mm
           </span>
@@ -52,7 +52,7 @@ export function CircuitView({ view, compact = false }: { view: "schematic" | "pc
 
 function Empty({ text, dark }: { text: string; dark: boolean }) {
   return (
-    <div className={`grid h-full place-items-center ${dark ? "bg-pcb text-paper/70" : "text-muted"}`}>
+    <div className={`grid h-full place-items-center ${dark ? "bg-pcb text-muted" : "text-muted"}`}>
       <p className="text-[14px]">{text}</p>
     </div>
   );

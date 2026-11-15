@@ -164,7 +164,7 @@ function Scene({ def, explode, shell, hovered, selected, onHover, onSelect, onAn
         if (!("emissive" in mat) || mat.userData.glow) return;
         const target = hot ? 0.35 : xray ? 0.12 : 0;
         if (hot || xray || mat.emissiveIntensity > 0.001) {
-          mat.emissive.set(hot ? "#7c5cff" : "#a5b4fc");
+          mat.emissive.set(hot ? "#0f9d6b" : "#4a8f76");
           mat.emissiveIntensity += (target - mat.emissiveIntensity) * 0.2;
         }
       });

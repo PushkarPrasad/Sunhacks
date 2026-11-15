@@ -93,7 +93,7 @@ export function BoardPage() {
         <div>
           <p className="font-serif text-[40px]">No board yet.</p>
           <p className="mt-2 text-muted">Place and wire modules in the builder first.</p>
-          <Link href="/builder" className="mt-6 inline-flex h-10 items-center rounded-full bg-copper px-5 text-[13px] text-white hover:bg-copper-hover">
+          <Link href="/builder" className="mt-6 inline-flex h-10 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-5 text-[13px] text-white hover:bg-copper-hover">
             Open the builder
           </Link>
         </div>
@@ -106,7 +106,7 @@ export function BoardPage() {
         {circuit.data ? (
           <QuadView build={build} data={circuit.data} />
         ) : (
-          <div className="grid h-full place-items-center bg-pcb text-[13px] text-paper/70" role="status">
+          <div className="grid h-full place-items-center bg-pcb text-[13px] text-muted" role="status">
             <span className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 animate-ping rounded-full bg-copper" /> {circuit.error ?? "Placing modules and routing the carrier board…"}
             </span>
@@ -116,7 +116,7 @@ export function BoardPage() {
 
       <aside className="flex min-h-0 flex-col gap-5 border-l border-line px-6 py-6">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Carrier board</p>
+          <p className="eyebrow">Carrier board</p>
           <h1 className="mt-1 font-serif text-[34px] leading-none">{build.name}</h1>
           <p className="mt-2 font-mono text-[12px] text-muted">
             {board ? `${board.w} × ${board.h} mm · 2 layers · ${circuit.data?.traces ?? 0} traces · 4 × M3` : "Routing…"}
@@ -137,7 +137,7 @@ export function BoardPage() {
                 type="button"
                 disabled={!circuit.data || busy !== null}
                 onClick={() => download(e.kind)}
-                className="flex items-start gap-2.5 rounded-[10px] border border-line bg-card p-3 text-left transition-colors hover:border-ink disabled:opacity-50"
+                className="flex items-start gap-2.5 rounded-[10px] border border-line bg-card p-3 text-left lift hover:border-line-strong disabled:opacity-50"
               >
                 <e.icon size={17} strokeWidth={1.5} className="mt-0.5 shrink-0 text-copper" />
                 <span>
@@ -165,7 +165,7 @@ export function BoardPage() {
                 role="radio"
                 aria-checked={qty === q}
                 onClick={() => setQty(q)}
-                className={`flex-1 rounded-md border py-1 font-mono text-[12px] ${qty === q ? "border-ink bg-copper text-white" : "border-line hover:border-line-strong"}`}
+                className={`flex-1 rounded-md border py-1 font-mono text-[12px] ${qty === q ? "border-copper bg-copper text-white" : "border-line hover:border-line-strong"}`}
               >
                 {q}
               </button>
@@ -202,7 +202,7 @@ function PayModal({ usd, name, onClose }: { usd: number; name: string; onClose: 
   const url = solanaPayUrl({ recipient: SOLANA_RECIPIENT, amountSol: sol, label: "Magic Smoke (devnet demo)", message: `Board order: ${name}` });
   const [qr, setQr] = useState<string | null>(null);
   useEffect(() => {
-    QRCode.toDataURL(url, { margin: 1, width: 240, color: { dark: "#16181C", light: "#FBF9F5" } }).then(setQr);
+    QRCode.toDataURL(url, { margin: 1, width: 240, color: { dark: "#06100C", light: "#EEF4F0" } }).then(setQr);
   }, [url]);
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-ink/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Solana Pay devnet demo">
@@ -219,7 +219,7 @@ function PayModal({ usd, name, onClose }: { usd: number; name: string; onClose: 
         <p className="mt-1 text-[11px] text-muted">
           ${usd.toFixed(2)} at a fixed demo rate of ${DEMO_USD_PER_SOL}/SOL. Scan with a wallet set to devnet.
         </p>
-        <a href={url} className="mt-4 inline-flex h-9 items-center rounded-full bg-copper px-4 text-[12px] text-white hover:bg-copper-hover">
+        <a href={url} className="mt-4 inline-flex h-9 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-4 text-[12px] text-white hover:bg-copper-hover">
           Open in wallet
         </a>
       </div>

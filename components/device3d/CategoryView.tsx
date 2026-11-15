@@ -100,7 +100,7 @@ export function CategoryView({ id }: { id: string }) {
         <div className="dot-grid absolute inset-0 [background-size:20px_20px] opacity-60" />
         <ExplodedDevice key={variant} blocks={blocks} active={active} onActive={setActive} exploded={exploded} anatomy={ANATOMY.has(id)} />
         <div className="pointer-events-none absolute left-8 top-7">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{ANATOMY.has(id) ? "Anatomy" : "Generic architecture"}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">{ANATOMY.has(id) ? "Anatomy" : "Generic architecture"}</p>
           <p className="mt-1 text-[13px] text-muted">Hover or use the arrow keys to inspect a block</p>
         </div>
         <div className="absolute right-6 top-6 flex gap-2">
@@ -117,7 +117,7 @@ export function CategoryView({ id }: { id: string }) {
                     setActive(null);
                     setFocusIndex(-1);
                   }}
-                  className={`h-8 rounded-full px-3 capitalize ${variant === v ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
+                  className={`h-8 rounded-[9px] px-3 capitalize ${variant === v ? "bg-copper text-white" : "text-muted hover:text-ink"}`}
                 >
                   {v}
                 </button>
@@ -127,7 +127,7 @@ export function CategoryView({ id }: { id: string }) {
           <button
             type="button"
             onClick={() => setExploded((e) => !e)}
-            className="flex h-9 items-center gap-2 rounded-full border border-line-strong bg-card/80 px-3.5 text-[13px] backdrop-blur hover:border-ink"
+            className="flex h-9 items-center gap-2 lift rounded-[10px] border border-line bg-card/80 px-3.5 text-[13px] backdrop-blur hover:border-line-strong hover:bg-raised"
             aria-pressed={exploded}
           >
             {exploded ? <Minimize2 size={15} strokeWidth={1.5} /> : <Layers size={15} strokeWidth={1.5} />}
@@ -158,7 +158,7 @@ export function CategoryView({ id }: { id: string }) {
                     setActive(b.id);
                     setFocusIndex(i);
                   }}
-                  className={`rounded-full border px-2.5 py-1 text-[12px] transition-colors ${active === b.id ? "border-copper bg-copper text-paper" : "border-line bg-card/80 text-muted hover:text-ink"}`}
+                  className={`rounded-[10px] border px-2.5 py-1 text-[12px] transition-colors ${active === b.id ? "border-copper bg-copper text-white" : "border-line bg-card/80 text-muted hover:text-ink"}`}
                 >
                   {b.name}
                 </button>
@@ -171,15 +171,15 @@ export function CategoryView({ id }: { id: string }) {
 
       <section className="flex min-h-0 flex-col px-10 pb-8 pt-8">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-full border border-line">
+          <span className="grid h-10 w-10 place-items-center rounded-[10px] border border-line">
             <CategoryIcon name={category.icon} size={20} />
           </span>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-peri">Device{id === "drones" ? " · 12 parts" : model ? ` · ${model.parts.length} parts` : ` · ${blocks.length} blocks`}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-champagne">Device{id === "drones" ? " · 12 parts" : model ? ` · ${model.parts.length} parts` : ` · ${blocks.length} blocks`}</p>
         </div>
         <h1 className="mt-4 font-serif text-[52px] leading-none">{category.name}</h1>
         <p className="mt-3 max-w-[460px] text-[15px] leading-relaxed text-muted">{category.description}</p>
 
-        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Starter builds</p>
+        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-faint">Starter builds</p>
         <div className="mt-3 flex min-h-0 flex-1 flex-col gap-3" data-arrows>
           {starters.map(({ t, report, fails, warns, count }) => (
             <button
@@ -189,14 +189,14 @@ export function CategoryView({ id }: { id: string }) {
                 loadTemplate(t.id);
                 router.push("/builder");
               }}
-              className="group flex flex-col rounded-[12px] border border-line bg-card p-5 text-left transition-colors hover:border-ink"
+              className="group flex flex-col rounded-[12px] border border-line bg-card p-5 text-left lift hover:border-line-strong"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="font-serif text-[26px] leading-tight">{t.name}</p>
                   <p className="mt-1 text-[13px] leading-snug text-muted">{t.description}</p>
                 </div>
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line-strong transition-colors group-hover:border-ink group-hover:bg-copper-hover group-hover:text-white">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-line transition-colors group-hover:border-copper group-hover:bg-copper-hover group-hover:text-white">
                   <ArrowRight size={16} strokeWidth={1.5} />
                 </span>
               </div>
@@ -222,9 +222,9 @@ export function CategoryView({ id }: { id: string }) {
 
 function VariantToggle({ variant, onChange }: { variant: "phone" | "laptop"; onChange: (v: "phone" | "laptop") => void }) {
   return (
-    <div className="glass absolute right-6 top-6 flex rounded-full border border-line p-0.5 text-[12px]" role="radiogroup" aria-label="Device">
+    <div className="glass absolute right-6 top-6 flex rounded-[12px] border border-line p-0.5 text-[12px]" role="radiogroup" aria-label="Device">
       {(["phone", "laptop"] as const).map((v) => (
-        <button key={v} type="button" role="radio" aria-checked={variant === v} onClick={() => onChange(v)} className={`rounded-full px-3.5 py-1.5 capitalize transition ${variant === v ? "bg-copper text-white" : "text-muted hover:text-ink"}`}>
+        <button key={v} type="button" role="radio" aria-checked={variant === v} onClick={() => onChange(v)} className={`rounded-[9px] px-3.5 py-1.5 capitalize transition ${variant === v ? "bg-copper text-white" : "text-muted hover:text-ink"}`}>
           {v}
         </button>
       ))}

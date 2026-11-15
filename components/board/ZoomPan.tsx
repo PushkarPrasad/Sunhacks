@@ -40,7 +40,7 @@ export function ZoomPan({ children, dark = false }: { children: ReactNode; dark?
     };
   }, []);
 
-  const btn = `grid h-9 w-9 place-items-center ${dark ? "hover:bg-paper/10" : "hover:bg-line/60"}`;
+  const btn = `grid h-9 w-9 place-items-center ${dark ? "hover:bg-raised" : "hover:bg-line/60"}`;
   return (
     <div
       ref={root}
@@ -59,7 +59,7 @@ export function ZoomPan({ children, dark = false }: { children: ReactNode; dark?
         {children}
       </div>
       <div
-        className={`absolute bottom-4 right-4 flex flex-col overflow-hidden rounded-full border shadow-[var(--shadow-float)] ${dark ? "border-paper/15 bg-pcb/90 text-paper" : "border-line bg-card/90"}`}
+        className={`absolute bottom-4 right-4 flex flex-col overflow-hidden rounded-[12px] border shadow-[var(--shadow-float)] ${dark ? "border-line bg-card/90 text-ink" : "border-line bg-card/90"}`}
         onPointerDown={(e) => e.stopPropagation()}
       >
         <button type="button" aria-label="Zoom in" className={btn} onClick={() => zoomAt(1.25)}>

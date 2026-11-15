@@ -76,7 +76,7 @@ export function pcbTexture(seed: number, mask = "#101418", label = ""): THREE.Ca
     g.fill();
   }
   if (label) {
-    g.fillStyle = "rgba(236,234,245,0.85)";
+    g.fillStyle = "rgba(238,244,240,0.85)";
     g.font = "bold 26px monospace";
     g.fillText(label, 24, 490);
   }
@@ -89,17 +89,17 @@ export function batteryLabel(lines: string[]): THREE.CanvasTexture {
   g.fillStyle = "#16161f";
   g.fillRect(0, 0, 1024, 512);
   const grad = g.createLinearGradient(0, 0, 1024, 0);
-  grad.addColorStop(0, "#7c5cff");
-  grad.addColorStop(1, "#3d7bff");
+  grad.addColorStop(0, "#0f9d6b");
+  grad.addColorStop(1, "#0a6b49");
   g.fillStyle = grad;
   g.fillRect(0, 0, 1024, 120);
   g.fillStyle = "#ffffff";
   g.font = "bold 72px sans-serif";
   g.fillText(lines[0] ?? "", 40, 90);
-  g.fillStyle = "#eceaf5";
+  g.fillStyle = "#eef4f0";
   g.font = "52px monospace";
   lines.slice(1).forEach((l, i) => g.fillText(l, 40, 210 + i * 70));
-  g.fillStyle = "#a3a1b8";
+  g.fillStyle = "#9bb3a7";
   g.font = "26px sans-serif";
   g.fillText("Do not puncture, short or charge unattended. Balance charge only.", 40, 470);
   return finish(c);

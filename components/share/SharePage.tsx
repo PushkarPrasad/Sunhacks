@@ -40,7 +40,7 @@ function ShareLoader() {
   return (
     <div className="grid h-full place-items-center px-10">
       <div className="w-full max-w-[560px] text-center">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Shared build</p>
+        <p className="eyebrow">Shared build</p>
         <h1 className="mt-3 font-serif text-[56px] leading-none">{shared.name}</h1>
         <p className="mt-4 text-[15px] text-muted">
           {shared.instances.length} modules · {shared.wires.length} wires · ${cost.toFixed(2)} in parts
@@ -59,7 +59,7 @@ function ShareLoader() {
             loadBuild({ ...shared, id: `copy_${Date.now().toString(36)}` });
             router.push("/builder");
           }}
-          className="mt-8 inline-flex h-11 items-center rounded-full bg-copper px-6 text-[14px] text-white hover:bg-copper-hover disabled:opacity-50"
+          className="mt-8 inline-flex h-11 items-center rounded-[10px] bg-copper shadow-[var(--shadow-btn)] px-6 text-[14px] text-white hover:bg-copper-hover disabled:opacity-50"
         >
           Open a copy in the builder
         </button>

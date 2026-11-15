@@ -54,7 +54,7 @@ export function Palette() {
   return (
     <aside className="flex h-full min-h-0 flex-col border-r border-line bg-paper" aria-label="Parts palette">
       <div className="px-4 pt-4">
-        <label className="flex h-9 items-center gap-2 rounded-full border border-line bg-card px-3 focus-within:border-ink">
+        <label className="flex h-9 items-center gap-2 rounded-[10px] border border-line bg-card px-3 focus-within:border-ink">
           <Search size={15} strokeWidth={1.5} className="text-muted" />
           <input
             value={query}
@@ -95,7 +95,7 @@ export function Palette() {
           );
         })}
       </div>
-      <p className="px-4 pb-2 pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+      <p className="px-4 pb-2 pt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
         {query ? `${items.length} results` : `${TABS.find((t) => t.id === tab)!.label} · ${items.length}`}
       </p>
       <div ref={listRef} className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-hidden px-3" role="tabpanel">

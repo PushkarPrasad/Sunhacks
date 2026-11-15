@@ -37,7 +37,7 @@ function Stepper({ label = true }: { label?: boolean }) {
   const cap = useMemo(() => block(0.423, 0.423, 0.07, 0.05), []);
   const shaft = useMemo(() => roundCyl(0.025, 0.24, 0.004, 12), []);
   const boss = useMemo(() => roundCyl(0.11, 0.02, 0.005, 32), []);
-  const lab = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["STEPPER  1.8°", "42 mm  1.5 A"], { bg: "#e8e6f2", fg: "#1b1a26", w: 256, h: 96, size: 22 }), roughness: 0.5 }), []);
+  const lab = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["STEPPER  1.8°", "42 mm  1.5 A"], { bg: "#eef4f0", fg: "#1b1a26", w: 256, h: 96, size: 22 }), roughness: 0.5 }), []);
   return (
     <Group>
       <mesh geometry={body} material={MAT.blackSteel()} rotation={[Math.PI / 2, 0, 0]} />
@@ -110,7 +110,7 @@ function XAxis() {
       <Group position={[-FX + 0.45, 0, -0.25]} rotation={[0, 0, Math.PI / 2]}>
         <Stepper label={false} />
       </Group>
-      <mesh geometry={carriage} material={MAT.aluminum("#4f43a6")} position={[0.3, -0.05, 0.14]} />
+      <mesh geometry={carriage} material={MAT.aluminum("#0a6b49")} position={[0.3, -0.05, 0.14]} />
     </Group>
   );
 }
@@ -198,14 +198,14 @@ function Bed() {
       <Instances geo={knob} mat={MAT.plasticMatte("#e3c54a")} at={corners.map(([x, z]) => ({ p: [x, -0.35, z] as V3 }))} />
       <mesh geometry={plateGeo} material={MAT.aluminum("#c3c6cd")} rotation={[-Math.PI / 2, 0, 0]} />
       <mesh geometry={pei} material={peiMat} position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]} />
-      <mesh geometry={print} material={MAT.printed("#7c5cff")} position={[0.3, 0.025, -0.1]} />
+      <mesh geometry={print} material={MAT.printed("#0f9d6b")} position={[0.3, 0.025, -0.1]} />
     </Group>
   );
 }
 
 function Control() {
   const box = useMemo(() => block(1.0, 0.5, 0.3, 0.05), []);
-  const screenTex = useMemo(() => labelTexture(["Printing  64%", "Nozzle 215°C  Bed 60°C", "Layer 112 / 175"], { bg: "#0d1530", fg: "#a5b4fc", w: 512, h: 256, size: 40 }), []);
+  const screenTex = useMemo(() => labelTexture(["Printing  64%", "Nozzle 215°C  Bed 60°C", "Layer 112 / 175"], { bg: "#08140f", fg: "#c8a96a", w: 512, h: 256, size: 40 }), []);
   const screenMat = useMemo(() => MAT.screen(screenTex, "printer-lcd"), [screenTex]);
   const knob = useMemo(() => roundCyl(0.06, 0.08, 0.02, 24), []);
   const psu = useMemo(() => block(1.15, 0.5, 0.95, 0.03), []);
@@ -246,7 +246,7 @@ function Spool() {
   const filament = useMemo(() => roundCyl(0.92, 0.62, 0.05, 72), []);
   const arm = useMemo(() => roundCyl(0.06, 1.0, 0.01, 16), []);
   const bowden = useMemo(() => sagCable([0, TOPY + 0.75, 0.1], [0.3, GANTRY_Y + 1.25, 0.4], 0.4, 0.035), []);
-  const fil = useMemo(() => new THREE.MeshPhysicalMaterial({ color: "#7c5cff", roughness: 0.3, clearcoat: 0.6, sheen: 0.5 }), []);
+  const fil = useMemo(() => new THREE.MeshPhysicalMaterial({ color: "#0f9d6b", roughness: 0.3, clearcoat: 0.6, sheen: 0.5 }), []);
   return (
     <Group>
       <mesh geometry={arm} material={MAT.aluminum("#9da2ac")} position={[0, TOPY + 0.3, 0.2]} rotation={[Math.PI / 2, 0, 0]} />

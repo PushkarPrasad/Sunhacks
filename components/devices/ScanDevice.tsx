@@ -45,7 +45,7 @@ export function ScanDevice() {
         type="button"
         onClick={() => input.current?.click()}
         disabled={state.kind === "busy"}
-        className="flex h-10 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] transition-colors hover:border-ink disabled:opacity-60"
+        className="flex h-10 items-center gap-2 lift rounded-[10px] border border-line px-4 text-[13px] transition-colors hover:border-line-strong hover:bg-raised disabled:opacity-60"
       >
         <ScanLine size={16} strokeWidth={1.5} />
         {state.kind === "busy" ? "Scanning…" : "Scan a Device"}

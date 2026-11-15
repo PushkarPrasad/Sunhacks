@@ -5,16 +5,16 @@ import type { CircuitJson } from "./generate";
 // Design palette: charcoal board, copper traces, warm paper schematic.
 export function pcbSvg(cj: CircuitJson): string {
   return convertCircuitJsonToPcbSvg(cj as never, {
-    backgroundColor: "#0E0E16",
+    backgroundColor: "#08140F",
     includeVersion: false,
     colorOverrides: {
-      copper: { top: "#C9773C", bottom: "#5B4FA8" },
+      copper: { top: "#C9773C", bottom: "#4F8A73" },
       drill: "#0F1012",
       silkscreen: { top: "#E8E2D6", bottom: "#8E877B" },
       boardOutline: "#8E877B",
-      substrate: "#24272B",
-      soldermask: { top: "#24272B", bottom: "#24272B" },
-      courtyard: { top: "#3A3E44", bottom: "#3A3E44" },
+      substrate: "#0F1F18",
+      soldermask: { top: "#0E2A1F", bottom: "#0E2A1F" },
+      courtyard: { top: "#2C5243", bottom: "#2C5243" },
     },
   });
 }
@@ -46,21 +46,21 @@ export function schematicSvg(cj: CircuitJson): string {
     includeVersion: false,
     colorOverrides: {
       schematic: {
-        background: "#0E0E16",
-        component_body: "#1A1A2A",
-        component_outline: "#A5B4FC",
-        wire: "#9479FF",
-        junction: "#9479FF",
-        pin: "#A3A1B8",
-        pin_name: "#ECEAF5",
-        pin_number: "#6E6C85",
-        reference: "#ECEAF5",
-        value: "#A3A1B8",
-        net_name: "#A5B4FC",
-        label_local: "#ECEAF5",
-        label_global: "#ECEAF5",
-        label_background: "#1A1A2A",
-        no_connect: "#6E6C85",
+        background: "#08140F",
+        component_body: "#11231C",
+        component_outline: "#5E8C78",
+        wire: "#14B47C",
+        junction: "#14B47C",
+        pin: "#9BB3A7",
+        pin_name: "#EEF4F0",
+        pin_number: "#6B8579",
+        reference: "#EEF4F0",
+        value: "#9BB3A7",
+        net_name: "#C8A96A",
+        label_local: "#EEF4F0",
+        label_global: "#EEF4F0",
+        label_background: "#11231C",
+        no_connect: "#6B8579",
       },
     },
   });

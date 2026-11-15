@@ -39,14 +39,14 @@ function screenTexture(): THREE.Texture {
   c.height = h;
   const g = c.getContext("2d")!;
   const bg = g.createLinearGradient(0, 0, w, h);
-  bg.addColorStop(0, "#1c1446");
-  bg.addColorStop(0.45, "#3a2a9c");
-  bg.addColorStop(1, "#0d3a8a");
+  bg.addColorStop(0, "#06100c");
+  bg.addColorStop(0.45, "#0a6b49");
+  bg.addColorStop(1, "#0f3a2c");
   g.fillStyle = bg;
   g.fillRect(0, 0, w, h);
   const glow = g.createRadialGradient(w * 0.75, h * 0.25, 10, w * 0.75, h * 0.25, w * 0.8);
-  glow.addColorStop(0, "rgba(160,140,255,0.55)");
-  glow.addColorStop(1, "rgba(160,140,255,0)");
+  glow.addColorStop(0, "rgba(94,226,168,0.55)");
+  glow.addColorStop(1, "rgba(94,226,168,0)");
   g.fillStyle = glow;
   g.fillRect(0, 0, w, h);
   g.fillStyle = "#ffffff";
@@ -69,12 +69,12 @@ function screenTexture(): THREE.Texture {
   g.font = "400 32px system-ui, sans-serif";
   g.fillStyle = "rgba(255,255,255,0.8)";
   g.fillText("6 of 6 passing · 3.2 h battery", 92, 626);
-  g.fillStyle = "#3ddc97";
+  g.fillStyle = "#5ee2a8";
   g.beginPath();
   g.roundRect(92, 660, (w - 184) * 0.82, 18, 9);
   g.fill();
   // app grid
-  const colors = ["#f5b14c", "#3ddc97", "#ff6b6b", "#7c5cff", "#3d7bff", "#e8e6f2", "#a5b4fc", "#2bc0e4", "#ffd166", "#ef476f", "#06d6a0", "#8338ec", "#3a86ff", "#fb5607", "#ffbe0b", "#8ecae6"];
+  const colors = ["#e8b04b", "#5ee2a8", "#f0706a", "#0f9d6b", "#0a6b49", "#eef4f0", "#c8a96a", "#2bc0e4", "#ffd166", "#ef476f", "#06d6a0", "#0a6b49", "#14b47c", "#fb5607", "#ffbe0b", "#8ecae6"];
   for (let i = 0; i < 16; i++) {
     const x = 70 + (i % 4) * 158;
     const y = 800 + Math.floor(i / 4) * 160;
@@ -93,7 +93,7 @@ function screenTexture(): THREE.Texture {
   g.roundRect(40, h - 220, w - 80, 170, 56);
   g.fill();
   for (let i = 0; i < 4; i++) {
-    g.fillStyle = ["#3ddc97", "#3d7bff", "#f5b14c", "#e8e6f2"][i];
+    g.fillStyle = ["#5ee2a8", "#0a6b49", "#e8b04b", "#eef4f0"][i];
     g.beginPath();
     g.roundRect(78 + i * 158, h - 192, 112, 112, 30);
     g.fill();
@@ -180,7 +180,7 @@ function Lens({ r }: { r: number }) {
   );
   const barrel = useMemo(() => roundCyl(r * 0.8, r * 0.5, r * 0.05, 40), [r]);
   const element = useMemo(() => lathe([[0, r * 0.05], [r * 0.6, 0.0], [r * 0.6, -r * 0.03], [0, -r * 0.01]], 40), [r]);
-  const coat = useMemo(() => new THREE.MeshPhysicalMaterial({ color: "#1b1340", metalness: 0.2, roughness: 0.04, clearcoat: 1, iridescence: 1, iridescenceIOR: 1.7, iridescenceThicknessRange: [200, 600] }), []);
+  const coat = useMemo(() => new THREE.MeshPhysicalMaterial({ color: "#10261d", metalness: 0.2, roughness: 0.04, clearcoat: 1, iridescence: 1, iridescenceIOR: 1.7, iridescenceThicknessRange: [200, 600] }), []);
   return (
     <Group rotation={[-Math.PI / 2, 0, 0]}>
       <mesh geometry={ring} material={MAT.aluminum("#9aa0ab")} />

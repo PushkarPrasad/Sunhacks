@@ -7,7 +7,7 @@ export function Pager({ page, pages, onChange, label = "page" }: { page: number;
   if (pages <= 1) return null;
   return (
     <div className="flex items-center justify-center gap-2" aria-label={`${label} navigation`}>
-      <button type="button" aria-label={`Previous ${label}`} disabled={page === 0} onClick={() => onChange(page - 1)} className="grid h-7 w-7 place-items-center rounded-full text-muted hover:bg-line/60 disabled:opacity-30">
+      <button type="button" aria-label={`Previous ${label}`} disabled={page === 0} onClick={() => onChange(page - 1)} className="grid h-7 w-7 place-items-center rounded-[10px] text-muted hover:bg-line/60 disabled:opacity-30">
         <ChevronLeft size={16} strokeWidth={1.5} />
       </button>
       <div className="flex items-center gap-1.5">
@@ -22,7 +22,7 @@ export function Pager({ page, pages, onChange, label = "page" }: { page: number;
           />
         ))}
       </div>
-      <button type="button" aria-label={`Next ${label}`} disabled={page >= pages - 1} onClick={() => onChange(page + 1)} className="grid h-7 w-7 place-items-center rounded-full text-muted hover:bg-line/60 disabled:opacity-30">
+      <button type="button" aria-label={`Next ${label}`} disabled={page >= pages - 1} onClick={() => onChange(page + 1)} className="grid h-7 w-7 place-items-center rounded-[10px] text-muted hover:bg-line/60 disabled:opacity-30">
         <ChevronRight size={16} strokeWidth={1.5} />
       </button>
     </div>

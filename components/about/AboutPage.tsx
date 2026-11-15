@@ -5,10 +5,10 @@ import { BRAND } from "@/lib/brand";
 
 // Team photos: drop a square image at /public/team/<first-name>.jpg and set `photo` below.
 const TEAM: { name: string; role: string; hue: string; photo?: string }[] = [
-  { name: "Aayoush Iyer", role: "Role coming soon", hue: "from-[#7C5CFF] to-[#3D7BFF]" },
-  { name: "Meghana Yerragovula", role: "Role coming soon", hue: "from-[#3D7BFF] to-[#A5B4FC]" },
-  { name: "Nicole Galvan Ayon", role: "Role coming soon", hue: "from-[#9479FF] to-[#5B45D9]" },
-  { name: "Pushkar Prasad", role: "Role coming soon", hue: "from-[#5B7CFF] to-[#7C5CFF]" },
+  { name: "Aayoush Iyer", role: "Role coming soon", hue: "from-[#0F9D6B] to-[#0A6B49]" },
+  { name: "Meghana Yerragovula", role: "Role coming soon", hue: "from-[#0A6B49] to-[#C8A96A]" },
+  { name: "Nicole Galvan Ayon", role: "Role coming soon", hue: "from-[#14B47C] to-[#0A6B49]" },
+  { name: "Pushkar Prasad", role: "Role coming soon", hue: "from-[#14B47C] to-[#0F9D6B]" },
 ];
 
 const initials = (n: string) =>
@@ -22,7 +22,7 @@ export function AboutPage() {
   return (
     <div className="mx-auto grid h-full max-w-[1240px] grid-cols-[1.05fr_1fr] items-center gap-16 px-12">
       <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 200, damping: 26 }}>
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-peri">About {BRAND.name}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-champagne">About {BRAND.name}</p>
         <h1 className="mt-5 font-serif text-[64px] leading-[0.98] tracking-[-0.015em]">
           The tool we kept
           <br />
@@ -41,7 +41,7 @@ export function AboutPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12 + k * 0.08, type: "spring", stiffness: 200, damping: 26 }}
-            className="rounded-[18px] border border-line bg-card/70 p-6 transition duration-300 hover:-translate-y-0.5 hover:border-copper/50"
+            className="rounded-[18px] border border-line bg-card/70 p-6 lift hover:border-line-strong"
           >
             {m.photo ? (
               // eslint-disable-next-line @next/next/no-img-element

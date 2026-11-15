@@ -63,7 +63,7 @@ function Cuff() {
   return (
     <Group position={[0.15, 0.8, 1.95]} scale={[0.82, 0.56, 1]}>
       <mesh geometry={band} material={MAT.knit("#1b1b22")} rotation={[Math.PI / 2, 0, 0]} />
-      <mesh geometry={strap} material={MAT.rubber("#4f43a6")} position={[0, 0.99, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[1, 1, 1.6]} />
+      <mesh geometry={strap} material={MAT.rubber("#16382c")} position={[0, 0.99, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[1, 1, 1.6]} />
     </Group>
   );
 }
@@ -85,10 +85,10 @@ function Board() {
       <mesh geometry={jack} material={MAT.plasticMatte("#111114")} position={[-31 * S, -14 * S, 6.3 * S]} />
       <Instances geo={header} mat={MAT.plasticMatte("#121214")} at={[{ p: [-6 * S, 25 * S, 5 * S], r: [0, 0, Math.PI / 2] }, { p: [16 * S, 25 * S, 5 * S], r: [0, 0, Math.PI / 2] }, { p: [-2 * S, -25 * S, 5 * S], r: [0, 0, Math.PI / 2] }, { p: [20 * S, -25 * S, 5 * S], r: [0, 0, Math.PI / 2] }]} />
       <mesh geometry={button} material={MAT.steel()} position={[-28 * S, -2 * S, 2.3 * S]} />
-      <mesh position={[24 * S, 8 * S, 1.2 * S]} material={MAT.led("#3ddc97")}>
+      <mesh position={[24 * S, 8 * S, 1.2 * S]} material={MAT.led("#5ee2a8")}>
         <boxGeometry args={[2 * S, 1.2 * S, 0.8 * S]} />
       </mesh>
-      <mesh position={[24 * S, 4 * S, 1.2 * S]} material={MAT.led("#f5b14c")}>
+      <mesh position={[24 * S, 4 * S, 1.2 * S]} material={MAT.led("#e8b04b")}>
         <boxGeometry args={[2 * S, 1.2 * S, 0.8 * S]} />
       </mesh>
     </Group>
@@ -109,7 +109,7 @@ function Mount() {
 
 function Battery() {
   const cell = useMemo(() => block(30 * S, 48 * S, 7 * S, 2 * S), []);
-  const label = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["LiPo 1S", "3.7 V  600 mAh"], { bg: "#1b1d2a", fg: "#e8e6f2", w: 256, h: 128, size: 34 }), roughness: 0.45 }), []);
+  const label = useMemo(() => new THREE.MeshStandardMaterial({ map: labelTexture(["LiPo 1S", "3.7 V  600 mAh"], { bg: "#1b1d2a", fg: "#eef4f0", w: 256, h: 128, size: 34 }), roughness: 0.45 }), []);
   const charger = useMemo(() => plate(26 * S, 17 * S, 1.6 * S, { r: 1 * S, bevel: 0.3 * S }), []);
   return (
     <Group position={[0.95, 1.0, 1.25]} rotation={[0.25, 0, -0.35]}>
@@ -129,7 +129,7 @@ function Switch() {
   return (
     <Group position={[-0.62, 0.86, -0.9]} rotation={[0, 0, Math.PI / 2.4]}>
       <mesh geometry={body} material={MAT.plasticMatte("#141418")} rotation={[-Math.PI / 2, 0, 0]} />
-      <mesh geometry={cap} material={MAT.plasticGloss("#7c5cff")} position={[0, 0.1, 0]} />
+      <mesh geometry={cap} material={MAT.plasticGloss("#0a6b49")} position={[0, 0.1, 0]} />
     </Group>
   );
 }
@@ -144,7 +144,7 @@ function Wiring() {
       <mesh geometry={toSwitch} material={MAT.silicone("#e3c54a")} />
       <mesh geometry={toBattery} material={MAT.silicone("#c23a3a")} />
       <mesh geometry={toBattery2} material={MAT.silicone("#141417")} />
-      <Instances geo={stitches} mat={MAT.knit("#7c5cff")} at={[{ p: [-0.38, BACK_Y - 0.06, -0.55], r: [0, 0.6, 0] }, { p: [-0.52, 1.13, -0.7], r: [0, 0.6, 0] }]} />
+      <Instances geo={stitches} mat={MAT.knit("#0a6b49")} at={[{ p: [-0.38, BACK_Y - 0.06, -0.55], r: [0, 0.6, 0] }, { p: [-0.52, 1.13, -0.7], r: [0, 0.6, 0] }]} />
     </Group>
   );
 }
