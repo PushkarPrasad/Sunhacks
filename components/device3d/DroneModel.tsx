@@ -57,12 +57,12 @@ function useMaterials() {
     const coil = coilTexture();
     return {
       carbon: new THREE.MeshPhysicalMaterial({ map: carbon, roughness: 0.38, metalness: 0.1, clearcoat: 0.8, clearcoatRoughness: 0.25 }),
-      anodViolet: new THREE.MeshStandardMaterial({ color: "#0a6b49", metalness: 0.85, roughness: 0.32 }),
+      anodViolet: new THREE.MeshStandardMaterial({ color: "#0b4f38", metalness: 0.85, roughness: 0.32 }),
       anodDark: new THREE.MeshStandardMaterial({ color: "#262b29", metalness: 0.8, roughness: 0.4 }),
       alu: new THREE.MeshStandardMaterial({ color: "#b9bcc6", metalness: 0.95, roughness: 0.28 }),
       copper: new THREE.MeshStandardMaterial({ map: coil, color: "#ffffff", metalness: 0.9, roughness: 0.35 }),
       gold: new THREE.MeshStandardMaterial({ color: "#d9ad4f", metalness: 1, roughness: 0.22 }),
-      prop: new THREE.MeshPhysicalMaterial({ color: "#6f8a7f", transmission: 0.55, thickness: 0.05, roughness: 0.25, ior: 1.5, transparent: true, opacity: 0.92 }),
+      prop: new THREE.MeshPhysicalMaterial({ color: "#5f7069", transmission: 0.55, thickness: 0.05, roughness: 0.25, ior: 1.5, transparent: true, opacity: 0.92 }),
       blackPlastic: new THREE.MeshStandardMaterial({ color: "#16161c", roughness: 0.65 }),
       rubber: new THREE.MeshStandardMaterial({ color: "#1e1e24", roughness: 0.95 }),
       chip: new THREE.MeshStandardMaterial({ color: "#121218", roughness: 0.35, metalness: 0.2 }),

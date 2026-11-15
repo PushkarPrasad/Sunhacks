@@ -38,7 +38,7 @@ export function QuadView({ build, data }: { build: Build; data: CircuitResult })
 
   const pcbId = selected ? maps.pcb.get(selected) : undefined;
   const schId = selected ? maps.sch.get(selected) : undefined;
-  const pcbCss = pcbId ? `[data-pcb-component-id="${pcbId}"] { stroke: #F4E3A1 !important; fill: #F4E3A1 !important; }` : "";
+  const pcbCss = pcbId ? `[data-pcb-component-id="${pcbId}"] { stroke: #14B47C !important; fill: rgb(15 157 107 / 0.35) !important; }` : "";
   const schCss = schId ? `[data-schematic-component-id="${schId}"] { stroke: #14B47C !important; } [data-schematic-component-id="${schId}"] rect { fill: #0E2A20 !important; }` : "";
 
   const onPick = (path: EventTarget[], kind: "pcb" | "sch") => {
