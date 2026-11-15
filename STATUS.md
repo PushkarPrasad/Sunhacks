@@ -5,6 +5,7 @@
   `http://localhost:3000/builder?hoop=1`. Drop or choose a build `.json` (Save build file, the download icon next to
   Upload, makes one), press on the ball, drag and let go so it drops through the hoop. "Just upload it" skips the game.
 - **Glove tab:** top nav, Glove (`/glove`). Connect Bluetooth (or USB); the camera starts in the same click.
+- **Calibration tab:** top nav, Calibrate (`/calibrate`).
 - **Combined test page:** `http://localhost:3000/test/glove-camera.html` (also linked from the Glove tab, "Test page").
 
 # Status: V2 (owner's reduced list) done

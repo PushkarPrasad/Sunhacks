@@ -16,6 +16,7 @@ export const NAV = [
   { path: "/builder", label: "Builder" },
   { path: "/board", label: "Board" },
   { path: "/glove", label: "Glove" },
+  { path: "/calibrate", label: "Calibrate" },
   { path: "/about", label: "About" },
 ] as const;
 

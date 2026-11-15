@@ -28,7 +28,7 @@ export function TopBar() {
             aria-current={i === current ? "page" : undefined}
             className={`relative rounded-md px-3 py-1.5 text-[13px] transition-colors ${i === current ? "text-ink" : "text-muted hover:text-ink"}`}
           >
-            {f.label === "Glove" || f.label === "About" ? f.label : t(`nav.${f.label}`)}
+            {f.label === "Glove" || f.label === "Calibrate" || f.label === "About" ? f.label : t(`nav.${f.label}`)}
             {i === current && <span className="absolute inset-x-3 -bottom-[11px] h-[2px] rounded-full bg-copper" />}
           </Link>
         ))}

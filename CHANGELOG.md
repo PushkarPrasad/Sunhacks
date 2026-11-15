@@ -8,6 +8,7 @@
 - Home "Drive it with your hands": the box-and-ovals drawing is replaced by a realistic 3D hand (WebXR generic hand, MIT) posed per gesture, with a mini drone for grab + twist and live-landmark mirroring.
 - Devices: new category order with Drones first, Start blank button, Phone/Laptop toggle, nine new starter builds, 12 V adapter part; tablets, projectors, consoles and cameras moved behind More (Coming Soon).
 - Hoop Upload is findable: "Upload" button with a basketball icon in the Builder toolbar and `/builder?hoop=1`; Playwright covers the throw.
+- Calibration tab: three-step wizard (keep still, tilt to each side, grab and twist) with a green check per step.
 - Glove tab rebuilt: live roll/pitch/yaw bars, 3D board preview, last 8 events, Blink LED, Reconnect.
 
 ## V2

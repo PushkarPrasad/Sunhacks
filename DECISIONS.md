@@ -41,8 +41,9 @@ Judgment calls made while building, newest last.
 15. **V1 token names kept** (`paper`, `ink`, `copper`) with V2 values, so the palette swap touched one file.
 16. **Webcam preview removed**; hand tracking still turns on from Settings and shows only the ring cursor
     (the Calibration wizard, where the preview belongs, is deferred).
-17. **V3: no separate Calibration tab exists.** The sketch calibrates the gyro offset at power-on (keep still ~2 s), so the
-    Glove tab says so and offers Recenter instead of a calibration wizard.
+17. **V3: Calibration tab added at the owner's request** (`/calibrate`): a 3-step wizard (keep still 2 s within 3°,
+    tilt roll ±30° and pitch ±25° from that zero, grab + twist > 45°) on the shared glove/input store. Its logic is pure
+    (`lib/input/calibration.ts`) and unit-tested. The board still calibrates its gyro at power-on.
 18. **V3: fist held 450 ms = grab, shorter fist tap = collapse.** Both rules from the fusion table need the fist; the hold
     time separates them. A 150 ms gap is tolerated so a held fist does not drop mid-twist.
 19. **V3: the duplicate filter now ignores the source.** The spec says a second event of the same type from either
