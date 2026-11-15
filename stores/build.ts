@@ -7,6 +7,7 @@ import { templatesById } from "@/data/templates";
 import { buildFromTemplate, emptyBuild } from "@/lib/build/fromTemplate";
 import * as ops from "@/lib/build/ops";
 import { pinKey } from "@/lib/build/nets";
+import { freeSpot } from "@/lib/build/geometry";
 import type { Build, Fix, PinRef } from "@/lib/types";
 
 const getPart = (id: string) => partsById[id];
@@ -71,9 +72,8 @@ export const useBuild = create<BuildState>()(
         const part = getPart(partId);
         if (!part) return null;
         const { build } = get();
-        const px = x ?? Math.max(0, ...build.instances.map((i) => i.x + 240), 0) + (build.instances.length ? 0 : 40);
-        const py = y ?? (build.instances.length ? 40 : 40);
-        const { build: next, id } = ops.addInstance(build, part, px, py);
+        const spot = freeSpot(build.instances, getPart, part, x ?? 40, y ?? 40);
+        const { build: next, id } = ops.addInstance(build, part, spot.x, spot.y);
         get().commit(next);
         set({ selection: { kind: "instance", id } });
         return id;

@@ -46,8 +46,9 @@ export function Palette() {
   const shown = items.slice(current * perPage, current * perPage + perPage);
 
   const add = (id: string) => {
+    // The store finds free space near the middle of the view.
     const c = useView.getState().center();
-    addPart(id, Math.round((c.x - 90 + (Math.random() * 60 - 30)) / 8) * 8, Math.round((c.y - 60 + (Math.random() * 60 - 30)) / 8) * 8);
+    addPart(id, c.x - 90, c.y - 80);
   };
 
   return (

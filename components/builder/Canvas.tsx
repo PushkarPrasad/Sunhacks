@@ -293,6 +293,7 @@ export function Canvas({ report }: { report: ChecksReport }) {
         onApply={(f) => f.fix && applyFix(f.id, f.fix)}
         onDismiss={(f) => dismiss(f.id)}
         onHover={setHoverFinding}
+        muted={!!pendingPin}
       />
 
       {/* Zoom + notes controls */}

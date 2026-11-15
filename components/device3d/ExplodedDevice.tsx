@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { ContactShadows, Edges, OrbitControls, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
+import { Group } from "@/lib/three/Group";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { ArchitectureBlock } from "@/lib/types";
 import { onInput } from "@/lib/input/bus";
@@ -54,7 +55,7 @@ function Block({ block, t, active, onActive }: { block: ArchitectureBlock; t: Re
   };
 
   return (
-    <group ref={group} rotation={block.rotation ?? [0, 0, 0]}>
+    <Group ref={group} rotation={block.rotation ?? [0, 0, 0]}>
       {block.shape === "rounded" ? (
         <RoundedBox args={[x, y, z]} radius={Math.min(x, y, z) * 0.35} smoothness={4} {...handlers}>
           {material}
@@ -73,7 +74,7 @@ function Block({ block, t, active, onActive }: { block: ArchitectureBlock; t: Re
           {edges}
         </mesh>
       )}
-    </group>
+    </Group>
   );
 }
 
@@ -118,12 +119,12 @@ function Scene({ blocks, active, onActive, exploded }: Props) {
       <ambientLight intensity={0.75} />
       <directionalLight position={[5, 9, 6]} intensity={1.6} />
       <directionalLight position={[-6, 4, -4]} intensity={0.45} />
-      <group position={[0, -0.6, 0]}>
+      <Group position={[0, -0.6, 0]}>
         {blocks.map((b) => (
           <Block key={b.id} block={b} t={t} active={active === b.id} onActive={onActive} />
         ))}
         <ContactShadows position={[0, minY - 0.25, 0]} opacity={0.28} scale={12} blur={2.6} far={6} color="#16181C" />
-      </group>
+      </Group>
       <OrbitControls ref={controls} enablePan={false} enableDamping dampingFactor={0.08} minDistance={4} maxDistance={16} minPolarAngle={0.2} maxPolarAngle={Math.PI / 2.05} />
     </>
   );

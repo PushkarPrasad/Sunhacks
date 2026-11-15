@@ -6,6 +6,7 @@ import { parts, partsById } from "@/data/parts";
 import { suggestionsFor, type Suggestion } from "@/data/compat";
 import type { Instance, Part } from "@/lib/types";
 import { pinKey } from "@/lib/build/nets";
+import { setAddress as setInstanceAddress } from "@/lib/build/ops";
 import { useBuild } from "@/stores/build";
 import { Pager } from "@/components/ui/Pager";
 import { Sparkline } from "@/components/ui/Sparkline";
@@ -32,7 +33,7 @@ function Overview() {
   const build = useBuild((s) => s.build);
   const total = build.instances.reduce((s, i) => s + (partsById[i.partId]?.priceUSD ?? 0), 0);
   const tips = [
-    ["Click a pin, then another pin", "Draw a wire"],
+    ["Pin → pin", "Draw a wire"],
     ["Drag a module", "Move it"],
     ["R", "Rotate the selection"],
     ["Delete", "Remove the selection"],
@@ -184,8 +185,6 @@ interface History {
 }
 
 function Specs({ inst, part }: { inst: Instance; part: Part }) {
-  const commit = useBuild((s) => s.commit);
-  const build = useBuild((s) => s.build);
   const [price, setPrice] = useState<PriceInfo | null>(null);
   const [history, setHistory] = useState<History | null>(null);
 
@@ -205,8 +204,10 @@ function Specs({ inst, part }: { inst: Instance; part: Part }) {
   }, [part.id]);
 
   const addr = inst.config?.i2cAddress ?? part.i2cAddresses?.default;
-  const setAddress = (a: string) =>
-    commit({ ...build, instances: build.instances.map((i) => (i.id === inst.id ? { ...i, config: { ...i.config, i2cAddress: a } } : i)), updatedAt: Date.now() });
+  const setAddress = (a: string) => {
+    const st = useBuild.getState();
+    st.commit(setInstanceAddress(st.build, inst.id, a));
+  };
 
   return (
     <div className="flex h-full flex-col">

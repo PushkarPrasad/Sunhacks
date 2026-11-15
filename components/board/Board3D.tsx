@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { ContactShadows, Edges, OrbitControls, Text } from "@react-three/drei";
 import * as THREE from "three";
+import { Group } from "@/lib/three/Group";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { partsById } from "@/data/parts";
 import type { Build } from "@/lib/types";
@@ -51,6 +52,7 @@ function useBoardModel(cj: El[], build: Build) {
         fpH: c.height,
         body: dims ? { w: rotated ? dims.h : dims.w, h: rotated ? dims.w : dims.h, d: Math.min(dims.d, 6) } : null,
         cable: part?.mount === "cable",
+        passive: part?.role === "passive",
       };
     });
     return { board, holes, mounting, segs, modules };
@@ -127,7 +129,7 @@ function Scene({ cj, build }: { cj: El[]; build: Build }) {
       <ambientLight intensity={0.7} />
       <directionalLight position={[4, 10, 6]} intensity={1.5} />
       <directionalLight position={[-6, 5, -5]} intensity={0.4} />
-      <group>
+      <Group>
         <mesh>
           <boxGeometry args={[bw, BOARD_T, bh]} />
           <meshStandardMaterial color="#24272B" roughness={0.75} />
@@ -148,21 +150,23 @@ function Scene({ cj, build }: { cj: El[]; build: Build }) {
           </mesh>
         ))}
         {m.modules.map((mod) => (
-          <group key={mod.label} position={[mod.x * S, BOARD_T / 2, -mod.y * S]}>
-            {/* header strip(s) */}
-            <mesh position={[0, (2.5 * S) / 2, 0]}>
-              <boxGeometry args={[Math.max(mod.fpW, 2.54) * S, 2.5 * S, Math.max(mod.fpH, 2.54) * S]} />
-              <meshStandardMaterial color="#16181C" roughness={0.6} transparent opacity={mod.body ? 0.95 : 1} />
-            </mesh>
+          <Group key={mod.label} position={[mod.x * S, BOARD_T / 2, -mod.y * S]}>
+            {/* header strip(s); passives solder straight to the board */}
+            {!mod.passive && (
+              <mesh position={[0, (2.5 * S) / 2, 0]}>
+                <boxGeometry args={[Math.max(mod.fpW, 2.54) * S, 2.5 * S, Math.max(mod.fpH, 2.54) * S]} />
+                <meshStandardMaterial color="#16181C" roughness={0.6} transparent opacity={mod.body ? 0.95 : 1} />
+              </mesh>
+            )}
             {mod.body && (
-              <mesh position={[0, HEADER + (mod.body.d * S) / 2, 0]}>
+              <mesh position={[0, (mod.passive ? 0 : HEADER) + (mod.body.d * S) / 2, 0]}>
                 <boxGeometry args={[mod.body.w * S, mod.body.d * S, mod.body.h * S]} />
                 <meshStandardMaterial color="#FBF9F5" roughness={0.85} />
                 <Edges color="#16181C" lineWidth={1} transparent opacity={0.35} />
               </mesh>
             )}
             <Text
-              position={[0, (mod.body ? HEADER + mod.body.d * S : 2.5 * S) + 0.012, 0]}
+              position={[0, (mod.body ? (mod.passive ? 0 : HEADER) + mod.body.d * S : 2.5 * S) + 0.012, 0]}
               rotation={[-Math.PI / 2, 0, 0]}
               fontSize={0.16}
               maxWidth={Math.max(0.8, (mod.body?.w ?? mod.fpW) * S * 0.95)}
@@ -172,9 +176,9 @@ function Scene({ cj, build }: { cj: El[]; build: Build }) {
             >
               {mod.label}
             </Text>
-          </group>
+          </Group>
         ))}
-      </group>
+      </Group>
       <ContactShadows position={[0, -0.4, 0]} opacity={0.3} scale={Math.max(bw, bh) * 2.2} blur={2.4} far={3} color="#16181C" />
       <OrbitControls ref={controls} enablePan={false} enableDamping dampingFactor={0.08} minDistance={3} maxDistance={30} maxPolarAngle={Math.PI / 2.1} />
     </>
@@ -185,7 +189,7 @@ export default function Board3D({ circuitJson, build }: { circuitJson: El[]; bui
   const board = circuitJson.find((e) => e.type === "pcb_board") as { width: number; height: number } | undefined;
   const span = Math.max(board?.width ?? 60, board?.height ?? 60) * S;
   return (
-    <Canvas camera={{ position: [span * 0.9, span * 1.0, span * 1.2], fov: 35 }} dpr={[1, 2]} gl={{ antialias: true, preserveDrawingBuffer: true }}>
+    <Canvas camera={{ position: [span * 1.15, span * 1.3, span * 1.6], fov: 35 }} dpr={[1, 2]} gl={{ antialias: true, preserveDrawingBuffer: true }}>
       <Scene cj={circuitJson} build={build} />
     </Canvas>
   );

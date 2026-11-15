@@ -141,8 +141,8 @@ export const categories: DeviceCategory[] = [
     blocks: [
       b("enclosure", "Chassis", "Base plate that carries motors and electronics.", "Acrylic plate", "rounded", [2.0, 0.08, 2.8], [0, 0.4, 0], [0, -0.5, 0], "shell"),
       b("motors", "Motors", "Gear motors that turn the wheels.", "N20 gear motors", "box", [1.4, 0.3, 0.4], [0, 0.25, -0.8], [0, -0.4, 0], "metal"),
-      b("wheel-l", "Wheel", "Rubber wheel on a motor shaft.", "N20 wheel", "cylinder", [0.9, 0.25, 0.9], [-1.15, 0.45, -0.8], [-0.7, 0, 0], "chip", [0, 0, HALF_PI]),
-      b("wheel-r", "Wheel", "Rubber wheel on a motor shaft.", "N20 wheel", "cylinder", [0.9, 0.25, 0.9], [1.15, 0.45, -0.8], [0.7, 0, 0], "chip", [0, 0, HALF_PI]),
+      b("wheel-l", "Left wheel", "Rubber wheel on a motor shaft.", "N20 wheel", "cylinder", [0.9, 0.25, 0.9], [-1.15, 0.45, -0.8], [-0.7, 0, 0], "chip", [0, 0, HALF_PI]),
+      b("wheel-r", "Right wheel", "Rubber wheel on a motor shaft.", "N20 wheel", "cylinder", [0.9, 0.25, 0.9], [1.15, 0.45, -0.8], [0.7, 0, 0], "chip", [0, 0, HALF_PI]),
       b("battery", "Battery", "Two lithium cells in series for the motors.", "2×18650 pack", "rounded", [1.0, 0.35, 0.8], [0, 0.62, 0.55], [0, 0.4, 0.2], "battery"),
       b("power", "Motor driver", "H-bridge that turns logic signals into motor current.", "TB6612FNG", "box", [0.45, 0.06, 0.45], [0.55, 0.47, -0.3], [0.4, 0.75, 0], "chip"),
       b("board", "Main board", "Controller board on standoffs.", "Carrier PCB", "box", [1.4, 0.04, 1.0], [0, 0.9, -0.3], [0, 0.95, 0], "board"),

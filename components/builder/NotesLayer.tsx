@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import type { Build, Finding, Part } from "@/lib/types";
 import { cardGeometry } from "@/lib/build/geometry";
 import { StickyNote } from "@/components/notes/StickyNote";
+import { useNoteTexts } from "@/lib/hooks/useNoteTexts";
 import type { View } from "./viewStore";
 
 const NOTE_W = 232;
@@ -18,10 +19,13 @@ interface Props {
   onApply: (f: Finding) => void;
   onDismiss: (f: Finding) => void;
   onHover: (f: Finding | null) => void;
+  /** While a wire is being drawn, notes fade and let clicks through to the pins underneath. */
+  muted?: boolean;
 }
 
 /** Sticky notes in screen space, pinned next to the part they are about. */
-export function NotesLayer({ findings, build, getPart, view, size, onApply, onDismiss, onHover }: Props) {
+export function NotesLayer({ findings, build, getPart, view, size, onApply, onDismiss, onHover, muted = false }: Props) {
+  const texts = useNoteTexts(findings);
   const placed = useMemo(() => {
     const rects: { x: number; y: number }[] = [];
     const byId = new Map(build.instances.map((i) => [i.id, i]));
@@ -54,10 +58,10 @@ export function NotesLayer({ findings, build, getPart, view, size, onApply, onDi
   }, [findings, build.instances, getPart, view, size]);
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-20">
+    <div className={`pointer-events-none absolute inset-0 z-20 transition-opacity duration-300 ${muted ? "opacity-25 [&_*]:!pointer-events-none" : ""}`}>
       {placed.map(({ f, x, y }) => (
-        <div key={f.id} className="pointer-events-auto absolute" style={{ left: x, top: y }} onMouseEnter={() => onHover(f)} onMouseLeave={() => onHover(null)}>
-          <StickyNote finding={f} onApply={() => onApply(f)} onDismiss={() => onDismiss(f)} />
+        <div key={f.id} className="pointer-events-auto absolute" style={{ left: x, top: y }} onPointerDown={(e) => e.stopPropagation()} onMouseEnter={() => onHover(f)} onMouseLeave={() => onHover(null)}>
+          <StickyNote finding={f} text={texts[f.id]} onApply={() => onApply(f)} onDismiss={() => onDismiss(f)} />
         </div>
       ))}
     </div>

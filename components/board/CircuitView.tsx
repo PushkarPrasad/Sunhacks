@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useBuild } from "@/stores/build";
 import { useCircuit } from "@/lib/hooks/useCircuit";
+import { ZoomPan } from "./ZoomPan";
 
 const Board3D = dynamic(() => import("./Board3D"), { ssr: false });
 
@@ -16,8 +17,16 @@ export function CircuitView({ view, compact = false }: { view: "schematic" | "pc
   }
   return (
     <div className={`relative h-full w-full overflow-hidden ${dark ? "bg-pcb text-paper" : view === "3d" ? "bg-paper" : "bg-paper"}`}>
-      {data && view === "schematic" && <div className="h-full w-full p-6 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: data.schematicSvg }} />}
-      {data && view === "pcb" && <div className="h-full w-full p-8 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: data.pcbSvg }} />}
+      {data && view === "schematic" && (
+        <ZoomPan>
+          <div className="h-full w-full p-6 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: data.schematicSvg }} />
+        </ZoomPan>
+      )}
+      {data && view === "pcb" && (
+        <ZoomPan dark>
+          <div className="h-full w-full p-8 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: data.pcbSvg }} />
+        </ZoomPan>
+      )}
       {data && view === "3d" && <Board3D circuitJson={data.circuitJson} build={build} />}
       {loading && (
         <div className={`absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-1.5 text-[12px] shadow-[var(--shadow-float)] ${dark ? "bg-paper text-ink" : "bg-ink text-paper"}`} role="status">

@@ -1,0 +1,140 @@
+import { expect, test } from "@playwright/test";
+import { collectErrors, expectNoOverflow, loadTemplate } from "./helpers";
+
+const SIZES = [
+  { w: 1440, h: 900, suffix: "" },
+  { w: 1280, h: 800, suffix: "-1280" },
+];
+
+for (const size of SIZES) {
+  test.describe(`pages at ${size.w}x${size.h}`, () => {
+    test.use({ viewport: { width: size.w, height: size.h } });
+
+    const shot = (name: string) => `screenshots/${name}${size.suffix}.png`;
+
+    test("home", async ({ page }) => {
+      const errors = collectErrors(page);
+      await page.goto("/");
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await page.waitForTimeout(600);
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("01-home") });
+      expect(errors).toEqual([]);
+    });
+
+    test("devices", async ({ page }) => {
+      const errors = collectErrors(page);
+      await page.goto("/devices");
+      await expect(page.getByText("Smart Home")).toBeVisible();
+      await page.waitForTimeout(600);
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("02-devices") });
+      expect(errors).toEqual([]);
+    });
+
+    test("category robots", async ({ page }) => {
+      const errors = collectErrors(page);
+      await page.goto("/devices/robots");
+      await expect(page.getByText("Robot Car")).toBeVisible();
+      await page.waitForTimeout(2500);
+      await page.getByRole("button", { name: "Motor driver", exact: true }).hover();
+      await page.waitForTimeout(500);
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("03-category-robots") });
+      expect(errors).toEqual([]);
+    });
+
+    test("more coming soon", async ({ page }) => {
+      await page.goto("/devices/more");
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("04-more") });
+    });
+
+    test("builder with gesture ring", async ({ page }) => {
+      const errors = collectErrors(page);
+      await loadTemplate(page, "gesture-ring");
+      await page.waitForTimeout(800);
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("05-builder-gesture-ring") });
+      expect(errors).toEqual([]);
+    });
+
+    test("builder with notes (robot car)", async ({ page }) => {
+      await loadTemplate(page, "robot-car");
+      await page.waitForTimeout(800);
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("06-builder-notes") });
+    });
+
+    test("templates", async ({ page }) => {
+      const errors = collectErrors(page);
+      await page.goto("/templates");
+      await expect(page.getByText("Gesture Ring")).toBeVisible();
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("10-templates") });
+      expect(errors).toEqual([]);
+    });
+
+    test("checks page with notes", async ({ page }) => {
+      const errors = collectErrors(page);
+      await loadTemplate(page, "status-terminal");
+      await page.goto("/checks");
+      await expect(page.getByText("5 V signal into a 3.3 V pin").first()).toBeVisible();
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("11-checks") });
+      expect(errors).toEqual([]);
+    });
+
+    test("board page pcb and 3d", async ({ page }) => {
+      const errors = collectErrors(page);
+      await loadTemplate(page, "gesture-ring");
+      await page.goto("/board");
+      await page.waitForSelector("text=traces routed", { timeout: 60_000 });
+      await expect(page.getByText(/day lead time/)).toBeVisible();
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("12-board-pcb") });
+      await page.getByRole("tab", { name: "3D" }).click();
+      await page.waitForTimeout(1500);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("13-board-3d") });
+      expect(errors).toEqual([]);
+    });
+
+    test("summary", async ({ page }) => {
+      const errors = collectErrors(page);
+      await loadTemplate(page, "handheld-console");
+      await page.goto("/summary");
+      await expect(page.getByAltText("QR code linking to this build")).toBeVisible({ timeout: 15_000 });
+      await expectNoOverflow(page);
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: shot("14-summary") });
+      expect(errors).toEqual([]);
+    });
+
+    test("builder schematic, pcb, 3d", async ({ page }) => {
+      await loadTemplate(page, "gesture-ring");
+      for (const [tab, name] of [
+        ["Schematic", "07-schematic"],
+        ["PCB", "08-pcb"],
+        ["3D", "09-board-3d"],
+      ] as const) {
+        await page.getByRole("tab", { name: tab, exact: true }).click();
+        await page.waitForSelector("text=traces routed", { timeout: 60_000 });
+        await page.waitForTimeout(1500);
+        await expectNoOverflow(page);
+        await page.waitForTimeout(700);
+      await page.screenshot({ path: shot(name) });
+      }
+      await page.getByRole("tab", { name: "Build", exact: true }).click();
+    });
+  });
+}

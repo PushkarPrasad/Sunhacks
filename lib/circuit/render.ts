@@ -19,8 +19,30 @@ export function pcbSvg(cj: CircuitJson): string {
   });
 }
 
+/** Aspect-correct output size from the schematic's own bounds, so the diagram fills its frame. */
+function schematicSize(cj: CircuitJson): { width: number; height: number } {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const e of cj) {
+    if (e.type !== "schematic_component") continue;
+    const c = e as unknown as { center: { x: number; y: number }; size?: { width: number; height: number } };
+    const w = (c.size?.width ?? 1) / 2 + 1.2;
+    const h = (c.size?.height ?? 1) / 2 + 0.8;
+    minX = Math.min(minX, c.center.x - w);
+    maxX = Math.max(maxX, c.center.x + w);
+    minY = Math.min(minY, c.center.y - h);
+    maxY = Math.max(maxY, c.center.y + h);
+  }
+  if (!isFinite(minX)) return { width: 1200, height: 800 };
+  const aspect = Math.min(2.4, Math.max(0.6, (maxX - minX) / (maxY - minY)));
+  return { width: 1400, height: Math.round(1400 / aspect) };
+}
+
 export function schematicSvg(cj: CircuitJson): string {
   return convertCircuitJsonToSchematicSvg(cj as never, {
+    ...schematicSize(cj),
     includeVersion: false,
     colorOverrides: {
       schematic: {

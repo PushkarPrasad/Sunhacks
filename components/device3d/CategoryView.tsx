@@ -39,7 +39,7 @@ export function CategoryView({ id }: { id: string }) {
   const starters = useMemo(
     () =>
       templatesForCategory(id).map((t) => {
-        const build = buildFromTemplate(t, (pid) => partsById[pid]);
+        const build = buildFromTemplate(t, (pid) => partsById[pid], { preview: true });
         const report = runChecks(build, parts);
         const fails = report.findings.filter((f) => f.severity === "fail").length;
         const warns = report.findings.filter((f) => f.severity === "warn").length;
@@ -92,13 +92,13 @@ export function CategoryView({ id }: { id: string }) {
           </button>
         </div>
         <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4">
-          <div className={`max-w-[380px] rounded-[12px] border border-line bg-card/90 p-4 shadow-[var(--shadow-float)] backdrop-blur transition-opacity duration-300 ${shown ? "opacity-100" : "opacity-0"}`} aria-live="polite">
+          <div className={`w-[340px] shrink-0 rounded-[12px] border border-line bg-card/90 p-4 shadow-[var(--shadow-float)] backdrop-blur transition-opacity duration-300 ${shown ? "opacity-100" : "opacity-0"}`} aria-live="polite">
             {shown && (
               <>
                 <p className="font-serif text-[22px] leading-tight">{shown.name}</p>
                 <p className="mt-1 text-[13px] leading-snug text-muted">{shown.description}</p>
-                <p className="mt-3 flex items-center gap-2 font-mono text-[11px] text-muted">
-                  <span className="h-px w-4 bg-copper" /> Maker equivalent: <span className="text-ink">{shown.makerEquivalent}</span>
+                <p className="mt-3 flex items-center gap-2 whitespace-nowrap font-mono text-[11px] text-muted">
+                  <span className="h-px w-4 bg-copper" /> Maker equivalent <span className="truncate text-ink">{shown.makerEquivalent}</span>
                 </p>
               </>
             )}

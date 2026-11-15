@@ -67,3 +67,33 @@ export function pinWorldPosition(inst: Instance, part: Part, pin: string): { x: 
   if (!p) return null;
   return { x: inst.x + p.x, y: inst.y + p.y, side: p.side };
 }
+
+/** Top-left position near (x, y) where a new card does not overlap existing cards (spiral search on a grid). */
+export function freeSpot(
+  instances: Instance[],
+  getPart: (id: string) => Part | undefined,
+  part: Part,
+  x: number,
+  y: number,
+  gap = 32,
+): { x: number; y: number } {
+  const g = cardGeometry(part, 0);
+  const rects = instances.map((i) => {
+    const p = getPart(i.partId);
+    const cg = p ? cardGeometry(p, i.rotation) : { w: 160, h: 100 };
+    return { x: i.x - gap, y: i.y - gap, w: cg.w + gap * 2, h: cg.h + gap * 2 };
+  });
+  const hits = (px: number, py: number) => rects.some((r) => px < r.x + r.w && px + g.w > r.x && py < r.y + r.h && py + g.h > r.y);
+  const step = 40;
+  for (let ring = 0; ring < 40; ring++) {
+    for (let dx = -ring; dx <= ring; dx++) {
+      for (let dy = -ring; dy <= ring; dy++) {
+        if (Math.max(Math.abs(dx), Math.abs(dy)) !== ring) continue;
+        const px = Math.round((x + dx * step) / 8) * 8;
+        const py = Math.round((y + dy * step) / 8) * 8;
+        if (!hits(px, py)) return { x: px, y: py };
+      }
+    }
+  }
+  return { x, y };
+}

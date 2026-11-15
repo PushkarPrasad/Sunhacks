@@ -18,7 +18,7 @@ interface Props {
   finding: Finding;
   onApply?: () => void;
   onDismiss?: () => void;
-  width?: number;
+  width?: number | string;
   text?: { title: string; body: string };
   className?: string;
   style?: React.CSSProperties;

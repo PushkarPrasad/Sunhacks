@@ -9,7 +9,7 @@ import { templates } from "@/data/templates";
 import { useBuild } from "@/stores/build";
 import { ExplodedIllustration, ScratchIllustration } from "./Illustrations";
 
-const FEATURED = ["gesture-ring", "robot-car", "plant-monitor", "handheld-console", "pocket-lora-messenger"];
+const FEATURED = ["gesture-ring", "robot-car", "plant-monitor", "handheld-console"];
 
 export function Home() {
   const router = useRouter();
